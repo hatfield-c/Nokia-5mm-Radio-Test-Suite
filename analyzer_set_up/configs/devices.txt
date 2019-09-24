@@ -1,0 +1,15 @@
+# lines beginning with #!@ or a space are treated as comments
+# 1st column -- equipment tag. should be all CAPS no spaces or special characters
+# 2nd column -- the class in the driver file
+# 3rd column -- the name of the .py file containing the class for the device
+# 4th column -- the pass parameters for the initialize function for the class.
+#               the pass parameters must be comma separated and match the names
+#		specified in the driver class you are using.
+
+TURNTABLE	Maturo	Maturo_driver	address='172.16.21.50', port=400
+#TURNTABLE	2090	nameless_2090_driver	address='GPIB0::9::INSTR'
+
+ANALYZER	MXA	agilent_MXA_driver	address='GPIB0::18::INSTR'
+
+UUT	aardvark	aardvark_driver	device=0
+UUT	SSH_5G	SSH_5G_driver	address='192.168.100.1', port=22, username='root', password='umniedziala'
