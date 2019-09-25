@@ -1,0 +1,1 @@
+.\Python37-32\python.exe .\EIRP\EIRP_Window.py

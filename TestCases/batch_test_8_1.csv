@@ -1,0 +1,8 @@
+TEST,Center Frequency(GHz),Channel Bandwidth(MHz),Resolution Bandwidth(Hz),Sweep Time(s),,
+OBUE,37.40034,100,1000000,0.2,,
+,,,,,,
+TEST,TX BW,Adjacent BW,Alternate BW,Adjacent Spacing,Alternate Spacing,User Std.
+EIRP,99840000,99840000,99840000,100000000,100000000,autogen
+,,,,,,
+TEST,Center Frequency(GHz),Attenuation(dBm),Allocation File,,,
+5GNR,37050000000,10,C:\\R_S\\Instr\\user\\NR5G\\AllocationFiles\\DL\\Single Carrier\\64QAM_cellID1_papr13_120KHz_100MHz.allocation,,,

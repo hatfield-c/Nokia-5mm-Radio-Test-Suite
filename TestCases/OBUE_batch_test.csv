@@ -1,0 +1,8 @@
+TEST,Center Frequency(GHz),Channel Bandwidth(MHz),Resolution Bandwidth(Hz),Sweep Time(s)
+OBUE,37.05,100,1000000,0.2
+,,,,
+TEST,Center Frequency(GHz),Channel Bandwidth(MHz),Resolution Bandwidth(Hz),Sweep Time(s)
+OBUE,38.49996,100,1000000,0.2
+,,,,
+TEST,Center Frequency(GHz),Channel Bandwidth(MHz),Resolution Bandwidth(Hz),Sweep Time(s)
+OBUE,39.94998,100,1000000,0.2
