@@ -1,0 +1,33 @@
+5G NR 
+5G NR Mode 
+Single Sweep 
+Set center frequency. 
+Attenuation == 10 db. Under amplitude. Manually set.
+external trigger -> grab from the other trigger 
+measure config -> 
+signal description 
+downlink mode, default 
+frequency range, f> 6 GHz 
+Component Carrier == 1 //only one carrier captured at a time 
+test model / user defined set 
+
+Select user defined directory. Applies allocation. 
+	Standard Base test models for NR modes 
+loads .allocation file. 
+
+Auto detection CELL ID -> ON 
+
+Trigger / signal capture in 5G NR toolbar 
+signal capture swap I/Q on off USER SELECTION UPON AUTOMATION RUN .
+phase tracking in parameter estimation tracking 
+
+demodulation -> if multi carier turn on. For single carrier off is acceptable 
+
+-> SWEEP 
+
+2 numbers. 
+
+mean EVM data and Frequency error
+hooks that read everything in there 
+
+EVM Error Vector Magnitude  

@@ -1,0 +1,89 @@
+//-----------Preparing the measurement ------------
+//Reset the instrument
+*RST
+//-------------Preparing the measurement---------------------
+//Activate adjacent-channel power measurement.
+CALC:MARK:FUNC:POW:SEL ACP
+//Select the user standard "GSM"
+CALC:MARK:FUNC:POW:PRES GSM
+//---------------Setting Up Channels------------
+//Create one transmission channel.
+POW:ACH:TXCH:COUN 1
+//Name the first transmission channel 'TX Channel'.
+POW:ACH:NAME:CHAN1 'TX Channel'
+//Create two adjacent channels - one adjacent channel and one alternate channel.
+POW:ACH:ACP 2
+//Name the adjacent channel 'ABC'
+POW:ACH:NAME:ACH 'ABC'
+//Name the first alternate channel 'XYZ'.
+POW:ACH:NAME:ALT1 'XYZ'
+//Define a bandwidth of 30 kHz for the transmission channel.
+POW:ACH:BWID:CHAN1 30kHz
+//Define a bandwidth of 30 kHz for the adjacent channel.
+POW:ACH:BWID:ACH 30kHz
+//Define a bandwidth of 30 kHz for the first alternate channel.
+POW:ACH:BWID:ALT1 30kHz
+//Define a distance of 33 kHz from the center of the transmission channel to the 
+//center of the adjacent channel.
+//Also adjust the distance to the alternate channels (66 kHz).
+POW:ACH:SPAC 33kHz
+//Define a distance of 100 kHz from the center of the transmission channel to the 
+//center of the first alternate channel.
+POW:ACH:SPAC:ALT1 100kHz
+//---------------Selecting a Reference Channel--
+//Select relative display of the channel power.
+POW:ACH:MODE REL
+//Define transmission channel 1 as the reference channel.
+POW:ACH:REF:TXCH:MAN 1
+//-----------Saving the settings as a user standard--------------
+//Save the user standard with the name "my_aclr_standard". 
+//Weighting filters can only be defined for user-defined standards. 
+CALC:MARK:FUNC:POW:STAN:SAVE 'my_aclr_standard'
+//---------------Defining Weighting Filters-----
+//Define a roll-off factor of 0.35 for the weighting filter of the first
+//transmission channel.
+POW:ACH:FILT:ALPH:CHAN1 0.35
+//Turn the weighting filter for the first transmission channel on.
+POW:ACH:FILT:CHAN1 ON
+//Define a roll-off factor of 0.35 for the weighting filter of the adjacent
+//channel.
+POW:ACH:FILT:ALPH:ACH 0.35
+//Turn the weighting filter for the adjacent channel on.
+POW:ACH:FILT:ACH ON
+//Define a roll-off factor of 0.35 for the weighting filter of the first
+//alternate channel.
+POW:ACH:FILT:ALPH:ALT1 0.35
+//Turn the weighting filter for the first alternate channel on.
+POW:ACH:FILT:ALT1 ON
+//---------------Working with Limits------------
+//Define a relative limit of 30 dB below the power of the reference channel
+//for both adjacent channels.
+CALC:LIM:ACP:ACH 30DB,30DB
+//Define a relative limit of 25 dB below the power of the reference channel
+//for the first alternate channels.
+CALC:LIM:ACP:ALT1 25DB,25DB
+//Define an absolute limit of -35 dBm for both adjacent channels.
+CALC:LIM:ACP:ACH:ABS -35DBM,-35DBM
+//Turn the ACLR limit check on.
+CALC:LIM:ACP ON
+//Turn the relative limit check for adjacent channels on.
+CALC:LIM:ACP:ACH:STAT ON
+//Turn the absolute limit check for adjacent channels on.
+CALC:LIM:ACP:ACH:ABS:STAT ON
+//Turn the absolute limit check for the first alternate channel on.
+CALC:LIM:ACP:ALT1:ABS:STAT ON
+//--------------Performing the Measurement-----
+//Determine the ideal ACLR measurement configuration.
+POW:ACH:PRES ACP;*WAI
+//Determine the ideal reference level for the measurement.
+POW:ACH:PRES:RLEV;*WAI
+//Initiate a new measurement and waits until the sweep has finished.
+INIT;*WAI
+//---------------Limit Check--------------------
+//Query the results of the limit check for the adjacent channels.
+CALC:LIM:ACP:ACH:RES?
+//Query the results of the limit check for the first alternate channels.
+CALC:LIM:ACP:ALT1:RES?
+//---------------Retrieving Results-------------
+//Query the results for the ACLR measurement.
+CALC:MARK:FUNC:POW:RES? ACP

@@ -1,0 +1,1 @@
+./aeub_config.sh -txp b f tdd mid 4
