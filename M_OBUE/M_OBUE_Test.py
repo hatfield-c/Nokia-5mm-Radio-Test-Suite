@@ -72,6 +72,34 @@ class M_OBUE_Test_A:
 
         return spans
 
+    def calc_spans_b(self):
+
+        #calculate 3 spans to each side 
+        bw_mid_offset = (0.1 *(self.BW_Contiguous) + 0.5)
+
+        spans[0] = (self.f_offset_max_L,
+                    (self.carrier_block[0] - 2*self.BW_Contiguous+5))
+
+        spans[1] = (2*self.BW_Contiguous,
+                    self.carrier_block[0]-bw_mid_offset)
+
+        spans[2] = (self.carrier_block[0] - bw_mid_offset,
+                    self.carrier_block[0]-0.5)
+
+        #Carrier Frequency Block
+
+        spans[3] = (self.carrier_block[1] + 0.5,
+                    self.carrier_block[1] + bw_mid_offset)
+
+        spans[4] = (self.carrier_block[1] + bw_mid_offset,
+                    2*self.BW_Contiguous + 0.5)
+
+        spans[5] = (2*self.BW_Contiguous + 5.0,
+                    self.f_offset_max_R)
+
+        return spans
+
+
     def run_test(self):
 
         offset_spans = self.calc_spans_a()
