@@ -1,6 +1,6 @@
 # Anthony Tang anthony.tang@nokia.com
 # https://gitlabe2.ext.net.nokia.com/anttang/FSW_Automation.git
-# Python 3.7.0 
+# Python 3.7.0
 
 import tkinter as tk
 
@@ -11,7 +11,8 @@ import tkinter as tk
 
 class InputPane(tk.Frame):
 
-    def __init__(self, root, title, entry_fields, default_vals = None):
+    def __init__(self, root, title = None, entry_fields = [],
+                    default_vals = None):
 
         tk.Frame.__init__(self, root, height = 20, width = 30, borderwidth = 3)
         self.config(relief = tk.GROOVE, padx = 2, pady = 2)
@@ -20,6 +21,12 @@ class InputPane(tk.Frame):
         entries = {}
         self.entry_strs = {}
         index = 0
+
+        if title:
+            #make a title label if one has been provided.
+            title_lable = tk.Label(self, text = title)
+            title_lable.grid(column = 0, row = index, sticky = tk.N + tk.W)
+            index += 1
 
         for field in entry_fields:
             print(field)

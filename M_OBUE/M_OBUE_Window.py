@@ -20,7 +20,7 @@ from Support_Modules import TestConfig as tcfg
 class M_OBUE_Window():
 
     version = "0.1"
-
+    number_carriers = 0
 
     def __init__(self):
 
@@ -35,6 +35,45 @@ class M_OBUE_Window():
         menu = tk.Menu(self.window)
         menu.add_command(label = "View Setup", command = lambda:
                                             self.test_conf.view_config())
-
-
         view_menu = tk.Menu(menu)
+
+        #adding toggling check button for iq swap usage.
+        self.iq_swap_selected = tk.BooleanVar()
+        self.iq_swap_selected.set(False)
+        view_menu.add_checkbutton(label = "I\\Q Swap", onvalue = 1,
+                                offvalue = 0, variable=self.iq_swap_selected)
+        menu.add_cascade(label="I Q", menu=view_menu)
+
+        self.window.config(menu = menu)
+
+
+        #resolution bandwidth and sweep time are universal to carriers
+        entry_fields = ['Resolution Bandwidth(Hz)', 'Sweep Time(s)']
+        shared_input_pane = ip.InputPane(self.window, title = None,
+                                            entry_fields =entry_fields)
+        shared_input_pane.pack()
+        add_carrier_btn = tk.Button(self.window,
+                                    text = "Add Carrier",
+                                    bg = "light blue",
+                                    command = lambda: self.add_carrier_pane())
+        add_carrier_btn.pack(fill = tk.X, expand = 1)
+
+        #add initial carrier pane.
+        self.add_carrier_pane()
+
+        self.window.mainloop()
+
+
+    def add_carrier_pane(self):
+        self.number_carriers += 1
+        title = "Carrier %d"%self.number_carriers
+        entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
+        carrier_pane = ip.InputPane(self.window, title, entry_fields)
+        carrier_pane.pack()
+
+
+
+
+if __name__ == '__main__':
+
+    M_OBUE_Window()
