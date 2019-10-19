@@ -16,11 +16,17 @@ from Support_Modules import InputPane as ip
 from Support_Modules import SpecPane as spec
 from Support_Modules import TestConfig as tcfg
 
+
+#TODO:
+#Hook up to test class.
+#Develop grid layout for tkinter GUI elements for better formatting.
+
 #input number of carriers
 class M_OBUE_Window():
 
     version = "0.1"
     number_carriers = 0
+    carriers = []
 
     def __init__(self):
 
@@ -46,32 +52,91 @@ class M_OBUE_Window():
 
         self.window.config(menu = menu)
 
-
         #resolution bandwidth and sweep time are universal to carriers
-        entry_fields = ['Resolution Bandwidth(Hz)', 'Sweep Time(s)']
-        shared_input_pane = ip.InputPane(self.window, title = None,
+        entry_fields = ['Resolution Bandwidth(MHz)', 'Sweep Time(s)']
+        self.shared_input_pane = ip.InputPane(self.window, title = None,
                                             entry_fields =entry_fields)
-        shared_input_pane.pack()
+        self.shared_input_pane.pack()
+
+        self.test_category = 'A'
+        category_a_rdb = tk.Radiobutton(self.window, text = "A",
+                                            variable = self.test_category)
+        category_b_rdb = tk.Radiobutton(self.window, text = "B",
+                                            variable = self.test_category)
+        category_a_rdb.pack(anchor = tk.W)
+        category_b_rdb.pack(anchor = tk.W)
+
+
+
+        #add carrier btn
         add_carrier_btn = tk.Button(self.window,
                                     text = "Add Carrier",
                                     bg = "light blue",
                                     command = lambda: self.add_carrier_pane())
         add_carrier_btn.pack(fill = tk.X, expand = 1)
 
+        #remove carrier btn
+        remove_carrier_btn = tk.Button(self.window,
+                                text = "Remove Carrier",
+                                bg = "orange",
+                                command = lambda: self.remove_carrier_pane() )
+        remove_carrier_btn.pack(fill = tk.X, expand = 1)
+
+        #
+        run_test_btn = tk.Button(self.window,
+                                text = "Run Test",
+                                bg = "green",
+                                command = lambda: self.run_test() )
+        run_test_btn.pack(fill = tk.X, expand = 1)
+
+
         #add initial carrier pane.
         self.add_carrier_pane()
 
-        self.window.mainloop()
-
+        self.window.mainloop() #tkinter loop
 
     def add_carrier_pane(self):
-        self.number_carriers += 1
+
         title = "Carrier %d"%self.number_carriers
         entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
-        carrier_pane = ip.InputPane(self.window, title, entry_fields)
-        carrier_pane.pack()
+        self.carriers.append(ip.InputPane(self.window, title, entry_fields))
+        self.carriers[self.number_carriers].pack()
+        self.number_carriers += 1
+        return
 
 
+    def remove_carrier_pane(self):
+
+        if self.number_carriers <= 1:
+            #stub out button
+            return
+
+        #remove carrier.
+        else:
+            #remove from list
+            remove = self.carriers.pop()
+            #remove graphical pane
+            remove.pack_forget()
+            self.number_carriers -= 1 #decerement carriers
+
+    def get_parameters(self):
+
+        #return all parameters in the parameter dictionary.
+        parameters = {}
+
+        parameters['Category'] = self.test_category
+        parameters.update(self.shared_input_pane.get_parameters())
+
+        for ip in self.carriers:
+            parameters.update(ip.get_parameters())
+
+        #print(parameters)
+        return parameters
+
+    def run_test(self):
+
+        print( self.get_parameters() )
+        return
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 ## FSW Automation 5G ##
 
-# OBUE Multicarrier Module Addition # 
+# OBUE Multicarrier Module Addition #
 
 maintained by Anthony.Tang@nokia.com
 

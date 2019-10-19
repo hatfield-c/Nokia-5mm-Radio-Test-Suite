@@ -29,7 +29,7 @@ class InputPane(tk.Frame):
             index += 1
 
         for field in entry_fields:
-            print(field)
+            #print(field)
             self.entry_strs[field] = tk.StringVar(self)
             labels[field] = tk.Label(self, text = field)
             entries[field] = tk.Entry(self,

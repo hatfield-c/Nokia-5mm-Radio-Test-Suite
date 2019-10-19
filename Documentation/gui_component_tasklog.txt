@@ -1,0 +1,5 @@
+GUI widgets that need to be developed:
+
+Generic scrolling window that supports widgets with fixed frame size.
+Generic output widget.
+M_OBUE widget for multicarrier. Needs to be listed and indexed for removal.
