@@ -1,0 +1,4 @@
+# Ignore python compilation files that may have been generated during testing
+__pycache__/
+*.py[cod]
+*$py.class
