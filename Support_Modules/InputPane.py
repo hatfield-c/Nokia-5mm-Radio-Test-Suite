@@ -24,8 +24,8 @@ class InputPane(tk.Frame):
 
         if title:
             #make a title label if one has been provided.
-            title_lable = tk.Label(self, text = title)
-            title_lable.grid(column = 0, row = index, sticky = tk.N + tk.W)
+            self.title_lable = tk.Label(self, text = title)
+            self.title_lable.grid(column = 0, row = index, sticky = tk.N + tk.W)
             index += 1
 
         for field in entry_fields:
@@ -50,5 +50,8 @@ class InputPane(tk.Frame):
             field_dic[entry] = var
 
         return field_dic
+
+    def get_title(self):
+        return self.title_lable
 
         #returns something.

@@ -16,7 +16,6 @@ from Support_Modules import InputPane as ip
 from Support_Modules import SpecPane as spec
 from Support_Modules import TestConfig as tcfg
 
-
 #TODO:
 #Hook up to test class.
 #Develop grid layout for tkinter GUI elements for better formatting.
@@ -27,6 +26,7 @@ class M_OBUE_Window():
     version = "0.1"
     number_carriers = 0
     carriers = []
+
 
     def __init__(self):
 
@@ -58,15 +58,16 @@ class M_OBUE_Window():
                                             entry_fields =entry_fields)
         self.shared_input_pane.pack()
 
-        self.test_category = 'A'
+        self.test_category = tk.StringVar(self.window, 'A')
         category_a_rdb = tk.Radiobutton(self.window, text = "A",
-                                            variable = self.test_category)
+                                            variable = self.test_category,
+                                            value = 1)
         category_b_rdb = tk.Radiobutton(self.window, text = "B",
-                                            variable = self.test_category)
+                                            variable = self.test_category,
+                                            value = 2)
         category_a_rdb.pack(anchor = tk.W)
         category_b_rdb.pack(anchor = tk.W)
-
-
+        self.test_category.set(1)
 
         #add carrier btn
         add_carrier_btn = tk.Button(self.window,
@@ -95,6 +96,7 @@ class M_OBUE_Window():
 
         self.window.mainloop() #tkinter loop
 
+
     def add_carrier_pane(self):
 
         title = "Carrier %d"%self.number_carriers
@@ -119,6 +121,7 @@ class M_OBUE_Window():
             remove.pack_forget()
             self.number_carriers -= 1 #decerement carriers
 
+
     def get_parameters(self):
 
         #return all parameters in the parameter dictionary.
@@ -128,10 +131,12 @@ class M_OBUE_Window():
         parameters.update(self.shared_input_pane.get_parameters())
 
         for ip in self.carriers:
-            parameters.update(ip.get_parameters())
+            carrier_name = ip.get_title()
+            parameters[carrier_name] = ip.get_parameters()
 
         #print(parameters)
         return parameters
+
 
     def run_test(self):
 
