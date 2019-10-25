@@ -23,20 +23,21 @@ class MenuFactory():
         self.root = root
         self.buildMenu(self.root, self.menuData)
 
-    def menuAction(self, action, args):
+    def menuAction(self, actionStr, args):
         pass
 
     def buildMenu(self, root, menuData):
+        self.menuData = menuData
         self.menuBar = tkinter.Menu(root)
-        for field in menuData:
-            if isinstance(menuData[field], dict):
+        for field in self.menuData:
+            if isinstance(self.menuData[field], dict):
                 subMenu = tkinter.Menu(self.menuBar, tearoff = 0)
 
-                line = menuData[field]
+                line = self.menuData[field]
                 for subField in line:
-                    subMenu.add_command(label = subField, command = lambda : self.menuAction(line[subField], None))
+                    subMenu.add_command(label = subField, command = lambda action = line[subField] : self.menuAction(actionStr = action, args = None))
 
                 self.menuBar.add_cascade(label = field, menu = subMenu)
             else:
-                self.menuBar.add_command(label = field, command = lambda : self.menuAction(menuData[field], None))
+                self.menuBar.add_command(label = field, command = lambda action = menuData[field] : self.menuAction(actionStr = action, args = None))
 

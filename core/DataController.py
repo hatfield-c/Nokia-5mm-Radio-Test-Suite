@@ -1,11 +1,12 @@
 import csv
 from CSVObject import CSVObject
+from Config import _CONFIG_
 
 class DataController:
 
     @staticmethod
     def Load(fileName, loadChildData = False):
-        with open("core/" + fileName) as csvFile:
+        with open(fileName) as csvFile:
             itemList = []
             fileReader = csv.reader(csvFile)
             
@@ -16,20 +17,20 @@ class DataController:
                 item = {}
                 for value, key in zip(line, keys):
                     item[key] = value
-                    if(key == "csv_path" and loadChildData):
-                        item["child_data"] = DataController.Load(item[key], loadChildData)
+                    if(key == _CONFIG_["csv_path_key"] and loadChildData):
+                        item[_CONFIG_["csv_child_data_key"]] = DataController.Load(item[key], loadChildData)
 
                 itemList.append(item)
 
-            if "csv_path" in keys:
-                keys.append("child_data")
+            if _CONFIG_["csv_path_key"] in keys:
+                keys.append(_CONFIG_["csv_child_data_key"])
 
-            csvData = CSVObject(itemList, keys)
+            csvData = CSVObject(itemList, keys, path = fileName)
             return csvData
 
     @staticmethod
     def Save(fileName, csvData):
-        with open("core/" + fileName, "w", newline="") as csvFile:
+        with open(fileName, "w", newline=_CONFIG_["csv_newline"]) as csvFile:
             fileWriter = csv.writer(csvFile)
 
             fields = csvData.getFields()
@@ -41,18 +42,3 @@ class DataController:
                     rowData.append(row[field])
 
                 fileWriter.writerow(rowData)
-
-
-
-
-                
-csv_data = DataController.Load("test.csv", True)
-print(csv_data)
-
-csv_write = CSVObject([{"res1": 0.501, "res2": "success"}, {"res1": -1, "res2": "failure"}], ["res1", "res2"])
-DataController.Save("results.csv", csv_write)
-
-results_data = DataController.Load("results.csv")
-print(results_data)
-
-print(csv_data.dropField('child_data'))
