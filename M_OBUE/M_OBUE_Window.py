@@ -127,12 +127,12 @@ class M_OBUE_Window():
         #return all parameters in the parameter dictionary.
         parameters = {}
 
-        parameters['Category'] = self.test_category
+        parameters['Category'] = self.test_category.get()
         parameters.update(self.shared_input_pane.get_parameters())
-
         for ip in self.carriers:
             carrier_name = ip.get_title()
             parameters[carrier_name] = ip.get_parameters()
+
 
         #print(parameters)
         return parameters
@@ -140,7 +140,11 @@ class M_OBUE_Window():
 
     def run_test(self):
 
-        print( self.get_parameters() )
+        parameters = self.get_parameters()
+
+        m_obue(parameters, testbench = self.testbench,
+                    iq_swap = self.iq_swap_selected.get() )
+
         return
 
 
