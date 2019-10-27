@@ -102,7 +102,7 @@ class M_OBUE_Window():
         title = "Carrier %d"%self.number_carriers
         entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
         self.carriers.append(ip.InputPane(self.window, title, entry_fields))
-        self.carriers[self.number_carriers].grid(row = 6+number_carriers, column = 0, padx = 1, pady =2)
+        self.carriers[self.number_carriers].grid(row = 6+self.number_carriers, column = 0, padx = 1, pady =2)
         self.number_carriers += 1
         return
 
