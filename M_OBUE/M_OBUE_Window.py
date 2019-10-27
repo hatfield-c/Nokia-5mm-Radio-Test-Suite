@@ -56,7 +56,7 @@ class M_OBUE_Window():
         entry_fields = ['Resolution Bandwidth(MHz)', 'Sweep Time(s)']
         self.shared_input_pane = ip.InputPane(self.window, title = None,
                                             entry_fields =entry_fields)
-        self.shared_input_pane.pack()
+        self.shared_input_pane.grid(row =0, column = 0, padx = 1, pady =2)
 
         self.test_category = tk.StringVar(self.window, 'A')
         category_a_rdb = tk.Radiobutton(self.window, text = "A",
@@ -65,8 +65,8 @@ class M_OBUE_Window():
         category_b_rdb = tk.Radiobutton(self.window, text = "B",
                                             variable = self.test_category,
                                             value = 2)
-        category_a_rdb.pack(anchor = tk.W)
-        category_b_rdb.pack(anchor = tk.W)
+        category_a_rdb.grid(row =1, column = 0, padx = 1, pady =2)
+        category_b_rdb.grid(row =2, column = 0, padx = 1, pady =2)
         self.test_category.set(1)
 
         #add carrier btn
@@ -74,21 +74,21 @@ class M_OBUE_Window():
                                     text = "Add Carrier",
                                     bg = "light blue",
                                     command = lambda: self.add_carrier_pane())
-        add_carrier_btn.pack(fill = tk.X, expand = 1)
+        add_carrier_btn.grid(row =3, column = 0, padx = 1, pady =2)
 
         #remove carrier btn
         remove_carrier_btn = tk.Button(self.window,
                                 text = "Remove Carrier",
                                 bg = "orange",
                                 command = lambda: self.remove_carrier_pane() )
-        remove_carrier_btn.pack(fill = tk.X, expand = 1)
+        remove_carrier_btn.grid(row =4, column = 0, padx = 1, pady =2)
 
         #
         run_test_btn = tk.Button(self.window,
                                 text = "Run Test",
                                 bg = "green",
                                 command = lambda: self.run_test() )
-        run_test_btn.pack(fill = tk.X, expand = 1)
+        run_test_btn.grid(row =5, column = 0, padx = 1, pady =2)
 
 
         #add initial carrier pane.
@@ -102,7 +102,7 @@ class M_OBUE_Window():
         title = "Carrier %d"%self.number_carriers
         entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
         self.carriers.append(ip.InputPane(self.window, title, entry_fields))
-        self.carriers[self.number_carriers].pack()
+        self.carriers[self.number_carriers].grid(row = 6+number_carriers, column = 0, padx = 1, pady =2)
         self.number_carriers += 1
         return
 
@@ -118,7 +118,7 @@ class M_OBUE_Window():
             #remove from list
             remove = self.carriers.pop()
             #remove graphical pane
-            remove.pack_forget()
+            remove.grid_forget()
             self.number_carriers -= 1 #decerement carriers
 
 
