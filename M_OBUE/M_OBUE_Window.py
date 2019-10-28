@@ -35,7 +35,7 @@ class M_OBUE_Window():
 
         #parse for the configuration from the res file.
         self.test_conf = tcfg.TestConfig('OBUE')
-        default_vals = self.test_conf.read_default_vals()
+        #default_vals = self.test_conf.read_default_vals()
 
         #menu and associated buttons.
         menu = tk.Menu(self.window)
@@ -129,23 +129,22 @@ class M_OBUE_Window():
 
         parameters['Category'] = self.test_category.get()
         parameters.update(self.shared_input_pane.get_parameters())
-        for ip in self.carriers:
-            carrier_name = ip.get_title()
-            parameters[carrier_name] = ip.get_parameters()
 
+        carrier_list = []
+        for ip in self.carriers:
+            carrier_list.append(ip.get_parameters())
 
         #print(parameters)
-        return parameters
+        return (parameters, carrier_list)
 
 
     def run_test(self):
 
-        parameters = self.get_parameters()
-
-        m_obue(parameters, testbench = self.testbench,
-                    iq_swap = self.iq_swap_selected.get() )
-
-        return
+        parameters, carrier_list = self.get_parameters()
+        m_obue.M_OBUE_Test_Contig(parameters, carrier_list,
+                            iq_swap= self.iq_swap_selected.get(),
+                            testbench = self.test_conf.testbench_configuration)
+        return False
 
 
 if __name__ == '__main__':
