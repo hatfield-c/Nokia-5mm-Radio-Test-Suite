@@ -32,7 +32,13 @@ class M_OBUE_Window():
 
         self.window = tk.Tk()
         self.window.title("M OBUE %s"% self.version)
-
+        self.canvas = tk.Canvas(self.window, borderwidth =0,width=275,height=200, background = "#ffffff")
+        self.canvas.grid(column=3,rowspan = 10,row = 0)
+        self.canvas.pack_propagate(False)
+        self.vsb = tk.Scrollbar(self.window, orient="vertical", command=self.canvas.yview)
+        self.vsb.grid(column=4,row=0,rowspan=10, sticky = 'ew')
+        self.canvas.configure(yscrollcommand=self.vsb.set)
+        
         #parse for the configuration from the res file.
         self.test_conf = tcfg.TestConfig('OBUE')
         default_vals = self.test_conf.read_default_vals()
@@ -56,7 +62,7 @@ class M_OBUE_Window():
         entry_fields = ['Resolution Bandwidth(MHz)', 'Sweep Time(s)']
         self.shared_input_pane = ip.InputPane(self.window, title = None,
                                             entry_fields =entry_fields)
-        self.shared_input_pane.grid(row =0, column = 0, padx = 1, pady =2)
+        self.shared_input_pane.grid(row =0, column = 0,columnspan= 2, padx = 1, pady =2)
 
         self.test_category = tk.StringVar(self.window, 'A')
         category_a_rdb = tk.Radiobutton(self.window, text = "A",
@@ -65,44 +71,47 @@ class M_OBUE_Window():
         category_b_rdb = tk.Radiobutton(self.window, text = "B",
                                             variable = self.test_category,
                                             value = 2)
-        category_a_rdb.grid(row =1, column = 0, padx = 1, pady =2)
-        category_b_rdb.grid(row =2, column = 0, padx = 1, pady =2)
+        category_a_rdb.grid(row =1, column = 0, padx = 1, pady =1)
+        category_b_rdb.grid(row =1, column = 1, padx = 1, pady =1)
         self.test_category.set(1)
 
         #add carrier btn
         add_carrier_btn = tk.Button(self.window,
                                     text = "Add Carrier",
                                     bg = "light blue",
-                                    command = lambda: self.add_carrier_pane())
-        add_carrier_btn.grid(row =3, column = 0, padx = 1, pady =2)
+                                    command = lambda: self.add_carrier_pane(self.canvas))
+        add_carrier_btn.grid(row =2, column = 0,columnspan= 2,  padx = 1, pady =2)
 
         #remove carrier btn
         remove_carrier_btn = tk.Button(self.window,
                                 text = "Remove Carrier",
                                 bg = "orange",
                                 command = lambda: self.remove_carrier_pane() )
-        remove_carrier_btn.grid(row =4, column = 0, padx = 1, pady =2)
+        remove_carrier_btn.grid(row =3, column = 0,columnspan= 2,  padx = 1, pady =2)
 
         #
         run_test_btn = tk.Button(self.window,
                                 text = "Run Test",
                                 bg = "green",
                                 command = lambda: self.run_test() )
-        run_test_btn.grid(row =5, column = 0, padx = 1, pady =2)
+        run_test_btn.grid(row =4, column = 0,columnspan= 2,  padx = 1, pady =2)
 
 
         #add initial carrier pane.
-        self.add_carrier_pane()
+        self.add_carrier_pane(self.canvas)
 
         self.window.mainloop() #tkinter loop
 
 
-    def add_carrier_pane(self):
+    def add_carrier_pane(self, canvas):
 
         title = "Carrier %d"%self.number_carriers
+        
         entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
-        self.carriers.append(ip.InputPane(self.window, title, entry_fields))
-        self.carriers[self.number_carriers].grid(row = 6+self.number_carriers, column = 0, padx = 1, pady =2)
+        self.carriers.append(ip.InputPane(canvas, title, entry_fields))
+        self.carriers[self.number_carriers].pack()
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        #self.carriers[self.number_carriers].grid(row = self.number_carriers*5, rowspan= 5,column = 2, padx = 1, pady =2)
         self.number_carriers += 1
         return
 
@@ -118,7 +127,7 @@ class M_OBUE_Window():
             #remove from list
             remove = self.carriers.pop()
             #remove graphical pane
-            remove.grid_forget()
+            remove.pack_forget()
             self.number_carriers -= 1 #decerement carriers
 
 
