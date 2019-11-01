@@ -39,7 +39,7 @@ class TestSuiteBuilder(Interface):
         runs = Editor(root = self.workspace, data = self.data, color = "orange")
         sequences = Editor(root = self.workspace, data = self.data, color = "red")
         testing = Editor(root = self.workspace, data = self.data, color = "lightgreen")
-        empty = Editor(root = self.workspace, color = "blue")
+        empty = Empty(root = self.workspace)
 
         workspaces = {
             "benches": benches,
