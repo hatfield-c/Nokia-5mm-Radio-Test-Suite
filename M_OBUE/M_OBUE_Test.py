@@ -39,7 +39,7 @@ class M_OBUE_Test_Contig:
         self.carrier_block = (lowest_carrier_span[0], highest_carrier_span[1])
         print(self.carrier_block)
 
-        self.BW_Contiguous = (self.carrier_block[-1] - self.carrier_block[0]) * 1000
+        self.BW_Contiguous = (self.carrier_block[-1] - self.carrier_block[0])
 
         self.sweep_time = parameters['Sweep Time(s)']
         self.rbw_MHz = parameters["Resolution Bandwidth(MHz)"]
@@ -67,8 +67,8 @@ class M_OBUE_Test_Contig:
     #Where carrier is a dictionary containing
     #{fc_ghz, ch_bw_mhz}
     def calc_carrier_span(self, carrier):
-        carrier_fc = int(carrier['Center Frequency(GHz)'])
-        channel_bw = int(carrier['Channel Bandwidth(MHz)'])
+        carrier_fc = float(carrier['Center Frequency(GHz)'])
+        channel_bw = float(carrier['Channel Bandwidth(MHz)'])
         #channel start and stop around fc calculated from offset to bandwidth
         start = carrier_fc - ((channel_bw/1000)/2)
         stop = start + (channel_bw/1000)
@@ -99,7 +99,7 @@ class M_OBUE_Test_Contig:
 
         #calculate 3 spans to each side
         bw_mid_offset = (0.1 *(self.BW_Contiguous) + 0.5)
-
+        spans = []
         spans.append((self.f_offset_max_L,
                     (self.carrier_block[0] - 2*self.BW_Contiguous+5)))
 
@@ -138,6 +138,7 @@ class M_OBUE_Test_Contig:
             index += 1
 
         return peak_list
+
 
 if __name__ == '__main__':
     parameters = {}
