@@ -9,7 +9,7 @@ Location: {PATH TO APP}\Python37-32
 Package Dependencies:
 
 	- tkinter
-		UI Framework upon which the application is build
+		UI Framework upon which the application is built
 	- Pillow
 		Images processing framework based off the PIL (Python-Imaging-Library) package
 
