@@ -32,12 +32,9 @@ class M_OBUE_Window():
 
         self.window = tk.Tk()
         self.window.title("M OBUE %s"% self.version)
-        self.canvas = tk.Canvas(self.window, borderwidth =0,width=275,height=200, background = "#ffffff")
+        self.canvas = tk.Canvas(self.window, borderwidth =0,width=550,height=300, background = "#ffffff")
         self.canvas.grid(column=3,rowspan = 10,row = 0)
-        self.canvas.pack_propagate(False)
-        self.vsb = tk.Scrollbar(self.window, orient="vertical", command=self.canvas.yview)
-        self.vsb.grid(column=4,row=0,rowspan=10, sticky = 'ew')
-        self.canvas.configure(yscrollcommand=self.vsb.set)
+        self.canvas.grid_propagate(False)
         
         #parse for the configuration from the res file.
         self.test_conf = tcfg.TestConfig('OBUE')
@@ -106,13 +103,11 @@ class M_OBUE_Window():
     def add_carrier_pane(self, canvas):
 
         title = "Carrier %d"%self.number_carriers
-        
-        entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
-        self.carriers.append(ip.InputPane(canvas, title, entry_fields))
-        self.carriers[self.number_carriers].pack()
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        #self.carriers[self.number_carriers].grid(row = self.number_carriers*5, rowspan= 5,column = 2, padx = 1, pady =2)
-        self.number_carriers += 1
+        if(self.number_carriers<8):
+            entry_fields = ['Center Frequency(GHz)', 'Channel Bandwidth(MHz)']
+            self.carriers.append(ip.InputPane(canvas, title, entry_fields))
+            self.carriers[self.number_carriers].grid(row = int(self.number_carriers%4),column = int(self.number_carriers/4),sticky = 'NW')
+            self.number_carriers += 1
         return
 
 
@@ -127,7 +122,7 @@ class M_OBUE_Window():
             #remove from list
             remove = self.carriers.pop()
             #remove graphical pane
-            remove.pack_forget()
+            remove.grid_forget()
             self.number_carriers -= 1 #decerement carriers
 
 
