@@ -1,6 +1,35 @@
-## FSW Automation 5G ##
+# Application Info #
 
-# OBUE Multicarrier Module Addition #
+## Python Data ##
+
+Version: 3.7.4
+
+Location: {PATH TO APP}\Python37-32
+
+Package Dependencies:
+
+	- tkinter
+		UI Framework upon which the application is built
+	- Pillow
+		Images processing framework based off the PIL (Python-Imaging-Library) package
+
+## Upgrading Python ##
+
+When upgrading the local Python version, install it to a new folder, and make sure to have the 'pip' and 'tkinter' modules installed as a part of the installation procedure (Should be offered as an option during install of Python. If not, then you'll have to figure out how to install them manually, or find a new installer). Then, run the following command on the Window command line:
+	
+	{PATH TO PYTHON}\python.exe {PATH TO PYTHON}\scripts\pip.exe install Pillow
+
+This will install the Pillow library into the upgraded Python instance, and all dependency requirements should be met.
+
+## Running the Application from Python ##
+
+With the local Python instance, you do not need to have Python installed/configured on the machine you wish to run the application from. Simply run the following command from the Windows command line:
+
+	{PATH TO PYTHON}\python.exe {PATH TO APP}\core\Application.py
+
+# FSW Automation 5G #
+
+## OBUE Multicarrier Module Addition ##
 
 maintained by Anthony.Tang@nokia.com
 
