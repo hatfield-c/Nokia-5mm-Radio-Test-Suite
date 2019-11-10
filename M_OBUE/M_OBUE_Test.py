@@ -30,9 +30,13 @@ class M_OBUE_Test_Contig:
         #simplify the block of contiguous multicarrier to
         #a contiguous block tuple. (lower_bound, upper_bound)
 
-        print(carrier_list)
-        print("carrier list 0", carrier_list[0])
-        print("carrier list -1", carrier_list[-1])
+
+        #sort the carrier list by the carrier's frequency Center
+        carrier_list = sorted(carrier_list, key=lambda x:
+                                float(x['Center Frequency(GHz)']))
+
+        #print("carrier list 0", carrier_list[0])
+        #print("carrier list -1", carrier_list[-1])
         lowest_carrier_span = self.calc_carrier_span(carrier_list[0])
         highest_carrier_span = self.calc_carrier_span(carrier_list[-1])
 
