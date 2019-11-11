@@ -1,4 +1,0 @@
-step,csv_path
-benches,benches.csv
-runs,runs.csv
-sequences, sequences.csv
