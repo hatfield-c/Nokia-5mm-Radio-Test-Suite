@@ -22,6 +22,9 @@ class Model:
     def getPath(self):
         return self.path
 
+    def setPath(self, path):
+        self.path = path
+
     def setData(self, fields, data):
         self.fields = fields
         self.data = data
@@ -35,6 +38,16 @@ class Model:
                 return 
 
         self.data.append(row)
+
+    def remove(self, row):
+        if not isinstance(row, dict):
+            return
+
+        try:
+            while True:
+                self.data.remove(row)
+        except ValueError:
+            pass
 
     def load(self):
         if self.path is None:

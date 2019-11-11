@@ -15,13 +15,30 @@ class CSVEditor(tkinter.Frame):
 
         self.paramModel = paramModel
         self.dimensions = dimensions
+        self.controls = controls
         self.buttons = []
         self.fieldLabels = []
 
-        if(len(self.paramModel.getFields()) > 0):
-            self.fieldWidth = int((3 * self.dimensions["width"]) / (len(self.paramModel.getFields()) * 23))
+        self.scrollCanvas = tkinter.Frame(self)
+        self.scrollFrame = tkinter.Frame(self)
+        self.scrollBar = tkinter.Frame(self)
+
+        self.rebuild(self.paramModel)
+
+    def rebuild(self, paramModel):
+        if(paramModel is None):
+            return
+
+        self.paramModel = paramModel
+
+        self.scrollCanvas.destroy()
+        self.scrollFrame.destroy()
+        self.scrollBar.destroy()
+
+        if(len(paramModel.getFields()) > 0):
+            self.fieldWidth = int((3 * self.dimensions["width"]) / (len(paramModel.getFields()) * 23))
         else:
-            self.fieldWidth = dimensions["width"]
+            self.fieldWidth = self.dimensions["width"]
 
         self.grid_propagate(False)
         
@@ -40,7 +57,7 @@ class CSVEditor(tkinter.Frame):
         UIFactory.ScrollBinding(container = self, scrollableCanvas = self.scrollCanvas, child = self.scrollFrame, subInterface = self.subInterface)
 
         self.buildEntries(root = self.leftColumn)
-        self.buildControls(root = self.rightColumn, controls = controls)
+        self.buildControls(root = self.rightColumn)
 
         self.leftColumn.grid(row = 0, column = 0, pady = 5, padx = 5, sticky = "n")
         self.rightColumn.grid(row = 0, column = 1, padx = 5, pady = 5, sticky = "n")
@@ -61,6 +78,7 @@ class CSVEditor(tkinter.Frame):
         for field in self.paramModel.getFields():
             label = tkinter.Label(rowFrame, text = field, background = _CONFIG_["color_secondary"])
             label.grid(row = 0, column = fNum, sticky = "ew")
+
             self.fieldLabels.append(label)
             rowFrame.columnconfigure(fNum, weight = 1)
             fNum += 1
@@ -82,25 +100,33 @@ class CSVEditor(tkinter.Frame):
                 entryFrame.grid(row = 0, column = k, padx = 3, sticky = "we")
                 k += 1
 
-            remove = tkinter.Button(rowFrame, text = u"\u274C", borderwidth = 0)
+            remove = tkinter.Button(
+                rowFrame, 
+                text = u"\u274C", 
+                borderwidth = 0
+            )
             remove.grid(row = 0, column = k)
             rowFrame.grid(row = j, column = 0, pady = 2)
             j += 1
 
         entryFields.grid(row = 0, column = 0)
 
-    def buildControls(self, root, controls):
-        if controls is None:
+    def buildControls(self, root):
+        if self.controls is None:
             return
 
         i = 0
-        for buttonKey in controls:
+        for buttonKey in self.controls:
             if(buttonKey == "_DIVIDER_"):
                 divider = Divider(root, color = "grey")
                 divider.grid(row = i, column = 0, pady = 8, sticky = "ew")
             else:
-                action = controls[buttonKey]["action"]
-                button = tkinter.Button(root, text = controls[buttonKey]["title"], command = lambda model = self.paramModel, action = action : action(model =  model))
+                action = self.controls[buttonKey]["action"]
+                button = tkinter.Button(
+                    root, 
+                    text = self.controls[buttonKey]["title"], 
+                    command = lambda model = self.paramModel, action = action : action(model =  model)
+                )
                 self.buttons.append(button)
                 button.grid(row = i, column = 0, pady = 2)
 

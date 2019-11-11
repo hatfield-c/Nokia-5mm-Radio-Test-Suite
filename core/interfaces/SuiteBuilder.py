@@ -92,3 +92,13 @@ class SuiteBuilder(Interface):
         footer.pack()        
         self.nav.grid(row = 0, column = 0, sticky = "nw")
         self.workspace.grid(row = 0, column = 1, sticky = "ne")
+
+    def setCollection(self, key, value):
+        if key == "Benches":
+            self.modelData.benches = value
+
+        if key == "Runs":
+            self.modelData.runs = value
+
+        if key == "Sequences":
+            self.modelData.sequences = value

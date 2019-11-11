@@ -10,6 +10,15 @@ class Suite(Model):
         self.runs = None
         self.sequences = None
 
+    def save(self):
+        self.data = [
+            { "step": "benches", "csv_path": self.benches },
+            { "step": "runs", "csv_path": self.runs },
+            { "step": "sequences", "csv_path": self.sequences }
+        ]
+
+        super().save()
+
     def load(self):
         super().load()
         

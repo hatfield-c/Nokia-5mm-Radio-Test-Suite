@@ -11,8 +11,6 @@ class UIFactory:
 
     @staticmethod
     def TruncatePath(path, length, invert = False):
-        path = "ddddddddddddddddddddddddddddddddddddddddddd" + path
-
         if len(path) > length:
             stringOffset = len(path) - length
             trunc = "..."

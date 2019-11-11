@@ -21,6 +21,15 @@ class Collection(Model):
 
         super().add(row)
 
+    def remove(self, parameters):
+
+        row = {}
+
+        row[self.fields[0]] = parameters.getParameter("name")
+        row[self.fields[1]] = parameters.getPath()
+
+        super().remove(row)
+
     def load(self):
         super().load()
 
