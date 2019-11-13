@@ -33,3 +33,6 @@ class Interface(tkinter.Frame):
 
     def getTitle(self):
         return self.title
+
+    def nothing(self):
+        pass

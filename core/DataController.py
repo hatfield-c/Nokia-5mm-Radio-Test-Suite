@@ -6,6 +6,8 @@ class DataController:
 
     @staticmethod
     def Load(fileName, loadChildData = False):
+        fileName = DataController.FullPath(path = fileName)
+
         with open(fileName) as csvFile:
             itemList = []
             fileReader = csv.reader(csvFile)
@@ -22,7 +24,7 @@ class DataController:
 
                 itemList.append(item)
 
-            if _CONFIG_["csv_path_key"] in keys:
+            if _CONFIG_["csv_path_key"] in keys and loadChildData:
                 keys.append(_CONFIG_["csv_child_data_key"])
 
             csvData = CSVObject(itemList, keys, path = fileName)
@@ -30,6 +32,8 @@ class DataController:
 
     @staticmethod
     def Save(fileName, csvData):
+        fileName = DataController.FullPath(path = fileName)
+        
         with open(fileName, "w", newline=_CONFIG_["csv_newline"]) as csvFile:
             fileWriter = csv.writer(csvFile)
 
@@ -42,3 +46,14 @@ class DataController:
                     rowData.append(row[field])
 
                 fileWriter.writerow(rowData)
+
+    @staticmethod
+    def FullPath(path = None):
+        if path is None:
+            return _CONFIG_["working_dir"] + "/"
+
+        if ":/" in path:
+            return path
+
+        
+        return _CONFIG_["working_dir"] + "/" + path

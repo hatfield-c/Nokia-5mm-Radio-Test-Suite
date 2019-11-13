@@ -29,15 +29,19 @@ class MenuFactory():
     def buildMenu(self, root, menuData):
         self.menuData = menuData
         self.menuBar = tkinter.Menu(root)
+
         for field in self.menuData:
             if isinstance(self.menuData[field], dict):
                 subMenu = tkinter.Menu(self.menuBar, tearoff = 0)
 
                 line = self.menuData[field]
                 for subField in line:
-                    subMenu.add_command(label = subField, command = lambda action = line[subField] : self.menuAction(actionStr = action, args = None))
+                    subMenu.add_command(label = subField, command = lambda action = line[subField] : self.menuAction(actionStr = action, args = { "root": self.root }))
+
+                    if(subField == 'Save As'):
+                        subMenu.add_separator()
 
                 self.menuBar.add_cascade(label = field, menu = subMenu)
             else:
-                self.menuBar.add_command(label = field, command = lambda action = menuData[field] : self.menuAction(actionStr = action, args = None))
+                self.menuBar.add_command(label = field, command = lambda action = menuData[field] : self.menuAction(actionStr = action, args = { "root": self.root }))
 
