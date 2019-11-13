@@ -1,2 +1,3 @@
-id,csv_path
-1,Run_Data/Runs/run0.csv
+name,csv_path
+runFire,core/Parameters/Runs/run0.csv
+runOff,core/Parameters/Runs/run1.csv

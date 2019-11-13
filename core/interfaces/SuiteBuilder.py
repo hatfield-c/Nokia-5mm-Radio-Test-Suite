@@ -2,6 +2,7 @@ import tkinter
 from Interface import Interface
 from editors.Empty import Empty
 from editors.BenchEditor import BenchEditor
+from editors.RunEditor import RunEditor
 from Editor import Editor
 from menus.SuiteEditorMenu import SuiteEditorMenu
 from templates.Nav import Nav
@@ -37,7 +38,7 @@ class SuiteBuilder(Interface):
         self.workspace = tkinter.Frame(self)
 
         benches = BenchEditor(root = self.workspace, csvPath = self.modelData.benches)
-        runs = Editor(root = self.workspace, csvPath = None, color = "orange")
+        runs = RunEditor(root = self.workspace, csvPath = self.modelData.runs)
         sequences = Editor(root = self.workspace, csvPath = None, color = "red")
         testing = Empty(root = self.workspace, color = "lightgreen")
         empty = Editor(root = self.workspace, color = "blue")
