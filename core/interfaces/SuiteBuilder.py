@@ -42,7 +42,7 @@ class SuiteBuilder(Interface):
         testing = Empty(root = self.workspace, color = "lightgreen")
         empty = Editor(root = self.workspace, color = "blue")
 
-        workspaces = {
+        self.workspaces = {
             "benches": benches,
             "runs": runs,
             "sequences": sequences,
@@ -69,19 +69,19 @@ class SuiteBuilder(Interface):
                         "4. Begin Testing"
                     ],
                     "actions": [
-                        lambda : workspaces["benches"].lift(),
-                        lambda : workspaces["runs"].lift(),
-                        lambda : workspaces["sequences"].lift(),
-                        lambda : workspaces["testing"].lift()
+                        lambda : self.workspaces["benches"].lift(),
+                        lambda : self.workspaces["runs"].lift(),
+                        lambda : self.workspaces["sequences"].lift(),
+                        lambda : self.workspaces["testing"].lift()
                     ]
                 }
             ]
         )
 
-        for space in workspaces:
-            workspaces[space].pack()
+        for space in self.workspaces:
+            self.workspaces[space].pack()
             if space != "empty":
-                workspaces[space].place(x = 0, y = 0)
+                self.workspaces[space].place(x = 0, y = 0)
 
         footer = tkinter.Frame(self.workspace, width = 900, height = 50, background = _CONFIG_["color_primary"])
         footerBorder = tkinter.Frame(footer, width = 900, height = 1, background = "grey")
@@ -93,12 +93,7 @@ class SuiteBuilder(Interface):
         self.nav.grid(row = 0, column = 0, sticky = "nw")
         self.workspace.grid(row = 0, column = 1, sticky = "ne")
 
-    def setCollection(self, key, value):
-        if key == "Benches":
-            self.modelData.benches = value
+    def save(self):
+        self.modelData.setCollection(key = "benches", value = self.workspaces["benches"].csvPath)
+        self.modelData.save()
 
-        if key == "Runs":
-            self.modelData.runs = value
-
-        if key == "Sequences":
-            self.modelData.sequences = value

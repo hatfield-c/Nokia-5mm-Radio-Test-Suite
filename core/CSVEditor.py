@@ -1,28 +1,56 @@
 import tkinter
+from models.Parameters import Parameters
 from templates.Divider import Divider
 from Config import _CONFIG_
 from UIFactory import UIFactory
 
 class CSVEditor(tkinter.Frame):
     
-    def __init__(self, root, paramModel, dimensions, controls = None):
-        if(root is None):
-            self.subInterface = False
-        else:
-            self.subInterface = True
-        
+    _CONTROLS_ = {
+        "save": {
+            "title": "Save",
+            "action": lambda self, args : self.save()
+        },
+        "saveAs": { 
+            "title": "Save As",
+            "action": lambda self, args : self.saveAs()
+        },
+        "load": {
+            "title": "Load",
+            "action": lambda self, args : self.load()
+        },
+        "newPoint": {
+            "title": "New Point",
+            "action": lambda self, args : self.newParameter(args = args),
+        },
+        "newFile": {
+            "title": "New File",
+            "action": lambda self, args : self.newFile()
+        },
+        "divider": {
+            "title": None,
+            "action": lambda self, args : self.addDivider(args = args)
+        }
+    }
+
+    def __init__(self, root, paramModel, dimensions, controls = None, subInterface = True):
         super().__init__(root, width = dimensions["width"], height = dimensions["height"])
 
+        self.root = root
+        self.subInterface = subInterface
         self.paramModel = paramModel
         self.dimensions = dimensions
         self.controls = controls
+
         self.buttons = []
+        self.entries = []
         self.fieldLabels = []
 
         self.scrollCanvas = tkinter.Frame(self)
         self.scrollFrame = tkinter.Frame(self)
         self.scrollBar = tkinter.Frame(self)
 
+        self.grid_propagate(False)
         self.rebuild(self.paramModel)
 
     def rebuild(self, paramModel):
@@ -31,17 +59,17 @@ class CSVEditor(tkinter.Frame):
 
         self.paramModel = paramModel
 
+        if not self.subInterface:
+            self.root.rebuild(model = paramModel)
+
+        self.buttons = []
+        self.entries = []
+        self.fieldLabels = []
+
         self.scrollCanvas.destroy()
         self.scrollFrame.destroy()
         self.scrollBar.destroy()
 
-        if(len(paramModel.getFields()) > 0):
-            self.fieldWidth = int((3 * self.dimensions["width"]) / (len(paramModel.getFields()) * 23))
-        else:
-            self.fieldWidth = self.dimensions["width"]
-
-        self.grid_propagate(False)
-        
         entriesWidth = int(3 * self.dimensions["width"] / 4)
         controlsWidth = int(self.dimensions["width"] / 4)
 
@@ -49,7 +77,7 @@ class CSVEditor(tkinter.Frame):
         self.scrollFrame = tkinter.Frame(self.scrollCanvas)
         
         self.leftColumn = tkinter.Frame(self.scrollFrame)
-        self.rightColumn = tkinter.Frame(self.scrollFrame, width = controlsWidth)
+        self.rightColumn = tkinter.Frame(self.scrollFrame, width = controlsWidth, borderwidth = 1, relief = "raised")
 
         self.scrollBar = tkinter.Scrollbar(self, orient = "vertical", command = self.scrollCanvas.yview)
         self.scrollCanvas.configure(yscrollcommand = self.scrollBar.set)
@@ -71,10 +99,10 @@ class CSVEditor(tkinter.Frame):
     def buildEntries(self, root):
         entryWidth = int(3 * self.dimensions["width"] / 4)
 
-        entryFields = tkinter.Frame(root)
+        self.entryFields = tkinter.Frame(root)
 
         fNum = 0
-        rowFrame = tkinter.Frame(entryFields, width = entryWidth, background = _CONFIG_["color_secondary"])
+        rowFrame = tkinter.Frame(self.entryFields, width = entryWidth, background = _CONFIG_["color_secondary"])
         for field in self.paramModel.getFields():
             label = tkinter.Label(rowFrame, text = field, background = _CONFIG_["color_secondary"])
             label.grid(row = 0, column = fNum, sticky = "ew")
@@ -87,50 +115,165 @@ class CSVEditor(tkinter.Frame):
 
         j = 1
         for row in self.paramModel.getData():
-            rowFrame = tkinter.Frame(entryFields, width = entryWidth)
-
-            k = 0
-            for entryKey in row:
-                entry = row[entryKey]
-                rowFrame.columnconfigure(k, weight = 1)
-
-                entryFrame = tkinter.Entry(rowFrame, width = self.fieldWidth)
-                entryFrame.insert(0, entry)
-
-                entryFrame.grid(row = 0, column = k, padx = 3, sticky = "we")
-                k += 1
-
-            remove = tkinter.Button(
-                rowFrame, 
-                text = u"\u274C", 
-                borderwidth = 0
-            )
-            remove.grid(row = 0, column = k)
+            rowFrame = self.buildParameterFrame(root = self.entryFields, rowData = row, entryWidth = entryWidth)
             rowFrame.grid(row = j, column = 0, pady = 2)
             j += 1
 
-        entryFields.grid(row = 0, column = 0)
+        self.entryFields.grid(row = 0, column = 0)
 
     def buildControls(self, root):
         if self.controls is None:
             return
 
         i = 0
-        for buttonKey in self.controls:
-            if(buttonKey == "_DIVIDER_"):
-                divider = Divider(root, color = "grey")
-                divider.grid(row = i, column = 0, pady = 8, sticky = "ew")
-            else:
-                action = self.controls[buttonKey]["action"]
+        for control in self.controls:
+            if control in CSVEditor._CONTROLS_: 
+                title = CSVEditor._CONTROLS_[control]["title"]
+                action = CSVEditor._CONTROLS_[control]["action"]
+
+                args = {
+                    "root": root,
+                    "entry_container": self.entryFields,
+                    "row": i
+                }
+
+                if title is None:
+                    action(self = self, args = args)
+
+                    i += 1
+                    continue
+
                 button = tkinter.Button(
                     root, 
-                    text = self.controls[buttonKey]["title"], 
-                    command = lambda model = self.paramModel, action = action : action(model =  model)
+                    text = title, 
+                    command = lambda self = self, action = action : action(self = self, args = args)
                 )
                 self.buttons.append(button)
-                button.grid(row = i, column = 0, pady = 2)
+                button.grid(row = i, column = 0, pady = 4, padx = 8)
 
-            i += 1
+                i += 1
+
+    def buildParameterFrame(self, root, rowData, entryWidth):
+        paramFrame = tkinter.Frame(root, width = entryWidth)
+
+        entryRow = {}
+        k = 0
+        for entryKey in rowData:
+            entry = rowData[entryKey]
+            paramFrame.columnconfigure(k, weight = 1)
+
+            entryFrame = tkinter.Entry(paramFrame, width = self.getFieldWidth())
+            entryFrame.insert(0, entry)
+
+            entryFrame.grid(row = 0, column = k, padx = 3, sticky = "we")
+
+            entryRow[entryKey] = entryFrame
+            k += 1
+
+        self.entries.append(entryRow)
+
+        remove = tkinter.Button(
+            paramFrame, 
+            text = u"\u274C",
+            command = lambda row = entryRow, container = paramFrame : self.removeParameter(row = row, container = container),
+            borderwidth = 0
+        )
+        remove.grid(row = 0, column = k)
+
+        return paramFrame
+
+    def compileData(self):
+        data = []
+
+        for row in self.entries:
+            dataRow = {}
+            for entryKey in row:
+                dataRow[entryKey] = row[entryKey].get()
+
+            data.append(dataRow)
+
+        return data
+
+    def save(self):
+        entryData = self.compileData()
+
+        self.paramModel.buildParameters(rowData = entryData)
+        self.paramModel.save()
+        
+        self.rebuild(self.paramModel)
+
+    def saveAs(self):
+        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
+
+        if fileName is None or fileName == "":
+            return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+
+        entryData = self.compileData()
+        newModel = Parameters(path = fileName)
+        
+        newModel.buildParameters(rowData = entryData)
+        newModel.save()
+
+    def load(self):
+        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Open", filetypes = [("csv files", "*.csv")])
+
+        if fileName is None or fileName == "":
+            return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+
+        paramModel = Parameters(path = fileName)
+        paramModel.load()
+        self.rebuild(paramModel = paramModel)
+
+    def newParameter(self, args):
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        paramFrame = self.buildParameterFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        
+        gridRow = len(self.entries)
+        paramFrame.grid(row = gridRow, column = 0, pady = 2)
+
+    def generateEmptyRow(self):
+        emptyRow = {}
+
+        for field in self.paramModel.getFields():
+            emptyRow[field] = ""
+
+        return emptyRow
+
+    def newFile(self):
+        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New", filetypes = [("csv files", "*.csv")])
+
+        if fileName is None or fileName == "":
+            return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+        newModel = Parameters(path = fileName)
+        newModel.useDefaultFields()
+        newModel.save()
+
+        self.rebuild(newModel)
+
+    def addDivider(self, args):
+        divider = Divider(args["root"], color = "lightgray")
+        divider.grid(row = args["row"], column = 0, pady = 8, padx = 8, sticky = "ew")
+
+    def removeParameter(self, row, container):
+        if row not in self.entries:
+            return
+
+        self.entries.remove(row)
+        container.destroy()
+
+    def getFieldWidth(self):
+        if(len(self.paramModel.getFields()) > 0):
+            return int((3 * self.dimensions["width"]) / (len(self.paramModel.getFields()) * 23))
+        else:
+            return self.dimensions["width"]
 
     def getFields(self):
         return self.paramModel.getFields()

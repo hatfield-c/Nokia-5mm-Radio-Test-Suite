@@ -38,7 +38,7 @@ class CSVObject:
         for row in newRows:
             row.pop(field, None)
 
-        return CSVObject(newRows, newFields)
+        return CSVObject(path = self.path, rowsList = newRows, fields = newFields)
         
     def getRow(self, rowId):
         return self.rows[rowId]

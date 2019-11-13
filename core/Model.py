@@ -5,13 +5,8 @@ class Model:
 
     def __init__(self, path):
         self.path = path
+        self.fields = None
         self.data = []
-
-        try:
-            if self.fields is None:
-                self.fields = []
-        except AttributeError:
-            self.fields = []
 
     def getFields(self):
         return self.fields
@@ -25,7 +20,13 @@ class Model:
     def setPath(self, path):
         self.path = path
 
-    def setData(self, fields, data):
+    def setData(self, fields = None, data = None):
+        if fields is None:
+            fields = self.fields
+        
+        if data is None:
+            return
+        
         self.fields = fields
         self.data = data
 
@@ -54,7 +55,9 @@ class Model:
             return
 
         csvData = DataController.Load(self.path)
+        
         self.fields = csvData.getFields()
+
         self.data = csvData.getAll()
 
     def save(self):

@@ -35,19 +35,16 @@ class SuiteEditorMenu(MenuFactory):
         print("About!")
 
     def saveSuite(self, args):
-        suiteData = args["root"].modelData
-
-        if suiteData.path is None:
-            return
-
-        suiteData.save()
+        suite = args["root"]
+        suite.save()
 
     def saveAsSuite(self, args):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         if fileName is None or fileName == "":
             return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         suiteData = args["root"].modelData
         newSuite = Suite(fileName)
@@ -58,10 +55,11 @@ class SuiteEditorMenu(MenuFactory):
 
     def newSuite(self, args):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New Suite File", filetypes = [("csv files", "*.csv")])
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         if fileName is None or fileName == "":
             return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         data = Suite(path = fileName)
         data.save()

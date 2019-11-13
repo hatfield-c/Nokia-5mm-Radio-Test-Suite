@@ -27,7 +27,7 @@ class UIFactory:
 
     @staticmethod
     def ScrollBinding(container, scrollableCanvas, child, subInterface = False):
-        scrollableCanvas.bind("<Configure>", lambda event : UIFactory.SetScrollRegion(root = scrollableCanvas, child = child))
+        child.bind("<Configure>", lambda event : UIFactory.SetScrollRegion(root = scrollableCanvas, child = child))
         
         if not subInterface:
             container.bind('<Enter>', lambda event : UIFactory.BindMouseToScroll(root = scrollableCanvas))
@@ -49,5 +49,3 @@ class UIFactory:
     def SetScrollRegion(root, child):
         root.configure(scrollregion = root.bbox("all"))
         root.yview_moveto(0)
-        print(root.winfo_parent())
-        print(root.bbox("all"))

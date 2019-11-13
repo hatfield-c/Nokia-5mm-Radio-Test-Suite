@@ -36,8 +36,8 @@ class Editor(Interface):
         if csvPath is None:
             return
         
-        _CONFIG_["app_root"].suite.setCollection(self.editorData["type"], csvPath)
-        self.dataCollection = Collection(path = csvPath)
+        self.csvPath = csvPath
+        self.dataCollection = Collection(path = self.csvPath)
         self.dataCollection.load()
 
         self.headerFrame.destroy()
@@ -48,14 +48,12 @@ class Editor(Interface):
         self.paramWidth = self.dimensions["width"] - 50
         self.headerFrame = self.buildHeaderFrame()
 
-        self.scrollFrame = tkinter.Canvas(self, width = self.paramWidth, height = self.dimensions["height"] - 40, background = "green")
+        self.scrollFrame = tkinter.Canvas(self, width = self.paramWidth, height = self.dimensions["height"] - 40)
         self.scrollFrame.grid_propagate(False)
         self.container = tkinter.Frame(self)
         
         self.scrollbar = tkinter.Scrollbar(self, orient = "vertical", command = self.scrollFrame.yview)
         self.scrollFrame.configure(yscrollcommand = self.scrollbar.set)
-
-        
 
         self.collectionFrame = tkinter.Frame(self.container, background = "white")
         parameterSet = self.dataCollection.getModels()
@@ -135,7 +133,7 @@ class Editor(Interface):
         newCollection = tkinter.Button(
             headerFrame, 
             text = "NEW", 
-            command = lambda : self.nothing(), 
+            command = lambda : self.newCollection(), 
             font = "Helvetica 10"
         )
 
@@ -166,7 +164,7 @@ class Editor(Interface):
 
         titleLabel = tkinter.Label(
             headLine, 
-            text = UIFactory.TruncatePath(path = parameters.getParameter("name"), length = 13) + ":   " + UIFactory.TruncatePath(path = parameters.path, length = 23),
+            text = UIFactory.TruncatePath(path = parameters.getParameter("name"), length = 13) + ":   " + UIFactory.TruncatePath(path = parameters.getPath(), length = 23),
             font = "Helevetica 14"
         )
         reloadButton = tkinter.Button(
@@ -207,11 +205,11 @@ class Editor(Interface):
 
     def addnewParameters(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.editorData["type"], filetypes = [("csv files", "*.csv")])
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-
+        
         if fileName is None or fileName == "":
             return
-
+        
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
         parametersName = simpledialog.askstring(title = "Bench Name", prompt = "Please enter a name for the bench.")
 
         if parametersName is None or parametersName == "":
@@ -229,10 +227,11 @@ class Editor(Interface):
 
     def loadParameters(self):
         fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.editorData["type"], filetypes = [("csv files", "*.csv")])
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         if fileName is None or fileName == "":
             return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         paramModel = Parameters(path = fileName)
         paramModel.load()
@@ -241,14 +240,14 @@ class Editor(Interface):
         newParamFrame.grid(row = len(self.paramFrames) - 1, column = 0, pady = 5, padx = (5, 0))
 
         self.dataCollection.add(paramModel)
-        self.update_idletasks()
 
     def saveCollectionAs(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         if fileName is None or fileName == "":
             return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         self.dataCollection.setPath(fileName)
         self.dataCollection.save()
@@ -257,10 +256,24 @@ class Editor(Interface):
 
     def loadCollection(self):
         fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.editorData["type"] + " Collection", filetypes = [("csv files", "*.csv")])
+        
+        if fileName is None or fileName == "":
+            return
+        
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+
+        self.rebuild(fileName)
+
+    def newCollection(self):
+        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New Collecion", filetypes = [("csv files", "*.csv")])
 
         if fileName is None or fileName == "":
             return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+
+        collection = Collection(path = fileName)
+        collection.save()
 
         self.rebuild(fileName)
 
@@ -269,6 +282,7 @@ class Editor(Interface):
         editCsv.pack()
 
     def reloadFrame(self, csvEditor, parameters):
+        parameters.load()
         csvEditor.rebuild(parameters)
 
     def removeFrame(self, container, parameters):

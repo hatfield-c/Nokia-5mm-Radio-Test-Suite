@@ -10,6 +10,17 @@ class Suite(Model):
         self.runs = None
         self.sequences = None
 
+    def setCollection(self, key, value):
+        if key == "benches":
+            print("FLAG")
+            self.benches = value
+
+        if key == "runs":
+            self.runs = value
+
+        if key == "sequences":
+            self.sequences = value
+
     def save(self):
         self.data = [
             { "step": "benches", "csv_path": self.benches },
