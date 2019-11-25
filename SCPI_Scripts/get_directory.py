@@ -38,12 +38,12 @@ def get_directory(filepath):
     Analyzer = VisaResourceManager.open_resource("TCPIP::192.168.255.200::inst0::INSTR")
     Analyzer.write_termination = '\n'
     Analyzer.clear()
-
+    
     catalog = write_query( Analyzer, ":MMEM:CAT? '%s' "%filepath )
     if catalog[0]:
         return(catalog[1])
 
-    
+
 
 if __name__ =='__main__':
 
