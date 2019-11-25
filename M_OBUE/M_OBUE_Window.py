@@ -35,7 +35,7 @@ class M_OBUE_Window():
         self.canvas = tk.Canvas(self.window, borderwidth =0,width=550,height=300, background = "#ffffff")
         self.canvas.grid(column=3,rowspan = 10,row = 0)
         self.canvas.grid_propagate(False)
-        
+
         #parse for the configuration from the res file.
         self.test_conf = tcfg.TestConfig('OBUE')
         #default_vals = self.test_conf.read_default_vals()
@@ -145,10 +145,20 @@ class M_OBUE_Window():
     def run_test(self):
 
         parameters, carrier_list = self.get_parameters()
-        m_obue.M_OBUE_Test_Contig(parameters, carrier_list,
+        test = m_obue.M_OBUE_Test_Contig(parameters, carrier_list,
                             iq_swap= self.iq_swap_selected.get(),
                             testbench = self.test_conf.testbench_configuration)
+        results_dic = test.run_test()
+        self.display_results(results_dic)
+
         return False
+
+    def display_results(self, peak_list):
+        #display specialized peak frames
+        self.peak_list_pane = pkpn.PeakPane(self.window, peak_list)
+        self.peak_list_pane.grid(column = 0, row = 15,
+                                columnspan = 10, rowspan = 4, sticky = tk.E)
+        #and also open up some kind of tkinter resource.
 
 
 if __name__ == '__main__':

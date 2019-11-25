@@ -1,3 +1,4 @@
+
 import tkinter
 from Config import _CONFIG_
 
@@ -6,7 +7,7 @@ class Interface(tkinter.Frame):
         self.title = title
         self.menuBar = menuBar
         self.dimensions = dimensions
-        
+
         if(root is None):
             self.root = tkinter.Toplevel()
             self.root.iconbitmap(_CONFIG_["favicon"])
@@ -14,12 +15,12 @@ class Interface(tkinter.Frame):
             self.root.title(self.title)
         else:
             self.root = root
-        
+
         if(self.dimensions is not None):
             super().__init__(master=self.root, width = dimensions["width"], height = dimensions["height"])
         else:
             super().__init__(master=self.root)
-        
+
     def initMenu(self):
         if self.menuBar is not None:
             self.menuBar.setRoot(self)
