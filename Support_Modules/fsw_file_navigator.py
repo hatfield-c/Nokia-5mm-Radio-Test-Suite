@@ -105,7 +105,8 @@ class fsw_file_navbox(tk.Frame):
         print("cd .. ")
         #split on \\
         path_list = self.filepath.split("\\")
-        leaving = path_list.pop()
+        if len(path_list) > 1: #guard to ensure C/ stays in path
+            leaving = path_list.pop()
         print("leaving ", leaving)
 
         newpath = ""
@@ -135,11 +136,15 @@ class fsw_file_navbox(tk.Frame):
                 #get the new directory
                 self.update_menu()
 
-        self.get_filepath()
 
 
     #returns the current filepath.
     def get_filepath(self):
+
+        if self.file_name.get() == "select file":
+            print("Select file before proceeding")
+            return False
+
         file = (self.filepath + "\\" + self.file_name.get())
         print(file)
         return file
@@ -149,7 +154,7 @@ class fsw_file_navbox(tk.Frame):
 if __name__ == '__main__':
 
     window = tk.Tk()
-    window.title("filefinder")
+    window.title("file finder")
 
     starting_directory = "C:\\R_S\\Instr\\user\\NR5G"
     navbox = fsw_file_navbox(window, starting_directory, "s2p")
