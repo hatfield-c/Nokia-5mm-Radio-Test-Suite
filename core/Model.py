@@ -4,7 +4,7 @@ from CSVObject import CSVObject
 class Model:
 
     def __init__(self, path):
-        self.path = path
+        self.setPath(path)
         self.fields = None
         self.data = []
 
@@ -19,6 +19,19 @@ class Model:
 
     def setPath(self, path):
         self.path = path
+
+        if self.path is not None:
+            pathSplit = self.path.split("/")
+            self.fileName = pathSplit[len(pathSplit) - 1]
+
+            pathLen = len(self.path)
+            if pathLen >= 32:
+                self.shortPath = self.path[pathLen - 32:pathLen]
+            else:
+                self.shortPath = self.path
+        else:
+            self.fileName = None
+            self.shortPath = None
 
     def setData(self, fields = None, data = None):
         if fields is None:
@@ -45,8 +58,7 @@ class Model:
             return
 
         try:
-            while True:
-                self.data.remove(row)
+            self.data.remove(row)
         except ValueError:
             pass
 

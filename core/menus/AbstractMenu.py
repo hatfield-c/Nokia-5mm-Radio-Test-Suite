@@ -1,6 +1,6 @@
 import tkinter
 
-class MenuFactory():
+class AbstractMenu():
     def __init__(self, root, menuData):
         self.menuData = menuData
         self.root = root

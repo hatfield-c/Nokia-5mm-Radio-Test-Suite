@@ -1,11 +1,11 @@
-from menus.MenuFactory import MenuFactory
+from menus.AbstractMenu import AbstractMenu
 from Config import _CONFIG_
 from DataController import DataController
 from models.Suite import Suite
 from UIFactory import UIFactory
 import tkinter
 
-class SuiteEditorMenu(MenuFactory):
+class SuiteManagerMenu(AbstractMenu):
     def __init__(self, root = None):
         self.menuData = {
             "File": {
@@ -17,7 +17,7 @@ class SuiteEditorMenu(MenuFactory):
             "About": "about"
         }
 
-        MenuFactory.__init__(self, root, self.menuData)
+        super().__init__(root, self.menuData)
 
     def menuAction(self, actionStr, args):
         switcher = {

@@ -1,4 +1,4 @@
-name,csv_path
-[NAME OF BENCH],core/Parameters/Benches/bench0.csv
-basicPlis,core/Parameters/Benches/bench1.csv
-advancedPlis,core/Parameters/Benches/bench2.csv
+csv_path
+core/Parameters/Benches/bench0.csv
+core/Parameters/Benches/bench1.csv
+core/Parameters/Benches/bench2.csv

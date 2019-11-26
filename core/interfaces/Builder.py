@@ -2,20 +2,33 @@ import tkinter
 from tkinter import simpledialog
 from UIFactory import UIFactory
 from Interface import Interface
-from interfaces.EditParameters import EditParameters
+from interfaces.EditModel import EditModel
 from models.Collection import Collection
 from models.Parameters import Parameters
+from models.ModelFactory import ModelFactory
 from CSVEditor import CSVEditor
+from templates.CSVFrame import CSVFrame
 from templates.Divider import Divider
 from Config import _CONFIG_
 
-class Editor(Interface):
-    def __init__(self, title = "", root = None, csvPath = None, dimensions = { "width": 900, "height": 570}, editorData = None, color = None):
+class Builder(Interface):
+    def __init__(
+            self, 
+            title = "[ NO TITLE GIVEN ]", 
+            root = None, 
+            csvPath = None,
+            builderData = {
+                "type": "[ NO TYPE SPECIFIED ]",
+                "factory": ModelFactory(modelType = "model"),
+                "controls": []
+            }, 
+            dimensions = { "width": 900, "height": 570}
+        ):
         super().__init__(title = title, root = root, dimensions = dimensions)
         self.dataCollection = None
         self.paramFrames = []
         self.output = None
-        self.editorData = editorData
+        self.builderData = builderData
 
         self.grid_rowconfigure(0, weight = 1)
         self.grid_rowconfigure(1, weight = 1)
@@ -28,8 +41,6 @@ class Editor(Interface):
         self.scrollbar = tkinter.Frame(self)
         self.container = tkinter.Frame(self)
 
-        self.config(background = color)
-
         self.rebuild(csvPath)
 
     def rebuild(self, csvPath):
@@ -37,7 +48,7 @@ class Editor(Interface):
             return
         
         self.csvPath = csvPath
-        self.dataCollection = Collection(path = self.csvPath)
+        self.dataCollection = Collection(path = self.csvPath, factory = self.builderData["factory"])
         self.dataCollection.load()
 
         self.headerFrame.destroy()
@@ -56,16 +67,15 @@ class Editor(Interface):
         self.scrollFrame.configure(yscrollcommand = self.scrollbar.set)
 
         self.collectionFrame = tkinter.Frame(self.container, background = "white")
-        parameterSet = self.dataCollection.getModels()
+        modelSet = self.dataCollection.getModels()
         self.paramFrames = []
         
         UIFactory.ScrollBinding(container = self, scrollableCanvas = self.scrollFrame, child = self.collectionFrame)
 
         i = 0
-        for setKey in parameterSet:
-            parameters = parameterSet[setKey]
+        for model in modelSet:
 
-            editParametersFrame = self.buildParameterFrame(parameters, self.paramWidth)
+            editParametersFrame = self.buildModelFrame(model)
             editParametersFrame.grid(row = i, column = 0, pady = 5, padx = (5, 0))
             i += 1
         
@@ -73,14 +83,14 @@ class Editor(Interface):
 
         newParameter = tkinter.Button(
             operationsFrame, 
-            text = "New " + self.editorData["type"], 
+            text = "New " + self.builderData["type"], 
             command = lambda : self.addnewParameters(), 
             font = "Helvetica 14 bold", 
             background = _CONFIG_["color_secondary"]
         )
         loadParameter = tkinter.Button(
             operationsFrame, 
-            text = "Load " + self.editorData["type"], 
+            text = "Load " + self.builderData["type"], 
             command = lambda : self.loadParameters(), 
             font = "Helvetica 14 bold", 
             background = _CONFIG_["color_secondary"]
@@ -145,101 +155,46 @@ class Editor(Interface):
 
         return headerFrame
         
-    def buildParameterFrame(self, parameters, width):
-        editParametersFrame = tkinter.Frame(self.collectionFrame)
-        editParametersFrame.configure(borderwidth = 2, relief = "groove")
-
-        details = tkinter.Frame(editParametersFrame)
-        headLine = tkinter.Frame(details)
-
-        csvFrame = CSVEditor(
-            root = editParametersFrame, 
-            paramModel = parameters,
-            dimensions = { 
-                "width": width, 
-                "height": int(self.dimensions["height"] / 3)
-            }, 
-            controls = self.editorData["controls"]
-        )
-
-        titleLabel = tkinter.Label(
-            headLine, 
-            text = UIFactory.TruncatePath(path = parameters.getParameter("name"), length = 13) + ":   " + UIFactory.TruncatePath(path = parameters.getPath(), length = 23),
-            font = "Helevetica 14"
-        )
-        reloadButton = tkinter.Button(
-            headLine,
-            text = "Reload",
-            background = _CONFIG_["color_secondary"],
-            command = lambda csvEditor = csvFrame, parameters = parameters : self.reloadFrame(csvEditor = csvEditor, parameters = parameters)
-        )
-        editButton = tkinter.Button(
-            headLine,
-            text = "Edit Defaults",
-            background = _CONFIG_["color_secondary"],
-            command = lambda parameters = parameters : self.editDefaultValues(parameters = parameters)
-        )
-        removeButton = tkinter.Button(
-            headLine, 
-            text = "Remove",
-            background = _CONFIG_["color_secondary"],
-            command = lambda container = editParametersFrame, parameters = parameters : self.removeFrame(container = container, parameters = parameters)
-        )
-        titleLabel.grid(row = 0, column = 0)
-        reloadButton.grid(row = 0, column = 1, padx = 10)
-        editButton.grid(row = 0, column = 2)
-        removeButton.grid(row = 0, column = 3, padx = 10)
-
-        delimiter = Divider(details, width = width)
-
-        headLine.grid(row = 0, column = 0, padx = 5, sticky = "w")
-        delimiter.grid(row = 1, column = 0, padx = 5, pady = 1)
-
-        csvFrame.columnconfigure(0, weight = 1)
-        self.paramFrames.append(csvFrame)
-
-        details.grid(row = 0, column = 0, pady = 2, sticky = "w")
-        csvFrame.grid(row = 1, column = 0)
-
-        return editParametersFrame
-
     def addnewParameters(self):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.editorData["type"], filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
         
         if fileName is None or fileName == "":
             return
         
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-        parametersName = simpledialog.askstring(title = "Bench Name", prompt = "Please enter a name for the bench.")
+        parametersName = simpledialog.askstring(title = self.builderData["type"] + " Name", prompt = "Please enter a name for the " + self.builderData["type"] + ".")
 
         if parametersName is None or parametersName == "":
             return
 
-        paramModel = Parameters(path = fileName)
-        paramModel.setParameter(key = "name", value = parametersName)
-        paramModel.save()
+        factory = self.builderData["factory"]
+        
+        model = factory.create(path = fileName)
+        model.save()
 
-        newParamFrame = self.buildParameterFrame(parameters = paramModel, width = self.paramWidth)
+        newParamFrame = self.buildModelFrame(model = model)
         newParamFrame.grid(row = len(self.paramFrames) - 1, column = 0, pady = 5, padx = (5, 0))
 
-        self.dataCollection.add(paramModel)
+        self.dataCollection.add(model)
         self.update_idletasks()
 
     def loadParameters(self):
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.editorData["type"], filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
 
         if fileName is None or fileName == "":
             return
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        paramModel = Parameters(path = fileName)
-        paramModel.load()
+        factory = self.builderData["factory"]
 
-        newParamFrame = self.buildParameterFrame(parameters = paramModel, width = self.paramWidth)
+        model = factory.create(path = fileName)
+        model.load()
+
+        newParamFrame = self.buildModelFrame(model = model)
         newParamFrame.grid(row = len(self.paramFrames) - 1, column = 0, pady = 5, padx = (5, 0))
 
-        self.dataCollection.add(paramModel)
+        self.dataCollection.add(model)
 
     def saveCollectionAs(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
@@ -255,7 +210,7 @@ class Editor(Interface):
         self.rebuild(fileName)
 
     def loadCollection(self):
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.editorData["type"] + " Collection", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.builderData["type"] + " Collection", filetypes = [("csv files", "*.csv")])
         
         if fileName is None or fileName == "":
             return
@@ -272,21 +227,24 @@ class Editor(Interface):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        collection = Collection(path = fileName)
+        collection = Collection(path = fileName, factory = self.builderData["factory"])
         collection.save()
 
         self.rebuild(fileName)
 
-    def editDefaultValues(self, parameters):
-        editCsv = EditParameters(model = parameters)
+    def buildModelFrame(self, model):
+        return CSVFrame(root = self.collectionFrame, model = model, controls = self.builderData["controls"], builder = self)
+
+    def editDefaultValues(self, model):
+        editCsv = EditModel(model = model)
         editCsv.pack()
 
-    def reloadFrame(self, csvEditor, parameters):
-        parameters.load()
-        csvEditor.rebuild(parameters)
+    def reloadFrame(self, csvEditor, model):
+        model.load()
+        csvEditor.rebuild(model)
 
-    def removeFrame(self, container, parameters):
-        self.dataCollection.remove(parameters)
+    def removeFrame(self, container, model):
+        self.dataCollection.remove(model)
         container.destroy()
 
     def compileData(self):

@@ -33,12 +33,12 @@ class CSVEditor(tkinter.Frame):
         }
     }
 
-    def __init__(self, root, paramModel, dimensions, controls = None, subInterface = True):
+    def __init__(self, root, model, dimensions, controls = None, subInterface = True):
         super().__init__(root, width = dimensions["width"], height = dimensions["height"])
 
         self.root = root
         self.subInterface = subInterface
-        self.paramModel = paramModel
+        self.model = model
         self.dimensions = dimensions
         self.controls = controls
 
@@ -51,16 +51,16 @@ class CSVEditor(tkinter.Frame):
         self.scrollBar = tkinter.Frame(self)
 
         self.grid_propagate(False)
-        self.rebuild(self.paramModel)
+        self.rebuild(self.model)
 
-    def rebuild(self, paramModel):
-        if(paramModel is None):
+    def rebuild(self, model):
+        if(model is None):
             return
 
-        self.paramModel = paramModel
+        self.model = model
 
         if not self.subInterface:
-            self.root.rebuild(model = paramModel)
+            self.root.rebuild(model = model)
 
         self.buttons = []
         self.entries = []
@@ -103,7 +103,7 @@ class CSVEditor(tkinter.Frame):
 
         fNum = 0
         rowFrame = tkinter.Frame(self.entryFields, width = entryWidth, background = _CONFIG_["color_secondary"])
-        for field in self.paramModel.getFields():
+        for field in self.model.getFields():
             label = tkinter.Label(rowFrame, text = field, background = _CONFIG_["color_secondary"])
             label.grid(row = 0, column = fNum, sticky = "ew")
 
@@ -114,7 +114,7 @@ class CSVEditor(tkinter.Frame):
         rowFrame.grid(row = 0, column = 0, sticky = "ew")
 
         j = 1
-        for row in self.paramModel.getData():
+        for row in self.model.getData():
             rowFrame = self.buildParameterFrame(root = self.entryFields, rowData = row, entryWidth = entryWidth)
             rowFrame.grid(row = j, column = 0, pady = 2)
             j += 1
@@ -197,10 +197,10 @@ class CSVEditor(tkinter.Frame):
     def save(self):
         entryData = self.compileData()
 
-        self.paramModel.buildParameters(rowData = entryData)
-        self.paramModel.save()
+        self.model.setData(data = entryData)
+        self.model.save()
         
-        self.rebuild(self.paramModel)
+        self.rebuild(self.model)
 
     def saveAs(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
@@ -224,9 +224,9 @@ class CSVEditor(tkinter.Frame):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        paramModel = Parameters(path = fileName)
-        paramModel.load()
-        self.rebuild(paramModel = paramModel)
+        model = Parameters(path = fileName)
+        model.load()
+        self.rebuild(model = model)
 
     def newParameter(self, args):
         entryContainer = args["entry_container"]
@@ -240,7 +240,7 @@ class CSVEditor(tkinter.Frame):
     def generateEmptyRow(self):
         emptyRow = {}
 
-        for field in self.paramModel.getFields():
+        for field in self.model.getFields():
             emptyRow[field] = ""
 
         return emptyRow
@@ -270,16 +270,10 @@ class CSVEditor(tkinter.Frame):
         container.destroy()
 
     def getFieldWidth(self):
-        if(len(self.paramModel.getFields()) > 0):
-            return int((3 * self.dimensions["width"]) / (len(self.paramModel.getFields()) * 23))
+        if(len(self.model.getFields()) > 0):
+            return int((3 * self.dimensions["width"]) / (len(self.model.getFields()) * 23))
         else:
             return self.dimensions["width"]
 
     def getFields(self):
-        return self.paramModel.getFields()
-
-    def getName(self):
-        return self.paramModel.getParameter("name")
-
-    def getTitle(self):
-        return self.paramModel.getParameter("name")
+        return self.model.getFields()

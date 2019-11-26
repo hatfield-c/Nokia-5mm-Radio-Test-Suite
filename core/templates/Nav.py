@@ -28,7 +28,7 @@ class Nav(tkinter.Frame):
         self.logo.image = img
         self.logo.pack()
 
-        self.mainLabel = tkinter.Label(self.mainPanel, text = "TEST SUITE BUILDER\nv." + _CONFIG_["version"], font = "Helvetica 10 bold", background = _CONFIG_["color_primary"])
+        self.mainLabel = tkinter.Label(self.mainPanel, text = "TEST SUITE MANAGER\nv." + _CONFIG_["version"], font = "Helvetica 10 bold", background = _CONFIG_["color_primary"])
         self.mainLabel.pack(pady = (0, 10))
 
         self.fileLabel = tkinter.Label(self.mainPanel, text = "Current Suite:", background = _CONFIG_["color_primary"])

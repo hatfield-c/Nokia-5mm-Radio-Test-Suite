@@ -33,7 +33,7 @@ class DataController:
     @staticmethod
     def Save(fileName, csvData):
         fileName = DataController.FullPath(path = fileName)
-        
+
         with open(fileName, "w", newline=_CONFIG_["csv_newline"]) as csvFile:
             fileWriter = csv.writer(csvFile)
 

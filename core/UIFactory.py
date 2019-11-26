@@ -10,7 +10,7 @@ class UIFactory:
         return fileName
 
     @staticmethod
-    def TruncatePath(path, length, invert = False):
+    def TruncatePath(path, length, invert = False, test = None):
         if len(path) > length:
             stringOffset = len(path) - length
             trunc = "..."

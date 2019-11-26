@@ -1,19 +1,20 @@
 import tkinter
 from Interface import Interface
-from editors.Empty import Empty
-from editors.BenchEditor import BenchEditor
-from editors.RunEditor import RunEditor
-from Editor import Editor
-from menus.SuiteEditorMenu import SuiteEditorMenu
+from interfaces.builders.Empty import Empty
+from interfaces.builders.BenchBuilder import BenchBuilder
+from interfaces.builders.RunBuilder import RunBuilder
+from interfaces.builders.SequenceBuilder import SequenceBuilder
+from interfaces.Builder import Builder
+from menus.SuiteManagerMenu import SuiteManagerMenu
 from templates.Nav import Nav
 from models.Suite import Suite
 from Config import _CONFIG_
 
-class SuiteBuilder(Interface):
+class SuiteManager(Interface):
     
     def __init__(self, title = "", root = None, modelData = None, dimensions = { "width": 1100, "height": 620}):
         super().__init__(title = title, root = root, dimensions = dimensions)
-        self.menuBar = SuiteEditorMenu(self)
+        self.menuBar = SuiteManagerMenu(self)
         self.initMenu()
 
         self.workspace = None
@@ -37,11 +38,11 @@ class SuiteBuilder(Interface):
 
         self.workspace = tkinter.Frame(self)
 
-        benches = BenchEditor(root = self.workspace, csvPath = self.modelData.benches)
-        runs = RunEditor(root = self.workspace, csvPath = self.modelData.runs)
-        sequences = Editor(root = self.workspace, csvPath = None, color = "red")
+        benches = BenchBuilder(root = self.workspace, csvPath = self.modelData.benches)
+        runs = RunBuilder(root = self.workspace, csvPath = self.modelData.runs)
+        sequences = SequenceBuilder(root = self.workspace, csvPath = self.modelData.sequences)
         testing = Empty(root = self.workspace, color = "lightgreen")
-        empty = Editor(root = self.workspace, color = "blue")
+        empty = Empty(root = self.workspace, color = "blue")
 
         self.workspaces = {
             "benches": benches,
@@ -96,5 +97,7 @@ class SuiteBuilder(Interface):
 
     def save(self):
         self.modelData.setCollection(key = "benches", value = self.workspaces["benches"].csvPath)
+        self.modelData.setCollection(key = "runs", value = self.workspaces["runs"].csvPath)
+        self.modelData.setCollection(key = "sequences", value = self.workspaces["sequences"].csvPath)
         self.modelData.save()
 

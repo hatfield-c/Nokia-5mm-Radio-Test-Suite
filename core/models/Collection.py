@@ -4,50 +4,55 @@ from models.Parameters import Parameters
 
 class Collection(Model):
     
-    def __init__(self, path):
+    def __init__(self, path, factory):
         super().__init__(path)
-        self.models = {}
+        self.models = []
+        self.factory = factory
 
         self.name = UIFactory.TruncatePath(self.path, 45)
 
     def getName(self):
         return self.name
 
-    def add(self, parameters):
+    def add(self, model):
         row = {}
 
-        row[self.fields[0]] = parameters.getParameter("name")
-        row[self.fields[1]] = parameters.getPath()
+        row[self.fields[0]] = model.getPath()
 
+        self.models.append(row)
         super().add(row)
 
-    def remove(self, parameters):
+    def remove(self, model):
 
         row = {}
 
-        row[self.fields[0]] = parameters.getParameter("name")
-        row[self.fields[1]] = parameters.getPath()
+        row[self.fields[0]] = model.getPath()
+
+        try:
+            self.models.remove(row)
+        except ValueError:
+            pass
 
         super().remove(row)
 
     def load(self):
         super().load()
 
-        self.models = {}
+        self.models = []
 
         for row in self.data:
             if not set(self.fields).issubset(row):
                 continue
 
-            path = row["csv_path"]
+            path = row[self.fields[0]]
 
             if path is None:
                 continue
 
-            parameters = Parameters(path)
-            parameters.load()
-            name = parameters.getParameter(key = "name")
-            self.models[name] = parameters
+            model = self.factory.create(path)
+            model.load()
+
+            self.models.append(model)
 
     def getModels(self):
         return self.models

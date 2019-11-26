@@ -5,7 +5,7 @@ from models.Parameters import Parameters
 from templates.Divider import Divider
 import tkinter
 
-class EditParameters(Interface):
+class EditModel(Interface):
 
     def __init__(self, title = "Edit Data", dimensions = { "width": 770, "height": 500}, model = None):
         super().__init__(title = title, dimensions = dimensions)
@@ -30,7 +30,7 @@ class EditParameters(Interface):
         self.csvFrame = CSVEditor(
             root = self, 
             dimensions = self.dimensions, 
-            paramModel = self.model, 
+            model = self.model, 
             controls = self.controls,
             subInterface = False
         )
@@ -46,16 +46,11 @@ class EditParameters(Interface):
         self.titleLabel.destroy()
 
         if self.model is None:
-            textStr = "[No Name Detected]" + ":   " + "[No File Detected]"
+            textStr = "[No File Detected]"
         else:
             textStr = UIFactory.TruncatePath(
-                path = self.model.getParameter("name"), 
-                length = 20
-            ) 
-            textStr += ":   " 
-            textStr += UIFactory.TruncatePath(
                 path = self.model.getPath(), 
-                length = 30
+                length = 50
             )
 
         self.titleLabel = tkinter.Label(
