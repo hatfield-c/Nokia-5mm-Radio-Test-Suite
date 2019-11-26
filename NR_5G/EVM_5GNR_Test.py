@@ -28,7 +28,9 @@ class EVM_Test():
         feedback = evm_scpi.evm_script(
                         center_freq = self.parameters['Center Frequency(GHz)'],
                         attenuation = self.parameters['Attenuation(dBm)'],
-                        alloc_file = self.parameters['Allocation File'],
+                        alloc_file = self.parameters['Allocation Filepath'],
+                        correction_file = self.parameters['Correction Filepath'],
+                        cell_number = self.parameters['Number Carriers'],
                         qam = self.parameters['QAM PDSCH'])
         res = []
         res.append(feedback)
