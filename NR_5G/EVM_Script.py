@@ -15,6 +15,7 @@ def write_command(instrument, command):
     return process_system_error(instrument)
 
 def write_query(instrument, command):
+    print(command)
     buffer = instrument.query(command)
     bSuccess = process_system_error(instrument)
     return bSuccess, buffer
@@ -93,26 +94,29 @@ def evm_script(center_freq, attenuation,
 
     feedback = {} #feedback dictionary
     feedback['Center Frequency'] = center_freq
-    try:
-        #get pdsch, evm is split upon and allocation file dependent.
-        #16, 64, and 256 qam
-        if qam is "16":
-            response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSST:AVER?")
-        elif qam is "64":
-            response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSSF:AVER?")
-        elif qam is "256":
-            response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSTS:AVER?")
-        #get responses for whatever the active pdsch is
-        feedback['EVM Average'] = response[1].strip()
 
-    except:
-        #just get average because that wont error out
-        #queries for evm and freq error.
-        response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:ALL:AVER?")
-        print("EVM mean")
-        print(response)
-        #get responses for whatever the active pdsch is
-        feedback['EVM Average'] = response[1].strip()
+    response = write_query( Analyzer, ":FETC:CC1:ISRC:FRAM:SUMM:EVM:DSSF:AVER?")
+
+    # try:
+    #     #get pdsch, evm is split upon and allocation file dependent.
+    #     #16, 64, and 256 qam
+    #     if qam is "16":
+    #         response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSST:AVER?")
+    #     elif qam is "64":
+    #         response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSSF:AVER?")
+    #     elif qam is "256":
+    #         response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSTS:AVER?")
+    #     #get responses for whatever the active pdsch is
+    #     feedback['EVM Average'] = response[1].strip()
+    #
+    # except:
+    #     #just get average because that wont error out
+    #     #queries for evm and freq error.
+    #     response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:ALL:AVER?")
+    #     print("EVM mean")
+    #     print(response)
+    #     #get responses for whatever the active pdsch is
+    #     feedback['EVM Average'] = response[1].strip()
 
     response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:FERR:AVER?")
     print("Frequency Error Average")

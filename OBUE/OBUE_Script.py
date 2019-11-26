@@ -84,9 +84,12 @@ def obue_script(test_name, sweep, rbw, start, stop, testbench,
                         + str(testbench['Testbench Correction']))
 
         #File name is selected by user or an external configuration file.
-        success = write_command( Analyzer, ":SENS:CORR:FRES:USER:STAT ON" )
+        # success = write_command( Analyzer, ":SENS:CORR:FRES:USER:STAT ON" )
+
+        filepath = "C:\\R_S\\Instr\\user\\NR5G\\rftube3_26_40GHz_20Nov19.s2p"
         success = write_command( Analyzer,
                     ":SENS:CORR:FRES:INP1:USER:SLIS1:INS '%s'"%(filepath) )
+
 
         if iq_swap is True:
             success = write_command( Analyzer, ":SENS:SWAP ON")

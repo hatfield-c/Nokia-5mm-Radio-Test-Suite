@@ -64,8 +64,6 @@ class M_OBUE_Test_Contig:
 
         print(self.offset_spans)
 
-        self.run_test()
-
         return
 
     #Where carrier is a dictionary containing
@@ -99,6 +97,7 @@ class M_OBUE_Test_Contig:
         print("Calc spans A", spans)
         return spans
 
+    #Fix calc spans B. Calculating invalid band sizes.
     def calc_spans_b(self):
 
         #calculate 3 spans to each side
@@ -139,8 +138,8 @@ class M_OBUE_Test_Contig:
                                             self.testbench,
                                             iq_swap = self.iq_swap)
             peak_list.append(peak)
+            print(peak)
             index += 1
-
         return peak_list
 
 

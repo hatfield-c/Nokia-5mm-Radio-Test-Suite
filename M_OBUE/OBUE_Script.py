@@ -40,7 +40,7 @@ def obue_script(test_name, sweep, rbw_MHz, start, stop, testbench,
         feedback['Span Stop'] = round(float(stop), 5)
 
         #calc min number points. Cannot be lower than 1001
-        rbw = int(rbw_MHz)/(10**6)
+        rbw = int(rbw_MHz)* (10**6)
         span = (stop - start) * (10**9)
         points =  int(2*(span/rbw))
         if points < 1001:
@@ -80,9 +80,11 @@ def obue_script(test_name, sweep, rbw_MHz, start, stop, testbench,
         success = write_command( Analyzer, ":TRIG:SEQ:SOUR EXT" )
         success = write_command( Analyzer, ":TRIG:SEQ:LEV:EXT 1" )
 
-        #User-defined correction selected (Option K-544).
-        filepath = ("C:\\R_S\\instr\\user\\s2p Corrections\\"
-                        + str(testbench['Testbench Correction']))
+        # #User-defined correction selected (Option K-544).
+        # filepath = ("C:\\R_S\\instr\\user\\s2p Corrections\\"
+        #                 + str(testbench['Testbench Correction']))
+
+        filepath = "C:\\R_S\Instr\\user\\NR5G\\rftube3_26_40GHz_20Nov19.s2p"
 
         #File name is selected by user or an external configuration file.
         success = write_command( Analyzer, ":SENS:CORR:FRES:USER:STAT ON" )
