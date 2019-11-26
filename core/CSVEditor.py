@@ -277,3 +277,6 @@ class CSVEditor(tkinter.Frame):
 
     def getFields(self):
         return self.model.getFields()
+
+    def getModel(self):
+        return self.model

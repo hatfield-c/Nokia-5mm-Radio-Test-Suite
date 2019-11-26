@@ -1,14 +1,10 @@
 from Model import Model
 from models.Parameter import Parameter
 
-# Move some functionality from Parameters to the Model class, so that any data gathering performed on parameters can be performed on the model
-# Then, edit the Builder class to instantiate its own models based on a model factory, which is set by classes which extend the Builder class
-# Specify the SequenceBuilder class to use a generic Model, and the other classes to use a Parameters model, and then the application should be able to
-# save/load both indexed and flat data
-
 class Parameters(Model):
 
-    defaultName = "NO_NAME"
+    DefaultName = "NO_NAME"
+    Id = "parameters"
     
     def __init__(self, path = ""):
         super().__init__(path)
@@ -19,62 +15,22 @@ class Parameters(Model):
 
         self.clearParameters()
 
-    def loadOld(self):
-        super().load()
-        
-        if self.fieldMap is None or not self.data:
-            return
-
+    def build(self, data):
         self.clearParameters()
 
-        if self.fieldMap["indexField"] in self.fields and self.fieldMap["valueField"] in self.fields:
-            self.indexed = True
-        else:
-            self.indexed = False
-
-        for row in self.data:
-            self.addParameterFromRow(row)
-
-        if self.getParameter("name") is not None:
-            self.name = self.getParameter("name")
-        else:
-            self.name = self.shortPath
-
-
-    def saveOld(self):
-        data = []
-
-        for key in self.parameters:
-            row = {}
-            parameter = self.parameters[key]
-
-            if self.indexed:
-                row[self.fieldMap["indexField"]] = key
-                row[self.fieldMap["valueField"]] = parameter.getValue()
-
-            args = parameter.getArgs()
-            for argKey in args:
-                    row[argKey] = args[argKey]
-            
-            data.append(row)
-
-        self.data = data
-        super().save()
-
-    def buildParameters(self, rowData):
-        self.clearParameters()
-
-        if rowData is None or not rowData:
+        if data is None or not data:
             return
 
         fields = []
-        for field in rowData[0]:
+        for field in data[0]:
             fields.append(field)
 
         self.fields = fields
 
-        for row in rowData:
+        for row in data:
             self.addParameterFromRow(row)
+
+        return self.compileParameters()
 
     def addParameter(self, key, value, args = {}):
         if key in self.parameters:
@@ -83,9 +39,6 @@ class Parameters(Model):
 
         if key is not None and value is not None:
             self.parameters[key] = Parameter(key = key, value = value, args = args)
-        else:
-            index = str(len(self.parameters))
-            self.parameters[index] = Parameter(key = None, value = None, args = args)
 
     def addParameterFromRow(self, row):
 
@@ -94,15 +47,15 @@ class Parameters(Model):
         args = {}
 
         for rowKey in row:
+            if rowKey == self.fieldMap["indexField"]:
+                continue
 
-            if (self.fieldMap["indexField"] in row) and (self.fieldMap["valueField"] in row):
-                if rowKey == self.fieldMap["valueField"]:
+            if rowKey == self.fieldMap["valueField"]:
                     value = row[rowKey]
             else:
                 args[rowKey] = row[rowKey]
 
-        if value is not None and self.fieldMap["indexField"] in row:
-            key = row[self.fieldMap["indexField"]]
+        key = row[self.fieldMap["indexField"]]
         
         self.addParameter(key = key, value = value, args = args)
 
@@ -120,7 +73,6 @@ class Parameters(Model):
         self.parameters = parameters
 
     def getParameter(self, key):
-
         if key not in self.parameters:
             return None
         
@@ -129,8 +81,6 @@ class Parameters(Model):
 
     def clearParameters(self):
         self.parameters = { }
-        self.indexed = False
-        self.name = None
 
     def useDefaultFields(self):
         fields = []
@@ -139,6 +89,19 @@ class Parameters(Model):
             fields.append(self.fieldMap[key])
 
         self.fields = fields
+
+    def compileParameters(self):
+        data = { "args": { } }
+
+        for paramKey in self.parameters:
+            parameter = self.parameters[paramKey]
+            
+            data[parameter.getKey()] = parameter.getValue()
+
+            if len(parameter.getArgs()) > 0:
+                data["args"][parameter.getKey()] = parameter.getArgs()
+
+        return data
 
     def toString(self):
         vals = "<path: " + self.path + " " + self.getPath() + ">\n"
@@ -151,9 +114,6 @@ class Parameters(Model):
 
     def getParameters(self):
         return self.parameters
-
-    def getName(self):
-        return self.name
 
     def getShortPath(self):
         return self.shortPath

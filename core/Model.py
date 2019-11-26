@@ -3,10 +3,16 @@ from CSVObject import CSVObject
 
 class Model:
 
+    Id = "model"
+
     def __init__(self, path):
         self.setPath(path)
         self.fields = None
         self.data = []
+        self.index = None
+
+    def build(self, data):
+        return data
 
     def getFields(self):
         return self.fields
@@ -16,6 +22,12 @@ class Model:
 
     def getPath(self):
         return self.path
+
+    def getIndex(self):
+        return self.index
+
+    def setIndex(self, index):
+        self.index = index
 
     def setPath(self, path):
         self.path = path

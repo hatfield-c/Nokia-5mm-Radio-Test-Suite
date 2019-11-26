@@ -5,6 +5,7 @@ from interfaces.builders.BenchBuilder import BenchBuilder
 from interfaces.builders.RunBuilder import RunBuilder
 from interfaces.builders.SequenceBuilder import SequenceBuilder
 from interfaces.Builder import Builder
+from interfaces.Activation import Activation
 from menus.SuiteManagerMenu import SuiteManagerMenu
 from templates.Nav import Nav
 from models.Suite import Suite
@@ -41,7 +42,7 @@ class SuiteManager(Interface):
         benches = BenchBuilder(root = self.workspace, csvPath = self.modelData.benches)
         runs = RunBuilder(root = self.workspace, csvPath = self.modelData.runs)
         sequences = SequenceBuilder(root = self.workspace, csvPath = self.modelData.sequences)
-        testing = Empty(root = self.workspace, color = "lightgreen")
+        testing = Activation(root = self.workspace, suite = self)
         empty = Empty(root = self.workspace, color = "blue")
 
         self.workspaces = {
@@ -101,3 +102,11 @@ class SuiteManager(Interface):
         self.modelData.setCollection(key = "sequences", value = self.workspaces["sequences"].csvPath)
         self.modelData.save()
 
+    def compileData(self):
+        data = {}
+
+        data["benches"] = self.workspaces["benches"].compileData()
+        data["runs"] = self.workspaces["runs"].compileData()
+        data["sequences"] = self.workspaces["sequences"].compileData()
+
+        return data

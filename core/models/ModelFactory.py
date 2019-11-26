@@ -4,8 +4,8 @@ from models.Parameters import Parameters
 class ModelFactory:
 
     types = {
-        "model": lambda path : Model(path = path),
-        "parameters": lambda path : Parameters(path = path)
+        Model.Id: lambda path : Model(path = path),
+        Parameters.Id: lambda path : Parameters(path = path)
     }
 
     def __init__(self, modelType):

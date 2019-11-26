@@ -12,6 +12,12 @@ from templates.Divider import Divider
 from Config import _CONFIG_
 
 class Builder(Interface):
+
+    DEFAULT_DIMENSIONS = {
+        "width": 900,
+        "height": 570
+    }
+
     def __init__(
             self, 
             title = "[ NO TITLE GIVEN ]", 
@@ -22,11 +28,11 @@ class Builder(Interface):
                 "factory": ModelFactory(modelType = "model"),
                 "controls": []
             }, 
-            dimensions = { "width": 900, "height": 570}
+            dimensions = DEFAULT_DIMENSIONS
         ):
         super().__init__(title = title, root = root, dimensions = dimensions)
         self.dataCollection = None
-        self.paramFrames = []
+        self.modelFrames = []
         self.output = None
         self.builderData = builderData
 
@@ -68,7 +74,7 @@ class Builder(Interface):
 
         self.collectionFrame = tkinter.Frame(self.container, background = "white")
         modelSet = self.dataCollection.getModels()
-        self.paramFrames = []
+        self.modelFrames = []
         
         UIFactory.ScrollBinding(container = self, scrollableCanvas = self.scrollFrame, child = self.collectionFrame)
 
@@ -81,23 +87,23 @@ class Builder(Interface):
         
         operationsFrame = tkinter.Frame(self.collectionFrame)
 
-        newParameter = tkinter.Button(
+        newModelButton = tkinter.Button(
             operationsFrame, 
             text = "New " + self.builderData["type"], 
-            command = lambda : self.addnewParameters(), 
+            command = lambda : self.addnewModel(), 
             font = "Helvetica 14 bold", 
             background = _CONFIG_["color_secondary"]
         )
-        loadParameter = tkinter.Button(
+        loadModelButton = tkinter.Button(
             operationsFrame, 
             text = "Load " + self.builderData["type"], 
-            command = lambda : self.loadParameters(), 
+            command = lambda : self.loadModel(), 
             font = "Helvetica 14 bold", 
             background = _CONFIG_["color_secondary"]
         )
 
-        newParameter.grid(row = 0, column = 0, padx = (0, 10))
-        loadParameter.grid(row = 0, column = 1)
+        newModelButton.grid(row = 0, column = 0, padx = (0, 10))
+        loadModelButton.grid(row = 0, column = 1)
 
         operationsFrame.grid(row = i + 1, column = 0)
 
@@ -155,30 +161,26 @@ class Builder(Interface):
 
         return headerFrame
         
-    def addnewParameters(self):
+    def addnewModel(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
         
         if fileName is None or fileName == "":
             return
         
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-        parametersName = simpledialog.askstring(title = self.builderData["type"] + " Name", prompt = "Please enter a name for the " + self.builderData["type"] + ".")
 
-        if parametersName is None or parametersName == "":
-            return
-
-        factory = self.builderData["factory"]
-        
+        factory = self.builderData["factory"]        
         model = factory.create(path = fileName)
         model.save()
 
-        newParamFrame = self.buildModelFrame(model = model)
-        newParamFrame.grid(row = len(self.paramFrames) - 1, column = 0, pady = 5, padx = (5, 0))
-
         self.dataCollection.add(model)
+
+        newModelFrame = self.buildModelFrame(model = model)
+        newModelFrame.grid(row = len(self.modelFrames) - 1, column = 0, pady = 5, padx = (5, 0))
+        
         self.update_idletasks()
 
-    def loadParameters(self):
+    def loadModel(self):
         fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
 
         if fileName is None or fileName == "":
@@ -191,10 +193,10 @@ class Builder(Interface):
         model = factory.create(path = fileName)
         model.load()
 
-        newParamFrame = self.buildModelFrame(model = model)
-        newParamFrame.grid(row = len(self.paramFrames) - 1, column = 0, pady = 5, padx = (5, 0))
-
         self.dataCollection.add(model)
+
+        newModelFrame = self.buildModelFrame(model = model)
+        newModelFrame.grid(row = len(self.modelFrames) - 1, column = 0, pady = 5, padx = (5, 0))
 
     def saveCollectionAs(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
@@ -232,6 +234,18 @@ class Builder(Interface):
 
         self.rebuild(fileName)
 
+    def compileData(self):
+        data = {}
+
+        for modelFrame in self.modelFrames:
+            model = modelFrame.getModel()
+            frameData = modelFrame.compileData()
+
+            formattedData = model.build(frameData)
+            data[model.getIndex()] = formattedData
+        
+        return data
+
     def buildModelFrame(self, model):
         return CSVFrame(root = self.collectionFrame, model = model, controls = self.builderData["controls"], builder = self)
 
@@ -246,8 +260,5 @@ class Builder(Interface):
     def removeFrame(self, container, model):
         self.dataCollection.remove(model)
         container.destroy()
-
-    def compileData(self):
-        pass
 
 

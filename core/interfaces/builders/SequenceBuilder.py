@@ -3,18 +3,18 @@ from models.Collection import Collection
 from models.ModelFactory import ModelFactory
 from interfaces.EditModel import EditModel
 from UIFactory import UIFactory
-from models.Parameters import Parameters
+from Model import Model
 import tkinter
 
 class SequenceBuilder(Builder):
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Sequence",
-            "factory": ModelFactory(modelType = "model"),
+            "factory": ModelFactory(modelType = Model.Id),
             "controls": [
-                "saveAs",
                 "divider",
-                "newPoint"
+                "saveAs",
+                "divider"
             ]
         }
 

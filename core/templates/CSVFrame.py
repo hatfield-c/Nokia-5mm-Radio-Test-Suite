@@ -34,7 +34,7 @@ class CSVFrame(tkinter.Frame):
         )
         reloadButton = tkinter.Button(
             headLine,
-            text = "Reload",
+            text = "Reload CSV",
             background = _CONFIG_["color_secondary"],
             command = lambda csvEditor = csvFrame, model = self.model : self.builder.reloadFrame(csvEditor = csvEditor, model = model)
         )
@@ -61,7 +61,7 @@ class CSVFrame(tkinter.Frame):
         delimiter.grid(row = 1, column = 0, padx = 5, pady = 1)
 
         csvFrame.columnconfigure(0, weight = 1)
-        self.builder.paramFrames.append(csvFrame)
+        self.builder.modelFrames.append(csvFrame)
 
         details.grid(row = 0, column = 0, pady = 2, sticky = "w")
         csvFrame.grid(row = 1, column = 0)

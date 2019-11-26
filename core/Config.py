@@ -1,3 +1,5 @@
+from Overseers.TestClass import TestClass
+
 _CONFIG_ = {
     "app_title": "Nokia Test Suite Manager",
     "version": "0.37",
@@ -12,5 +14,9 @@ _CONFIG_ = {
     "working_dir": None,
 
     "color_primary": "#dbdbdb",
-    "color_secondary": "#d4d4d4"
+    "color_secondary": "#d4d4d4",
+
+    "overseers": {
+        "testing": TestClass
+    }
 }

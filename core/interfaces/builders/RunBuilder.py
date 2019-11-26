@@ -10,11 +10,11 @@ class RunBuilder(Builder):
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Run",
-            "factory": ModelFactory(modelType = "parameters"),
+            "factory": ModelFactory(modelType = Parameters.Id),
             "controls": [
-                "saveAs",
                 "divider",
-                "newPoint"
+                "saveAs",
+                "divider"
             ]
         }
 
