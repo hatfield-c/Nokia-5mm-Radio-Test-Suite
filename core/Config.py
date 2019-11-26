@@ -1,4 +1,5 @@
 from Overseers.TestClass import TestClass
+from Overseers.OBUE_Test import OBUE_Test
 
 _CONFIG_ = {
     "app_title": "Nokia Test Suite Manager",
@@ -17,6 +18,7 @@ _CONFIG_ = {
     "color_secondary": "#d4d4d4",
 
     "overseers": {
-        "testing": TestClass
+        "testing": TestClass,
+        "OBUE": OBUE_Test
     }
 }

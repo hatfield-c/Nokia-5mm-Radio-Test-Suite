@@ -1,6 +1,6 @@
 key,value
-testClass,testing
-Center Frequency(GHz),37.40034
+testClass,OBUE
+Center Frequency(GHz),37.39404
 Channel Bandwidth(MHz),100
 Resolution Bandwidth(Hz),1000000
 Sweep Time(s),0.2

@@ -137,7 +137,6 @@ class fsw_file_navbox(tk.Frame):
                 self.update_menu()
 
 
-
     #returns the current filepath.
     def get_filepath(self):
 

@@ -36,6 +36,7 @@ def get_esr(instrument):
 
 
 INSTRUMENT = "TCPIP::192.168.255.200::inst0::INSTR"
+DELAY = 5
 
 def evm_script(center_freq, attenuation,
                 alloc_file, correction_file, cell_number,
@@ -105,7 +106,10 @@ def evm_script(center_freq, attenuation,
     #success = write_command( Analyzer, ":INIT:REFR;*WAI")
 
     success = write_command( Analyzer, ":INIT:IMM;" )
-    time.sleep(5)
+    time.sleep(DELAY)
+    #wait for the 5gnr module to synchronize.
+    #takes > 4 seconds. This may be the topic of adjustment.
+
 
     feedback = {} #feedback dictionary
     feedback['Center Frequency'] = center_freq
