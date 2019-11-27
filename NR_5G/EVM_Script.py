@@ -97,6 +97,7 @@ def evm_script(center_freq, attenuation,
     success = write_command( Analyzer, ":CONF:NR5G:DL:CC1:SSBL:DET AUTO")
     success = write_command( Analyzer, ":CONF:NR5G:DL:CC1:FRAM1:BWP:DET AUTO")
 
+    #external trigger at 1.4 V
     success = write_command( Analyzer, ":TRIG:SEQ:SOUR EXT" )
     success = write_command( Analyzer, ":TRIG:SEQ:LEV:EXT 1.4" )
 
