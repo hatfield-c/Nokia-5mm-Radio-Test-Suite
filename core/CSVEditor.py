@@ -42,6 +42,12 @@ class CSVEditor(tkinter.Frame):
         self.model = model
         self.dimensions = dimensions
         self.controls = controls
+        self.modelFactory = ModelFactory(
+            args = {
+                "type": self.model.ID, 
+                "fields": model.getFields()
+            }
+        )
 
         self.buttons = []
         self.entries = []
@@ -212,9 +218,7 @@ class CSVEditor(tkinter.Frame):
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         entryData = self.compileData()
-
-        factory = ModelFactory(modelType = self.model.ID)
-        newModel = factory.create(path = fileName)
+        newModel = self.modelFactory.create(path = fileName)
         
         newModel.setData(data = entryData)
         newModel.save()
@@ -229,9 +233,7 @@ class CSVEditor(tkinter.Frame):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        factory = ModelFactory(modelType = self.model.ID)
-
-        model = factory.create(path = fileName)
+        model = self.modelFactory.create(path = fileName)
         model.load()
         self.rebuild(model = model)
 
@@ -259,11 +261,8 @@ class CSVEditor(tkinter.Frame):
             return
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-        factory = ModelFactory(modelType = self.model.ID)
 
-        newModel = factory.create(path = fileName)
-
-        newModel.useDefaultFields()
+        newModel = self.modelFactory.create(path = fileName)
         newModel.save()
 
         self.rebuild(newModel)

@@ -7,10 +7,21 @@ from core.Model import Model
 import tkinter
 
 class SequenceBuilder(Builder):
+
+    FIELDS = [
+        "key",
+        "value"
+    ]
+
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Sequence",
-            "factory": ModelFactory(modelType = Model.ID),
+            "factory": ModelFactory(
+                args = {
+                    "type": Model.ID, 
+                    "fields": self.FIELDS
+                }
+            ),
             "controls": [
                 "divider",
                 "saveAs",

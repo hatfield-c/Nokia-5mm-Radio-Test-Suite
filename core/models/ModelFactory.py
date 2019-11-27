@@ -8,9 +8,27 @@ class ModelFactory:
         Parameters.ID: Parameters
     }
 
-    def __init__(self, modelType):
-        self.modelType = modelType
+    def __init__(self, args):
+        self.modelType = args["type"]
+        self.fields = args["fields"]
+
+        if "default" in args:
+            self.defaultEntries = args["default"]
+        else:
+            empty = {}
+
+            for field in self.fields:
+                empty[field] = ""
+
+            self.defaultEntries = [ empty ]
 
     def create(self, path):
         bluePrint = ModelFactory.types[self.modelType]
-        return bluePrint(path = path)
+        model = bluePrint(path = path)
+        
+        model.setFields(self.fields)
+
+        if self.defaultEntries is not None:
+            model.setData(data = self.defaultEntries)
+
+        return model

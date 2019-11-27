@@ -1,4 +1,4 @@
-class TestClass:
+class DumpInput:
     def __init__(self, parameters, testbench):
         self.parameters = parameters
         self.testbench = testbench

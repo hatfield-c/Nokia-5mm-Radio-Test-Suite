@@ -25,7 +25,12 @@ class Builder(Interface):
             csvPath = None,
             builderData = {
                 "type": "[ NO TYPE SPECIFIED ]",
-                "factory": ModelFactory(modelType = "model"),
+                "factory": ModelFactory(
+                    args = {
+                        "type": "model",
+                        "fields": [ "key", "value" ]
+                    }
+                ),
                 "controls": []
             }, 
             dimensions = DEFAULT_DIMENSIONS

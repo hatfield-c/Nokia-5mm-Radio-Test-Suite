@@ -29,6 +29,9 @@ class Model:
     def setIndex(self, index):
         self.index = index
 
+    def setFields(self, fields):
+        self.fields = fields
+
     def setPath(self, path):
         self.path = path
 

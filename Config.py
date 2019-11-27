@@ -1,9 +1,9 @@
-from modules.TestClass import TestClass
+from modules.DumpInput import DumpInput
 from modules.OBUE_Test import OBUE_Test
 
 _CONFIG_ = {
     # App Configuration
-    "app_title": "Nokia Test Suite Manager",
+    "app_title": "Test Suite Manager",
     "version": "0.56",
     "favicon_path": "media/icon.ico",
     "logo_path": "media/logo.gif",
@@ -20,7 +20,7 @@ _CONFIG_ = {
 
     # Test Module Registration 
     "modules": {
-        "testing": TestClass,
+        "DumpInput": DumpInput,
         "OBUE": OBUE_Test
     },
 

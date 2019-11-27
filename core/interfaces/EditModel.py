@@ -7,7 +7,18 @@ import tkinter
 
 class EditModel(Interface):
 
-    def __init__(self, title = "Edit Data", dimensions = { "width": 770, "height": 500}, model = None):
+    def __init__(
+        self, 
+        title = "Default Values", 
+        dimensions = { 
+            "width": 770, 
+            "height": 500
+        }, 
+        model = None
+    ):
+        if model.getPath() is not None:
+            title += title + ": " + UIFactory.TruncatePath(path = model.getPath(), length = 45)
+            
         super().__init__(title = title, dimensions = dimensions)
 
         self.model = model

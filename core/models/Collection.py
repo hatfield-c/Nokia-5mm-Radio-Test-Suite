@@ -12,29 +12,14 @@ class Collection(Model):
         self.name = UIFactory.TruncatePath(self.path, 45)
 
     def add(self, model):
-        row = {}
-
         model.setIndex(self.newIndex())
-
-        row[self.fields[0]] = model.getIndex
-        row[self.fields[1]] = model.getPath()
-
-        self.models.append(row)
-        super().add(row)
+        self.models.append(model)
 
     def remove(self, model):
-
-        row = {}
-
-        row[self.fields[0]] = model.getIndex()
-        row[self.fields[1]] = model.getPath()
-
         try:
-            self.models.remove(row)
+            self.models.remove(model)
         except ValueError:
             pass
-
-        super().remove(row)
 
     def load(self):
         super().load()
@@ -58,12 +43,23 @@ class Collection(Model):
 
             self.models.append(model)
 
+    def save(self):
+        data = []
+
+        for model in self.models:
+            row = { self.fields[0]: model.getIndex(), self.fields[1]: model.getPath() }
+            data.append(row)
+
+        self.setData(data = data)
+        super().save()
+
     def newIndex(self):
         if len(self.models) == 0:
             return 1
 
         lastModel = self.models[len(self.models) - 1]
-        return lastModel.getIndex() + 1
+        lastIndex = int(lastModel.getIndex())
+        return str(lastIndex + 1)
 
     def getModels(self):
         return self.models

@@ -40,7 +40,7 @@ class CSVFrame(tkinter.Frame):
         )
         reloadButton = tkinter.Button(
             headLine,
-            text = "Reload CSV",
+            text = "Reset Data",
             background = _CONFIG_["color_secondary"],
             command = lambda csvEditor = csvFrame, model = self.model : self.builder.reloadFrame(csvEditor = csvEditor, model = model)
         )

@@ -10,7 +10,7 @@ class Interface(tkinter.Frame):
 
         if(root is None):
             self.root = tkinter.Toplevel()
-            self.root.iconbitmap(_CONFIG_["favicon"])
+            self.root.iconbitmap(_CONFIG_["favicon_path"])
             self.root.geometry(str(self.dimensions['width']) + "x" + str(self.dimensions['height']))
             self.root.title(self.title)
         else:

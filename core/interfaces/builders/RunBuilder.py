@@ -7,10 +7,24 @@ from core.models.Parameters import Parameters
 import tkinter
 
 class RunBuilder(Builder):
+
+    FIELDS = [
+        "key",
+        "value"
+    ]
+
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Run",
-            "factory": ModelFactory(modelType = Parameters.ID),
+            "factory": ModelFactory(
+                args = {
+                    "type": Parameters.ID, 
+                    "fields": self.FIELDS,
+                    "default": [
+                        { "key": "module", "value": "DumpInput" }
+                    ]
+                }
+            ),
             "controls": [
                 "divider",
                 "saveAs",
