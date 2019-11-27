@@ -1,8 +1,8 @@
-from Interface import Interface
-from CSVEditor import CSVEditor
-from UIFactory import UIFactory
-from models.Parameters import Parameters
-from templates.Divider import Divider
+from core.Interface import Interface
+from core.CSVEditor import CSVEditor
+from core.UIFactory import UIFactory
+from core.models.Parameters import Parameters
+from core.templates.Divider import Divider
 import tkinter
 
 class EditModel(Interface):

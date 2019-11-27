@@ -1,6 +1,6 @@
 import tkinter
 from Config import _CONFIG_
-from templates.Divider import Divider
+from core.templates.Divider import Divider
 from PIL import ImageTk, Image
 
 class Nav(tkinter.Frame):

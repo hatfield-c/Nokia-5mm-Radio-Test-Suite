@@ -1,5 +1,5 @@
-from Model import Model
-from models.Parameters import Parameters
+from core.Model import Model
+from core.models.Parameters import Parameters
 
 class ModelFactory:
 

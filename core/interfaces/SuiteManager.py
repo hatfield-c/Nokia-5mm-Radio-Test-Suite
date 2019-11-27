@@ -1,14 +1,14 @@
 import tkinter
-from Interface import Interface
-from interfaces.builders.Empty import Empty
-from interfaces.builders.BenchBuilder import BenchBuilder
-from interfaces.builders.RunBuilder import RunBuilder
-from interfaces.builders.SequenceBuilder import SequenceBuilder
-from interfaces.Builder import Builder
-from interfaces.Activation import Activation
-from menus.SuiteManagerMenu import SuiteManagerMenu
-from templates.Nav import Nav
-from models.Suite import Suite
+from core.Interface import Interface
+from core.interfaces.builders.Empty import Empty
+from core.interfaces.builders.BenchBuilder import BenchBuilder
+from core.interfaces.builders.RunBuilder import RunBuilder
+from core.interfaces.builders.SequenceBuilder import SequenceBuilder
+from core.interfaces.Builder import Builder
+from core.interfaces.Activation import Activation
+from core.menus.SuiteManagerMenu import SuiteManagerMenu
+from core.templates.Nav import Nav
+from core.models.Suite import Suite
 from Config import _CONFIG_
 
 class SuiteManager(Interface):

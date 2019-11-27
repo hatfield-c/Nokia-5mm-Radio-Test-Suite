@@ -1,4 +1,4 @@
-from Model import Model
+from core.Model import Model
 
 class Suite(Model):
     

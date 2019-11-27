@@ -1,5 +1,5 @@
 import tkinter
-from Interface import Interface
+from core.Interface import Interface
 
 class Alert(Interface):
     def __init__(self, title = "Alert", data = { "title": "ALERT", "description": "Something happened." }, dimensions = { "height": 300, "width": 400 }):

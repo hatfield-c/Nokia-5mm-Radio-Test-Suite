@@ -1,5 +1,5 @@
 import csv
-from CSVObject import CSVObject
+from core.CSVObject import CSVObject
 from Config import _CONFIG_
 
 class DataController:

@@ -1,5 +1,5 @@
-from DataController import DataController
-from CSVObject import CSVObject
+from core.DataController import DataController
+from core.CSVObject import CSVObject
 
 class Model:
 

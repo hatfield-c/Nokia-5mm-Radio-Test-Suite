@@ -1,8 +1,8 @@
 import tkinter
-from models.Parameters import Parameters
-from templates.Divider import Divider
+from core.models.Parameters import Parameters
+from core.templates.Divider import Divider
 from Config import _CONFIG_
-from UIFactory import UIFactory
+from core.UIFactory import UIFactory
 
 class CSVEditor(tkinter.Frame):
     

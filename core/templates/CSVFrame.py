@@ -1,8 +1,8 @@
 import tkinter
 from Config import _CONFIG_
-from CSVEditor import CSVEditor
-from UIFactory import UIFactory
-from templates.Divider import Divider
+from core.CSVEditor import CSVEditor
+from core.UIFactory import UIFactory
+from core.templates.Divider import Divider
 
 class CSVFrame(tkinter.Frame):
     def __init__(self, root, model, controls, builder):

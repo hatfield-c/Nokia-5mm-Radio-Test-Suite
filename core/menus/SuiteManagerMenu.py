@@ -1,8 +1,8 @@
-from menus.AbstractMenu import AbstractMenu
+from core.menus.AbstractMenu import AbstractMenu
+from core.DataController import DataController
+from core.models.Suite import Suite
+from core.UIFactory import UIFactory
 from Config import _CONFIG_
-from DataController import DataController
-from models.Suite import Suite
-from UIFactory import UIFactory
 import tkinter
 
 class SuiteManagerMenu(AbstractMenu):
@@ -20,6 +20,7 @@ class SuiteManagerMenu(AbstractMenu):
         super().__init__(root, self.menuData)
 
     def menuAction(self, actionStr, args):
+        
         switcher = {
             "about": lambda : self.about(args),
             "saveSuite": lambda : self.saveSuite(args),

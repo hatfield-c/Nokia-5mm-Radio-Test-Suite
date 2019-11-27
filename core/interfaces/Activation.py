@@ -1,8 +1,8 @@
 import tkinter
 from Config import _CONFIG_
-from Interface import Interface
-from interfaces.Builder import Builder
-from interfaces.Alert import Alert
+from core.Interface import Interface
+from core.interfaces.Builder import Builder
+from core.interfaces.Alert import Alert
 
 class Activation(Interface):
     def __init__(self, root, suite):

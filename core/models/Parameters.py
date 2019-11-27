@@ -1,5 +1,5 @@
-from Model import Model
-from models.Parameter import Parameter
+from core.Model import Model
+from core.models.Parameter import Parameter
 
 class Parameters(Model):
 

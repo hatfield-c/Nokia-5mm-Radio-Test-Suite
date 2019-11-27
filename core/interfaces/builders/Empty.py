@@ -1,4 +1,4 @@
-from interfaces.Builder import Builder
+from core.interfaces.Builder import Builder
 
 class Empty(Builder):
     def __init__(self, title = "", root = None, color = None):

@@ -1,6 +1,6 @@
-from Model import Model
-from UIFactory import UIFactory
-from models.Parameters import Parameters
+from core.Model import Model
+from core.UIFactory import UIFactory
+from core.models.Parameters import Parameters
 
 class Collection(Model):
     

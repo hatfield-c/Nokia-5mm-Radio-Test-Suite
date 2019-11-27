@@ -1,1 +1,0 @@
-info 	 sending EIRP_ACLR commands to analyzer 

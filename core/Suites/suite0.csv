@@ -1,4 +1,0 @@
-step,csv_path
-benches,core/Collections/load0.csv
-runs,core/Collections/load1.csv
-sequences,core/Collections/load2.csv

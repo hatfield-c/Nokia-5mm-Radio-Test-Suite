@@ -1,9 +1,9 @@
-from interfaces.Builder import Builder
-from models.Collection import Collection
-from models.ModelFactory import ModelFactory
-from interfaces.EditModel import EditModel
-from UIFactory import UIFactory
-from Model import Model
+from core.interfaces.Builder import Builder
+from core.models.Collection import Collection
+from core.models.ModelFactory import ModelFactory
+from core.interfaces.EditModel import EditModel
+from core.UIFactory import UIFactory
+from core.Model import Model
 import tkinter
 
 class SequenceBuilder(Builder):
