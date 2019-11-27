@@ -10,7 +10,7 @@ class BenchBuilder(Builder):
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Bench",
-            "factory": ModelFactory(modelType = Parameters.Id),
+            "factory": ModelFactory(modelType = Parameters.ID),
             "controls": [
                 "divider",
                 "saveAs",

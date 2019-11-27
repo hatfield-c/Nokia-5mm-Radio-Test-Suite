@@ -27,6 +27,12 @@ class CSVFrame(tkinter.Frame):
             controls = self.controls
         )
 
+        indexString = "[" + str(model.getIndex()) + "] "
+        indexLabel = tkinter.Label(
+            headLine, 
+            text = indexString,
+            font = "Helevetica 14 bold"
+        )
         titleLabel = tkinter.Label(
             headLine, 
             text = UIFactory.TruncatePath(path = self.model.getPath(), length = 36),
@@ -50,10 +56,11 @@ class CSVFrame(tkinter.Frame):
             background = _CONFIG_["color_secondary"],
             command = lambda container = self, model = self.model : self.builder.removeFrame(container = container, model = model)
         )
-        titleLabel.grid(row = 0, column = 0)
-        reloadButton.grid(row = 0, column = 1, padx = 10)
-        editButton.grid(row = 0, column = 2)
-        removeButton.grid(row = 0, column = 3, padx = 10)
+        indexLabel.grid(row = 0, column = 0)
+        titleLabel.grid(row = 0, column = 1)
+        reloadButton.grid(row = 0, column = 2, padx = 10)
+        editButton.grid(row = 0, column = 3)
+        removeButton.grid(row = 0, column = 4, padx = 10)
 
         delimiter = Divider(details, width = self.builder.paramWidth)
 

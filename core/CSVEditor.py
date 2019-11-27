@@ -1,5 +1,6 @@
 import tkinter
-from core.models.Parameters import Parameters
+from core.Model import Model
+from core.models.ModelFactory import ModelFactory
 from core.templates.Divider import Divider
 from Config import _CONFIG_
 from core.UIFactory import UIFactory
@@ -21,7 +22,7 @@ class CSVEditor(tkinter.Frame):
         },
         "newPoint": {
             "title": "New Point",
-            "action": lambda self, args : self.newParameter(args = args),
+            "action": lambda self, args : self.newPoint(args = args),
         },
         "newFile": {
             "title": "New File",
@@ -115,7 +116,7 @@ class CSVEditor(tkinter.Frame):
 
         j = 1
         for row in self.model.getData():
-            rowFrame = self.buildParameterFrame(root = self.entryFields, rowData = row, entryWidth = entryWidth)
+            rowFrame = self.buildModelFrame(root = self.entryFields, rowData = row, entryWidth = entryWidth)
             rowFrame.grid(row = j, column = 0, pady = 2)
             j += 1
 
@@ -153,16 +154,16 @@ class CSVEditor(tkinter.Frame):
 
                 i += 1
 
-    def buildParameterFrame(self, root, rowData, entryWidth):
-        paramFrame = tkinter.Frame(root, width = entryWidth)
+    def buildModelFrame(self, root, rowData, entryWidth):
+        modelFrame = tkinter.Frame(root, width = entryWidth)
 
         entryRow = {}
         k = 0
         for entryKey in rowData:
             entry = rowData[entryKey]
-            paramFrame.columnconfigure(k, weight = 1)
+            modelFrame.columnconfigure(k, weight = 1)
 
-            entryFrame = tkinter.Entry(paramFrame, width = self.getFieldWidth())
+            entryFrame = tkinter.Entry(modelFrame, width = self.getFieldWidth())
             entryFrame.insert(0, entry)
 
             entryFrame.grid(row = 0, column = k, padx = 3, sticky = "we")
@@ -173,14 +174,14 @@ class CSVEditor(tkinter.Frame):
         self.entries.append(entryRow)
 
         remove = tkinter.Button(
-            paramFrame, 
+            modelFrame, 
             text = u"\u274C",
-            command = lambda row = entryRow, container = paramFrame : self.removeParameter(row = row, container = container),
+            command = lambda row = entryRow, container = modelFrame : self.removePoint(row = row, container = container),
             borderwidth = 0
         )
         remove.grid(row = 0, column = k)
 
-        return paramFrame
+        return modelFrame
 
     def compileData(self):
         data = []
@@ -211,10 +212,14 @@ class CSVEditor(tkinter.Frame):
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
         entryData = self.compileData()
-        newModel = Parameters(path = fileName)
+
+        factory = ModelFactory(modelType = self.model.ID)
+        newModel = factory.create(path = fileName)
         
-        newModel.buildParameters(rowData = entryData)
+        newModel.setData(data = entryData)
         newModel.save()
+
+        self.rebuild(newModel)
 
     def load(self):
         fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Open", filetypes = [("csv files", "*.csv")])
@@ -224,18 +229,20 @@ class CSVEditor(tkinter.Frame):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        model = Parameters(path = fileName)
+        factory = ModelFactory(modelType = self.model.ID)
+
+        model = factory.create(path = fileName)
         model.load()
         self.rebuild(model = model)
 
-    def newParameter(self, args):
+    def newPoint(self, args):
         entryContainer = args["entry_container"]
 
         row = self.generateEmptyRow()
-        paramFrame = self.buildParameterFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
         
         gridRow = len(self.entries)
-        paramFrame.grid(row = gridRow, column = 0, pady = 2)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2)
 
     def generateEmptyRow(self):
         emptyRow = {}
@@ -252,7 +259,10 @@ class CSVEditor(tkinter.Frame):
             return
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-        newModel = Parameters(path = fileName)
+        factory = ModelFactory(modelType = self.model.ID)
+
+        newModel = factory.create(path = fileName)
+
         newModel.useDefaultFields()
         newModel.save()
 
@@ -262,7 +272,7 @@ class CSVEditor(tkinter.Frame):
         divider = Divider(args["root"], color = "lightgray")
         divider.grid(row = args["row"], column = 0, pady = 8, padx = 8, sticky = "ew")
 
-    def removeParameter(self, row, container):
+    def removePoint(self, row, container):
         if row not in self.entries:
             return
 

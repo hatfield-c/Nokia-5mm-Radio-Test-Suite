@@ -4,7 +4,7 @@ from core.models.Parameter import Parameter
 class Parameters(Model):
 
     DefaultName = "NO_NAME"
-    Id = "parameters"
+    ID = "parameters"
     
     def __init__(self, path = ""):
         super().__init__(path)

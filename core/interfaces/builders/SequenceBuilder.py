@@ -10,7 +10,7 @@ class SequenceBuilder(Builder):
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Sequence",
-            "factory": ModelFactory(modelType = Model.Id),
+            "factory": ModelFactory(modelType = Model.ID),
             "controls": [
                 "divider",
                 "saveAs",

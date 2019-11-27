@@ -3,7 +3,7 @@ from core.CSVObject import CSVObject
 
 class Model:
 
-    Id = "model"
+    ID = "model"
 
     def __init__(self, path):
         self.setPath(path)

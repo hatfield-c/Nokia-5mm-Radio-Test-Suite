@@ -1,5 +1,29 @@
 import tkinter
 
+class parent:
+    TES = "a"
+
+    def __init__(self):
+        print(self.TES)
+
+class child(parent):
+    TES = "b"
+
+    def __init__(self):
+        print(self.TES)
+        print(parent.TES)
+
+p = parent()
+print(p.TES)
+c = child()
+print(c.TES,"\n")
+
+lis = [p, c]
+model = lis[0]
+print(model.TES)
+model = lis[1]
+print(model.TES)
+
 App = tkinter.Tk()
 
 pFrame = tkinter.Frame(App, width = "300", height = "200")
