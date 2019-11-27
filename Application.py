@@ -13,7 +13,7 @@ class Application(tkinter.Tk):
         _CONFIG_["working_dir"] = os.getcwd()
         _CONFIG_["working_dir"] = _CONFIG_["working_dir"].replace("\\", "/")
 
-        self.iconbitmap(_CONFIG_["favicon"])
+        self.iconbitmap(_CONFIG_["favicon_path"])
 
         self.suite = SuiteManager(title = _CONFIG_["app_title"], root = self)
 

@@ -1,7 +1,6 @@
 import tkinter
 from Config import _CONFIG_
 from core.templates.Divider import Divider
-from PIL import ImageTk, Image
 
 class Nav(tkinter.Frame):
     def __init__(self, root, data):
@@ -23,7 +22,8 @@ class Nav(tkinter.Frame):
         self.buildStepsPanel(data)
 
     def buildMainPanel(self, data):
-        img = ImageTk.PhotoImage(Image.open("media/logo.png"))
+        logoPath = _CONFIG_["logo_path"]
+        img = tkinter.PhotoImage(file = logoPath)
         self.logo = tkinter.Label(self.mainPanel, image = img, background = _CONFIG_["color_primary"])
         self.logo.image = img
         self.logo.pack()

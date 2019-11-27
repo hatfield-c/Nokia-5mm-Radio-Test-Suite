@@ -39,7 +39,7 @@ class Activation(Interface):
                 bench = benches[benchIndex]
                 run = runs[runIndex]
 
-                bluePrint = _CONFIG_["overseers"][run["testClass"]]
+                bluePrint = _CONFIG_["modules"][run["module"]]
                 overseer = bluePrint(parameters = run, testbench = bench)
 
                 result = overseer.run_test()
