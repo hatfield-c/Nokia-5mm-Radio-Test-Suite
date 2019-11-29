@@ -34,8 +34,12 @@ class Nav(tkinter.Frame):
         self.fileLabel = tkinter.Label(self.mainPanel, text = "Current Suite:", background = _CONFIG_["color_primary"])
         self.fileLabel.pack(anchor = "w")
 
+        if data[0]["csv_file"] is None:
+            path = ""
+        else:
+            path = data[0]["csv_file"]
         self.fileField = tkinter.Entry(self.mainPanel, width = 32, justify = "right")
-        self.fileField.insert(0, data[0]["csv_file"])
+        self.fileField.insert(index = 0, string = path)
         self.fileField.xview_moveto(1)
         self.fileField.pack(pady = (0, 5))
 

@@ -1,11 +1,13 @@
 from core.Model import Model
 from core.models.Parameters import Parameters
+from core.models.Suite import Suite
 
 class ModelFactory:
 
     types = {
         Model.ID: Model,
-        Parameters.ID: Parameters
+        Parameters.ID: Parameters,
+        Suite.ID : Suite
     }
 
     def __init__(self, args):

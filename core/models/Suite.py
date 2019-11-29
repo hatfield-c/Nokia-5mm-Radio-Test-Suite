@@ -1,6 +1,8 @@
 from core.Model import Model
 
 class Suite(Model):
+
+    ID = "suite"
     
     def __init__(self, path):
         super().__init__(path)
@@ -12,7 +14,6 @@ class Suite(Model):
 
     def setCollection(self, key, value):
         if key == "benches":
-            print("FLAG")
             self.benches = value
 
         if key == "runs":

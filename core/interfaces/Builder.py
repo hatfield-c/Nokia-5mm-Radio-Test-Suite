@@ -1,14 +1,19 @@
 import tkinter
 from tkinter import simpledialog
-from core.UIFactory import UIFactory
-from core.Interface import Interface
-from core.interfaces.EditModel import EditModel
+
 from core.models.Collection import Collection
 from core.models.Parameters import Parameters
 from core.models.ModelFactory import ModelFactory
-from core.CSVEditor import CSVEditor
+
+from core.Interface import Interface
+from core.interfaces.EditModel import EditModel
+from core.interfaces.alerts.PathError import PathError
+
 from core.templates.CSVFrame import CSVFrame
 from core.templates.Divider import Divider
+
+from core.CSVEditor import CSVEditor
+from core.UIFactory import UIFactory
 from Config import _CONFIG_
 
 class Builder(Interface):
@@ -51,21 +56,26 @@ class Builder(Interface):
         self.scrollFrame = tkinter.Frame(self)
         self.scrollbar = tkinter.Frame(self)
         self.container = tkinter.Frame(self)
+        self.collectionFrame = tkinter.Frame(self)
 
         self.rebuild(csvPath)
 
     def rebuild(self, csvPath):
-        if csvPath is None:
-            return
-        
+
         self.csvPath = csvPath
         self.dataCollection = Collection(path = self.csvPath, factory = self.builderData["factory"])
-        self.dataCollection.load()
+
+        try:
+            self.dataCollection.load()
+        except Exception:
+            PathError(path = csvPath, pathType = self.builderData["type"] + " " + self.dataCollection.ID)
+            self.dataCollection = Collection(path = None, factory = self.builderData["factory"])
 
         self.headerFrame.destroy()
         self.scrollFrame.destroy()
         self.scrollbar.destroy()
         self.container.destroy()
+        self.collectionFrame.destroy()
 
         self.paramWidth = self.dimensions["width"] - 50
         self.headerFrame = self.buildHeaderFrame()
@@ -90,17 +100,21 @@ class Builder(Interface):
             editParametersFrame.grid(row = i, column = 0, pady = 5, padx = (5, 0))
             i += 1
         
-        operationsFrame = tkinter.Frame(self.collectionFrame)
+        if i == 0:
+            placeHolder = tkinter.Frame(self.collectionFrame, width = self.paramWidth)
+            placeHolder.grid(row = 0, column = 0, sticky = "we")
+
+        self.operationsFrame = tkinter.Frame(self.collectionFrame)
 
         newModelButton = tkinter.Button(
-            operationsFrame, 
+            self.operationsFrame, 
             text = "New " + self.builderData["type"], 
             command = lambda : self.addnewModel(), 
             font = "Helvetica 14 bold", 
             background = _CONFIG_["color_secondary"]
         )
         loadModelButton = tkinter.Button(
-            operationsFrame, 
+            self.operationsFrame, 
             text = "Load " + self.builderData["type"], 
             command = lambda : self.loadModel(), 
             font = "Helvetica 14 bold", 
@@ -110,11 +124,11 @@ class Builder(Interface):
         newModelButton.grid(row = 0, column = 0, padx = (0, 10))
         loadModelButton.grid(row = 0, column = 1)
 
-        operationsFrame.grid(row = i + 1, column = 0)
+        self.operationsFrame.grid(row = i + 1, column = 0)
 
         self.collectionFrame.grid(row = 0, column = 0)
 
-        self.headerFrame.grid(row = 0, column = 0, sticky = "ew", columnspan = 2)
+        self.headerFrame.grid(row = 0, column = 0, sticky = "we", columnspan = 2)
         self.scrollFrame.grid(row = 1, column = 0, sticky = "news")
         self.scrollbar.grid(row = 1, column = 1, sticky = "ns")
 
@@ -134,7 +148,7 @@ class Builder(Interface):
         saveCollection = tkinter.Button(
             headerFrame, 
             text = u"\uD83D\uDCBE", 
-            command = lambda : self.dataCollection.save(), 
+            command = lambda : self.saveCollection(), 
             font = "Helvetica 14", 
             borderwidth = 0, 
             background = _CONFIG_["color_primary"]
@@ -176,8 +190,13 @@ class Builder(Interface):
 
         factory = self.builderData["factory"]        
         model = factory.create(path = fileName)
-        model.save()
-
+        
+        try:
+            model.save()
+        except Exception:
+            PathError(path = fileName, pathType = model.ID)
+            return
+        
         self.dataCollection.add(model)
 
         newModelFrame = self.buildModelFrame(model = model)
@@ -196,12 +215,29 @@ class Builder(Interface):
         factory = self.builderData["factory"]
 
         model = factory.create(path = fileName)
-        model.load()
 
+        try:
+            model.load()
+        except Exception:
+            PathError(path = fileName, pathType = model.ID)
+            return
+    
         self.dataCollection.add(model)
 
         newModelFrame = self.buildModelFrame(model = model)
         newModelFrame.grid(row = len(self.modelFrames) - 1, column = 0, pady = 5, padx = (5, 0))
+
+    def saveCollection(self):
+        if self.dataCollection.getPath() is None:
+            self.saveCollectionAs()
+            return
+
+        try:
+            self.dataCollection.save()
+        except Exception:
+            PathError(path = self.dataCollection.getPath(), pathType = self.dataCollection.ID)
+            return
+        
 
     def saveCollectionAs(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
@@ -211,8 +247,13 @@ class Builder(Interface):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        self.dataCollection.setPath(fileName)
-        self.dataCollection.save()
+        origPath = self.dataCollection.getPath()
+        try:
+            self.dataCollection.setPath(fileName)
+            self.dataCollection.save()
+        except Exception:
+            CollectionPathError(path = fileName)
+            self.dataCollection.setPath(origPath)
 
         self.rebuild(fileName)
 

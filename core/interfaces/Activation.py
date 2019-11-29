@@ -3,6 +3,7 @@ from Config import _CONFIG_
 from core.Interface import Interface
 from core.interfaces.Builder import Builder
 from core.interfaces.Alert import Alert
+from core.interfaces.alerts.NoSequences import NoSequences
 
 class Activation(Interface):
     def __init__(self, root, suite):
@@ -27,6 +28,10 @@ class Activation(Interface):
         benches = appData["benches"]
         runs = appData["runs"]
         sequences = appData["sequences"]
+
+        if sequences is None or not sequences:
+            NoSequences()
+            return
 
         results = []
         for sequenceIndex in sequences:

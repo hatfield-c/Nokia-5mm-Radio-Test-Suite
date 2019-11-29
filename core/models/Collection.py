@@ -3,13 +3,23 @@ from core.UIFactory import UIFactory
 from core.models.Parameters import Parameters
 
 class Collection(Model):
+
+    ID = "collection"
     
     def __init__(self, path, factory):
         super().__init__(path)
         self.models = []
         self.factory = factory
 
-        self.name = UIFactory.TruncatePath(self.path, 45)
+        self.fields = [ "id", "csv_path" ]
+
+    def setPath(self, path):
+        super().setPath(path = path)
+
+        if self.path is not None:
+            self.name = UIFactory.TruncatePath(self.path, 45)
+        else:
+            self.name = "[ NO COLLECTION LOADED ]"
 
     def add(self, model):
         model.setIndex(self.newIndex())
@@ -44,6 +54,9 @@ class Collection(Model):
             self.models.append(model)
 
     def save(self):
+        if self.path is None:
+            return
+
         data = []
 
         for model in self.models:

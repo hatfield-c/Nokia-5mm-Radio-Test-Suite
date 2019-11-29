@@ -1,3 +1,4 @@
+from core.interfaces.alerts.model.NullModelFields import NullModelFields
 from core.DataController import DataController
 from core.CSVObject import CSVObject
 
@@ -7,7 +8,7 @@ class Model:
 
     def __init__(self, path):
         self.setPath(path)
-        self.fields = None
+        self.fields = []
         self.data = []
         self.index = None
 
@@ -33,7 +34,10 @@ class Model:
         self.fields = fields
 
     def setPath(self, path):
-        self.path = path
+        if path == "":
+            self.path = None
+        else:
+            self.path = path
 
         if self.path is not None:
             pathSplit = self.path.split("/")
@@ -60,6 +64,10 @@ class Model:
 
     def add(self, row):
         if not isinstance(row, dict):
+            return
+
+        if self.fields is None:
+            NullModelFields(path = self.path)
             return
 
         for field in self.fields:
