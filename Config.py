@@ -5,7 +5,7 @@ _CONFIG_ = {
     # App Configuration
     "app_title": "Test Suite Manager",
     "version": "0.56",
-    
+
     # CSV Configuration
     "csv_dir": "CSV Data/",
     "csv_path_key": "csv_path",
@@ -27,10 +27,13 @@ _CONFIG_ = {
     "working_dir": None,
     "current_suite_file": None,
 
-    # Test Module Registration 
+    # Test Module Registration
     "modules": {
         "DumpInput": DumpInput,
-        "OBUE": OBUE_Test
+        "OBUE": OBUE_Test,
+        "EVM": EVM_5GNR_Test,
+        "M_OBUE": M_OBUE_Test,
+        "EIRP": EIRP_Test
     }
 
 }

@@ -7,7 +7,7 @@ import sys
 #       third party imports
 
 #       local imports
-from NR_5G import EVM_Script as evm_scpi
+import modules.SCPI_Scripts.EVM_Script as evm_scpi
 from Support_Modules import csv_logger as csvr
 
 

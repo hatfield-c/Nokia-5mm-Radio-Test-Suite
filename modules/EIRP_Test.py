@@ -5,7 +5,7 @@
 import sys
 from Support_Modules import csv_logger as csvr
 
-from EIRP import EIRP_Script as eirp_scpi
+import modules.SCPI_Scripts.EIRP_Script as eirp_scpi
 
 class EIRP_Test():
 
@@ -20,11 +20,9 @@ class EIRP_Test():
         #call EIRP script
         feedback = eirp_scpi.eirp_script(
                         center_freq = self.parameters['Center Frequency(GHz)'],
-                        tx_bw = self.parameters['TX BW'],
-                        adj_bw = self.parameters['Adjacent BW'],
-                        alt_bw = self.parameters['Alternate BW'],
-                        adj_space = self.parameters['Adjacent Spacing'],
-                        alt_space = self.parameters['Alternate Spacing'],
+                        tx_bw = self.parameters['TX BW(MHz)'],
+                        adj_bw = self.parameters['Adjacent BW(MHz)'],
+                        adj_space = self.parameters['Adjacent Spacing(MHz)'],
                         user_standard = self.parameters['User Std.'],
                         testbench = self.testbench)
         res = []
