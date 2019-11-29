@@ -4,7 +4,6 @@
 
 #       standard library imports
 import sys
-
 import csv
 import math
 import datetime as dt
@@ -106,9 +105,6 @@ class OBUE_Test():
             peak_list[3]['P/F'] = "Fail"
         else:
             peak_list[3]['P/F'] = "Pass"
-
-        #if self.to_log is True:
-        #    csvr.log_to_csv(peak_list, self.testbench, "OBUE")
 
         #PEAK LIST is a list of dictionaries containing test results
         return peak_list
