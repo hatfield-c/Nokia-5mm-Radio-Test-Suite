@@ -1,4 +1,5 @@
 from core.menus.AbstractMenu import AbstractMenu
+from core.interfaces.About import About
 from core.DataController import DataController
 from core.models.Suite import Suite
 from core.UIFactory import UIFactory
@@ -33,4 +34,4 @@ class SuiteManagerMenu(AbstractMenu):
         action()
 
     def about(self, args):
-        print("About!")
+        About()

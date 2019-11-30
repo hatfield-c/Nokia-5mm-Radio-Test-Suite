@@ -21,6 +21,7 @@ _CONFIG_ = {
     "favicon_path": "media/icon.ico",
     "logo_path": "media/logo.gif",
     "icon_path": "media/icon_huge.gif",
+    "flare_path": "media/flare.gif",
 
     # Runtime Configuration
     "app_root": None,
