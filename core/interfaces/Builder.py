@@ -140,7 +140,7 @@ class Builder(Interface):
         headerFrame = tkinter.Frame(self, background = _CONFIG_["color_primary"], borderwidth = 2, relief = "raised")
         collectionTitle = tkinter.Label(
             headerFrame, 
-            text = "Collection: " + self.dataCollection.getName(), 
+            text = self.builderData["type"].upper() + ": " + self.dataCollection.getName(), 
             background = _CONFIG_["color_primary"],
             font = "Helvetica 16 bold",
         )

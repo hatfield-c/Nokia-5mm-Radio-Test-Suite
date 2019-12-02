@@ -3,7 +3,7 @@
 # Python 3.7.0
 
 import sys
-from Support_Modules import csv_logger as csvr
+from legacy.Support_Modules import csv_logger as csvr
 
 import modules.SCPI_Scripts.EIRP_Script as eirp_scpi
 

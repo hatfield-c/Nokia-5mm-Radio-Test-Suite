@@ -8,10 +8,10 @@ import sys
 
 #       local imports
 import modules.SCPI_Scripts.EVM_Script as evm_scpi
-from Support_Modules import csv_logger as csvr
+from legacy.Support_Modules import csv_logger as csvr
 
 
-class EVM_Test():
+class EVM_5GNR_Test():
 
     def __init__(self, parameters = None, testbench = None, to_log = True):
 

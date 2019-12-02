@@ -6,6 +6,7 @@ class Nav(tkinter.Frame):
     def __init__(self, root, data):
         tkinter.Frame.__init__(self, master = root, relief = "ridge", borderwidth = 1, width = 200, height = 601, background = _CONFIG_["color_primary"])
         self.grid_propagate(False)
+        self.currentBuilder = None
 
         self.mainPanel = tkinter.Frame(self, width = 200, height = 150, background = _CONFIG_["color_primary"])
         self.delimiter = Divider(self, width = 200) #tkinter.Frame(self, width = 200, height = 1, bg = "black")
@@ -55,7 +56,16 @@ class Nav(tkinter.Frame):
         i = 0
         self.stepsData = []
         for step, action in zip(data[1]["items"], data[1]["actions"]):
-            editorButton = tkinter.Button(self.stepList, text = step, command = action, bg = "white", borderwidth = 0)
+            editorButton = tkinter.Radiobutton(
+                self.stepList, 
+                text = step, 
+                command = action,
+                indicatoron = 0,
+                background = "white", 
+                variable = self.currentBuilder,
+                value = step,
+                borderwidth = 0
+            )
             editorButton.grid(row = i, column = 0, sticky = "w")
             self.stepsData.append(editorButton)
             i += 1

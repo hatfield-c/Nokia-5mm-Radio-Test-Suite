@@ -1,5 +1,5 @@
 key,value,data
-name,basic,him
+<label|name>,basic,<radio|A|B|C>
 description,basictesting,basicdata
 testclass,basic,classdata
 temp,25,celsius

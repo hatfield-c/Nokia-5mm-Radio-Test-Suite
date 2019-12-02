@@ -1,6 +1,6 @@
 import tkinter
 from Config import _CONFIG_
-from core.CSVEditor import CSVEditor
+from core.CSVRenderer import CSVRenderer
 from core.UIFactory import UIFactory
 from core.templates.Divider import Divider
 
@@ -17,7 +17,7 @@ class CSVFrame(tkinter.Frame):
         details = tkinter.Frame(self)
         headLine = tkinter.Frame(details)
 
-        csvFrame = CSVEditor(
+        csvFrame = CSVRenderer(
             root = self, 
             model = model,
             dimensions = { 

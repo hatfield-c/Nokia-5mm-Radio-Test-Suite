@@ -1,5 +1,8 @@
 from modules.DumpInput import DumpInput
 from modules.OBUE_Test import OBUE_Test
+from modules.EVM_5GNR_Test import EVM_5GNR_Test
+from modules.M_OBUE_Test import M_OBUE_Test
+from modules.EIRP_Test import EIRP_Test
 
 _CONFIG_ = {
     # App Configuration
