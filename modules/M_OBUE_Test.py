@@ -14,7 +14,7 @@ import modules.SCPI_Scripts.OBUE_Script as obue_scpi
 #from Support_Modules import csv_logger as csvr
 
 
-class M_OBUE_Test_Contig:
+class M_OBUE_Test:
 
     RF_Start = 37.00 #37.00 GHz
     RF_Stop = 40.00 #40.00GHz

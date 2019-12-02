@@ -3,7 +3,7 @@
 # Python 3.7.0
 
 import sys
-from Support_Modules import csv_logger as csvr
+#from Support_Modules import csv_logger as csvr
 
 import modules.SCPI_Scripts.EIRP_Script as eirp_scpi
 
@@ -28,9 +28,6 @@ class EIRP_Test():
         res = []
         res.append(feedback)
         #logger requires a list of the responses.
-
-        if to_log is True:
-            csvr.log_to_csv(res, self.testbench, "EIRP_ACLR")
 
         return feedback
 
