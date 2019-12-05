@@ -18,6 +18,7 @@ class M_OBUE_Test:
 
     RF_Start = 37.00 #37.00 GHz
     RF_Stop = 40.00 #40.00GHz
+    MAX_CARRIERS = 8
 
     f_offset_max_L = RF_Start - 1.5 #37GHz - 1.5 GHz
     f_offset_max_R = RF_Stop + 1.5 #40 GHz + 1.5 GHz
@@ -25,11 +26,11 @@ class M_OBUE_Test:
 
     def __init__(self, parameters, carrier_list, testbench = None,
                     to_log = True, iq_swap = False):
-        print(parameters)
+
+        carrier_list = self.extract_carrier_vals(parameters)
+
         #simplify the block of contiguous multicarrier to
         #a contiguous block tuple. (lower_bound, upper_bound)
-
-
         #sort the carrier list by the carrier's frequency Center
         carrier_list = sorted(carrier_list, key=lambda x:
                                 float(x['Center Frequency(GHz)']))
@@ -138,6 +139,24 @@ class M_OBUE_Test:
         print("Calc spans B", spans)
         return spans
 
+
+    def extract_carrier_vals(self, parameters):
+
+        #iterate through carriers
+        for carrier_num in range(0, self.MAX_CARRIERS):
+            fc_key = ("Carrier %d Center Frequency(GHz)"%carrier_num)
+            bw_key = ("Carrier %d Channel Bandwidth(MHz)"%carrier_num)
+
+
+            if fc_key in parameters:
+                carrier = {}
+                carrier["Center Frequency(GHz)"] = parameters[fc_key]
+                if bw_key in parameters:
+                    carrier["Channel Bandwidth(MHz)"] = parameters[bw_key]
+
+            carrier_list.append(carrier)
+
+        return carrier_list
 
 
 
