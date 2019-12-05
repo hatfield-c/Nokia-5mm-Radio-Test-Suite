@@ -1,4 +1,4 @@
 step,csv_path
-benches,
-runs,
-sequences,
+benches,CSV Data/Collections/load0.csv
+runs,CSV Data/Collections/load1.csv
+sequences,CSV Data/Collections/load2.csv
