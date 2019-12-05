@@ -117,11 +117,11 @@ def evm_script(center_freq, attenuation,
     try:
         #get pdsch, evm is split upon and allocation file dependent.
         #16, 64, and 256 qam
-        if qam is "16":
+        if qam == "16":
             response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSST:AVER?")
-        elif qam is "64":
+        elif qam == "64":
             response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSSF:AVER?")
-        elif qam is "256":
+        elif qam == "256":
             response = write_query( Analyzer, ":FETC:CC1:FRAM:SUMM:EVM:DSTS:AVER?")
         #get responses for whatever the active pdsch is
         feedback['EVM Average'] = response[1].strip()
