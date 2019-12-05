@@ -20,8 +20,16 @@ class Application(tkinter.Tk):
         self.geometry(str(self.suite.dimensions['width']) + "x" + str(self.suite.dimensions['height']))
         self.title(_CONFIG_["app_title"])
         self.resizable(False, False)
+        self.protocol("WM_DELETE_WINDOW", lambda : self.exit())
 
         self.mainloop()
 
+    def exit(self):
+        shouldExit = self.suite.checkQuit()
+        
+        if not shouldExit:
+            return
+        
+        self.destroy()
 
 start = Application()

@@ -116,7 +116,7 @@ class Builder(Interface):
             placeHolder = tkinter.Frame(self.collectionFrame, width = self.paramWidth)
             placeHolder.grid(row = 0, column = 0, sticky = "we")
 
-        self.operationsFrame = tkinter.Frame(self.collectionFrame)
+        self.operationsFrame = tkinter.Frame(self.container)
 
         newModelButton = tkinter.Button(
             self.operationsFrame, 
@@ -136,9 +136,8 @@ class Builder(Interface):
         newModelButton.grid(row = 0, column = 0, padx = (0, 10))
         loadModelButton.grid(row = 0, column = 1)
 
-        self.operationsFrame.grid(row = i + 1, column = 0)
-
         self.collectionFrame.grid(row = 0, column = 0)
+        self.operationsFrame.grid(row = 1, column = 0)
 
         self.headerFrame.grid(row = 0, column = 0, sticky = "we", columnspan = 2)
         self.scrollFrame.grid(row = 1, column = 0, sticky = "news")
@@ -212,6 +211,12 @@ class Builder(Interface):
             builder = 
             self
         )
+
+    def getPath(self):
+        if self.dataCollection is None:
+            return None
+
+        return self.dataCollection.getPath()
         
     ################################################
     #                                              #

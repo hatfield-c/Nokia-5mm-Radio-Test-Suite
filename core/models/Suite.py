@@ -1,4 +1,5 @@
 from core.Model import Model
+from core.UIFactory import UIFactory
 
 class Suite(Model):
 
@@ -12,7 +13,21 @@ class Suite(Model):
         self.runs = None
         self.sequences = None
 
+    def getCollection(self, key):
+        if key == "benches":
+            return self.benches
+
+        if key == "runs":
+            return self.runs
+
+        if key == "sequences":
+            return self.sequences
+
+        return None
+
     def setCollection(self, key, value):
+        value = UIFactory.RelativePath(value)
+
         if key == "benches":
             self.benches = value
 

@@ -1,3 +1,5 @@
+from Config import _CONFIG_
+
 class UIFactory:
 
     @staticmethod
@@ -8,6 +10,25 @@ class UIFactory:
             fileName += ext
 
         return fileName
+
+    @staticmethod
+    def RelativePath(path):
+        if path is None:
+            return None
+
+        workDir = _CONFIG_["working_dir"]
+
+        if workDir is None:
+            workDir = ""
+            return
+
+        if workDir[-1] != "/":
+            workDir += "/"
+
+        if workDir not in path:
+            return path
+
+        return path.replace(workDir, "")
 
     @staticmethod
     def TruncatePath(path, length, invert = False):

@@ -60,7 +60,11 @@ class Collection(Model):
         data = []
 
         for model in self.models:
-            row = { self.fields[0]: model.getIndex(), self.fields[1]: model.getPath() }
+            index = model.getIndex()
+            path = model.getPath()
+            path = UIFactory.RelativePath(path)
+
+            row = { self.fields[0]: index, self.fields[1]: path }
             data.append(row)
 
         self.setData(data = data)

@@ -1,3 +1,4 @@
+from Config import _CONFIG_
 from core.Interface import Interface
 from core.inputs.legacy.fsw_file_navigator import fsw_file_navbox
 import tkinter
@@ -10,7 +11,7 @@ class AllocationFile(tkinter.Toplevel):
         self.transient(self.parent)
         self.geometry("400x200")
         self.title("Allocation File Selector")
-        #title = "Allocation File Selector", dimensions = { "height": 200, "width": 400 })
+        self.iconbitmap(_CONFIG_["favicon_path"])
 
         if startingDir is None or startingDir == "":
             self.directory = "C:\\R_S\\Instr\\user\\NR5G"

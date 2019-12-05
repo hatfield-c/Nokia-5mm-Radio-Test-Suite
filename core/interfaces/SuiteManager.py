@@ -9,6 +9,7 @@ from core.interfaces.Builder import Builder
 from core.Interface import Interface
 from core.interfaces.Welcome import Welcome
 from core.interfaces.Activation import Activation
+from core.interfaces.CheckQuit import CheckQuit
 from core.interfaces.alerts.PathError import PathError
 
 from core.menus.SuiteManagerMenu import SuiteManagerMenu
@@ -41,6 +42,7 @@ class SuiteManager(Interface):
         self.initMenu()
         self.workspace = tkinter.Frame(self)
         self.nav = tkinter.Frame(self)
+        self.quit = False
 
         self.rowconfigure(0, weight = 1)
         self.columnconfigure(0, weight = 1)
@@ -106,17 +108,15 @@ class SuiteManager(Interface):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        suiteData = self.modelData
-        newSuite = self.modelFactory.create(path = fileName)
-        newSuite.setData(fields = suiteData.getFields(), data = suiteData.getData())
+        self.modelData.setPath(fileName)
 
         try:
-            newSuite.save()
+            self.modelData.save()
         except Exception:
             traceback.print_exc()
-            PathError(path = newSuite.getPath(), pathType = newSuite.ID)
-    
-        self.rebuild(modelData = newSuite)
+            PathError(path = self.modelData.getPath(), pathType = self.modelData.ID)
+
+        self.rebuild(modelData = self.modelData)
 
     def newSuite(self, args):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New Suite File", filetypes = [("csv files", "*.csv")])
@@ -151,6 +151,28 @@ class SuiteManager(Interface):
             PathError(path = suite.getPath(), pathType = suite.ID)
         
         self.rebuild(modelData = suite)
+
+    def checkQuit(self):
+        if self.modelData.getPath() is None:
+            return True
+
+        benchData = self.modelData.getCollection(key = "benches")
+        runData = self.modelData.getCollection(key = "runs")
+        sequenceData = self.modelData.getCollection(key = "sequences")
+
+        self.quit = True
+        if benchData == None or benchData == "":
+            check = CheckQuit(parent = self, missingCollection = "BENCH")
+        elif runData == None or runData == "":
+            check = CheckQuit(parent = self, missingCollection = "RUN")
+        elif sequenceData == None or sequenceData == "":
+            check = CheckQuit(parent = self, missingCollection = "SEQUENCE")
+            
+        if self.quit:
+            return True
+
+        self.quit = False
+        return False
 
     def compileData(self):
         data = {}

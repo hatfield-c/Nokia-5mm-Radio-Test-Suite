@@ -1,5 +1,5 @@
 key,value
-<label|module>,EIRP
+<label|module>,DumpInput
 <label|Center Frequency(GHz)>,37.39404
 <label|TX BW(MHz)>,99.840000
 <label|Adjacent BW(MHz)>,99.840000

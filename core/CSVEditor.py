@@ -38,6 +38,7 @@ class CSVEditor(tkinter.Frame):
         self.scrollCanvas = tkinter.Frame(self)
         self.scrollFrame = tkinter.Frame(self)
         self.scrollBar = tkinter.Frame(self)
+        self.entryFields = tkinter.Frame(self)
 
         self.grid_propagate(False)
         self.rebuild(self.model)
@@ -58,11 +59,12 @@ class CSVEditor(tkinter.Frame):
         self.scrollCanvas.destroy()
         self.scrollFrame.destroy()
         self.scrollBar.destroy()
+        self.entryFields.destroy()
 
         entriesWidth = int(3 * self.dimensions["width"] / 4)
         controlsWidth = int(self.dimensions["width"] / 4)
 
-        self.scrollCanvas = tkinter.Canvas(self, width = self.dimensions["width"] - 20, height = self.dimensions["height"])
+        self.scrollCanvas = tkinter.Canvas(self, width = self.dimensions["width"] - 20, height = self.dimensions["height"] - 50)
         self.scrollFrame = tkinter.Frame(self.scrollCanvas)
         
         self.leftColumn = tkinter.Frame(self.scrollFrame)
@@ -362,7 +364,8 @@ class CSVEditor(tkinter.Frame):
 
         row = self.generateEmptyRow()
         row["bench"] = SequenceSelector.DEFAULT_BENCH_STR
-        row["run"] = SequenceSelector.DEFAULT_RUN_STR 
+        row["run"] = SequenceSelector.DEFAULT_RUN_STR
+        row["runtime"] = "<label|0.0>"
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
 

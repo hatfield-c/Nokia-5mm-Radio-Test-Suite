@@ -1,0 +1,4 @@
+step,csv_path
+benches,CSV Data/Collections/basic_benches.csv
+runs,CSV Data/Collections/basic_runs.csv
+sequences,CSV Data/Collections/basic_sequences.csv
