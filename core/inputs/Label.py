@@ -7,9 +7,24 @@ class Label(tkinter.Label):
         "text"     #     0
     ]
 
+    DEFAULT = "<label|DEFAULT_TEXT>"
+
     def __init__(self, args):
         root = args["root"]
-        config = args["config"]
+        configData = args["config"]
         data = args["data"]
+        orig = args["orig"]
 
+        config = { }
+        self.text = data[0]
         super().__init__(root, config, text = "[" + data[0] + "]", font = "Helevetica 10 bold")
+
+    def get(self):
+        return self.text
+
+    def getRaw(self, value):
+        rawString = "<"
+        rawString += "label|"
+        rawString += value
+        rawString += ">"
+        return rawString

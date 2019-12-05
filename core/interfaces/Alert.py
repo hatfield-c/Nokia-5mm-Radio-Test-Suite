@@ -12,6 +12,7 @@ class Alert(Interface):
             dimensions = { "height": 300, "width": 400 }
         ):
         super().__init__(title = title, dimensions = dimensions)
+        self.root.resizable(True, True)
 
         self.label = tkinter.Label(self, text = data["title"], font = "Helvetica 14 bold")
         self.message = tkinter.Message(self, text = data["description"], width = 350)

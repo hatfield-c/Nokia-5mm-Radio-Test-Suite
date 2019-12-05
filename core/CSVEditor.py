@@ -1,38 +1,20 @@
 import tkinter
+from Config import _CONFIG_
 from core.Model import Model
 from core.models.ModelFactory import ModelFactory
-from core.templates.Divider import Divider
-from Config import _CONFIG_
+
 from core.UIFactory import UIFactory
+from core.templates.Divider import Divider
+from core.interfaces.alerts.NoKeyError import NoKeyError
+from core.interfaces.alerts.NoKeyValueError import NoKeyValueError
+from core.interfaces.alerts.NoBenchRunError import NoBenchRunError
+
+from core.inputs.Label import Label as InputLabel
+from core.inputs.AllocationFile import AllocationFile
+from core.inputs.CollectionDropDown import CollectionDropDown as SequenceSelector
+from core.inputs.Radio import Radio
 
 class CSVEditor(tkinter.Frame):
-    
-    _CONTROLS_ = {
-        "save": {
-            "title": "Save",
-            "action": lambda self, args : self.save()
-        },
-        "saveAs": { 
-            "title": "Save As",
-            "action": lambda self, args : self.saveAs()
-        },
-        "load": {
-            "title": "Load",
-            "action": lambda self, args : self.load()
-        },
-        "newPoint": {
-            "title": "New Point",
-            "action": lambda self, args : self.newPoint(args = args),
-        },
-        "newFile": {
-            "title": "New File",
-            "action": lambda self, args : self.newFile()
-        },
-        "divider": {
-            "title": None,
-            "action": lambda self, args : self.addDivider(args = args)
-        }
-    }
 
     def __init__(self, root, model, dimensions, controls = None, subInterface = True):
         super().__init__(root, width = dimensions["width"], height = dimensions["height"])
@@ -131,7 +113,7 @@ class CSVEditor(tkinter.Frame):
     def buildControls(self, root):
         if self.controls is None:
             return
-
+        
         i = 0
         for control in self.controls:
             if control in CSVEditor._CONTROLS_: 
@@ -201,6 +183,79 @@ class CSVEditor(tkinter.Frame):
 
         return data
 
+    def getFieldWidth(self):
+        if(len(self.model.getFields()) > 0):
+            return int((3 * self.dimensions["width"]) / (len(self.model.getFields()) * 23))
+        else:
+            return self.dimensions["width"]
+
+    def getFields(self):
+        return self.model.getFields()
+
+    def getModel(self):
+        return self.model
+
+    ################################################
+    #                                              #
+    #                Button Handlers               #
+    #                                              #
+    ################################################
+
+    _CONTROLS_ = {
+        "save": {
+            "title": "Save",
+            "action": lambda self, args : self.save()
+        },
+        "saveAs": { 
+            "title": "Save As",
+            "action": lambda self, args : self.saveAs()
+        },
+        "load": {
+            "title": "Load",
+            "action": lambda self, args : self.load()
+        },
+        "newEmpty": {
+            "title": "Empty Point",
+            "action": lambda self, args : self.newEmpty(args = args),
+        },
+        "newFile": {
+            "title": "New File",
+            "action": lambda self, args : self.newFile()
+        },
+        "divider": {
+            "title": None,
+            "action": lambda self, args : self.addDivider(args = args)
+        },
+        "addKey": {
+            "title": "Add Key",
+            "action": lambda self, args : self.addKey(args = args)
+        },
+        "addAllocationFile": {
+            "title": "Allocation\nFile",
+            "action": lambda self, args : self.addAllocationFile(args = args)
+        },
+        "addSequenceSelector": {
+            "title": "Sequence\nSelector",
+            "action": lambda self, args : self.addSequenceSelector(args = args)
+        },
+        "addRadio": {
+            "title": "Add Radio",
+            "action": lambda self, args : self.addRadio(args = args)
+        },
+        "addMobue": {
+            "title": "MOBUE\nSetup",
+            "action": lambda self, args : self.addMobue(args = args)
+        },
+        "addAbCategory": {
+            "title": "A\\B\nCategories",
+            "action": lambda self, args : self.addAbCategory(args = args)
+        },
+        "addCarrier": {
+            "title": "Add\nCarrier",
+            "action": lambda self, args : self.addCarrier(args = args)
+        }
+    }
+
     def save(self):
         entryData = self.compileData()
 
@@ -237,7 +292,7 @@ class CSVEditor(tkinter.Frame):
         model.load()
         self.rebuild(model = model)
 
-    def newPoint(self, args):
+    def newEmpty(self, args):
         entryContainer = args["entry_container"]
 
         row = self.generateEmptyRow()
@@ -267,6 +322,136 @@ class CSVEditor(tkinter.Frame):
 
         self.rebuild(newModel)
 
+    def addKey(self, args):
+        if "key" not in self.model.getFields():
+            alert = NoKeyError(path = self.model.getPath())
+            return
+        
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["key"] = InputLabel.DEFAULT
+
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2)
+    
+    def addAllocationFile(self, args):
+        if "key" not in self.model.getFields() or "value" not in self.model.getFields():
+            alert = NoKeyValueError(path = self.model.getPath())
+            return
+
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["key"] ="<label|Allocation File>"
+        row["value"] = AllocationFile.DEFAULT
+
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+    def addSequenceSelector(self, args):
+        if "bench" not in self.model.getFields() or "run" not in self.model.getFields():
+            alert = NoBenchRunError(path = self.model.getPath())
+            return
+
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["bench"] = SequenceSelector.DEFAULT_BENCH_STR
+        row["run"] = SequenceSelector.DEFAULT_RUN_STR 
+
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+    def addRadio(self, args):
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        keyList = list(row.keys())
+        lastKey = keyList[-1]
+        row[lastKey] = Radio.DEFAULT
+
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+    def addMobue(self, args):
+        if "key" not in self.model.getFields() or "value" not in self.model.getFields():
+            alert = NoKeyValueError(path = self.model.getPath())
+            return
+        
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["key"] = "<label|Resolution Bandwidth(MHz)>"
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+        row = self.generateEmptyRow()
+        row["key"] = "<label|Sweep Time(s)>"
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+        self.addAbCategory(args)
+        self.addCarrier(args)
+
+    def addAbCategory(self, args):
+        if "key" not in self.model.getFields() or "value" not in self.model.getFields():
+            alert = NoKeyValueError(path = self.model.getPath())
+            return
+        
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["key"] = "<label|Category>"
+        row["value"] = "<radio|A|B>"
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+    def addCarrier(self, args):
+        if "key" not in self.model.getFields() or "value" not in self.model.getFields():
+            alert = NoKeyValueError(path = self.model.getPath())
+            return
+        
+        carrierNum = 0
+        data = self.compileData()
+        for row in data:
+            keyVal = row["key"]
+
+            if "Carrier" in keyVal:
+                carrierNum += 1
+
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["key"] = "<label|Carrier" + str(carrierNum) + ">"
+        row["value"] = "<label|Carrier" + str(carrierNum) + ">"
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+        row = self.generateEmptyRow()
+        row["key"] = "<label|Center Frequency(GHz)" + str(carrierNum) + ">"
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+        row = self.generateEmptyRow()
+        row["key"] = "<label|Channel Bandwidth(MHz)" + str(carrierNum) + ">"
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
     def addDivider(self, args):
         divider = Divider(args["root"], color = "lightgray")
         divider.grid(row = args["row"], column = 0, pady = 8, padx = 8, sticky = "ew")
@@ -278,14 +463,3 @@ class CSVEditor(tkinter.Frame):
         self.entries.remove(row)
         container.destroy()
 
-    def getFieldWidth(self):
-        if(len(self.model.getFields()) > 0):
-            return int((3 * self.dimensions["width"]) / (len(self.model.getFields()) * 23))
-        else:
-            return self.dimensions["width"]
-
-    def getFields(self):
-        return self.model.getFields()
-
-    def getModel(self):
-        return self.model

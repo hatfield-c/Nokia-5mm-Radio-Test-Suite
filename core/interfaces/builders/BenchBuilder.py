@@ -16,17 +16,30 @@ class BenchBuilder(Builder):
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Bench",
+            "mutable": False,
             "factory": ModelFactory(
                 args = {
                     "type": Parameters.ID, 
-                    "fields": self.FIELDS
+                    "fields": self.FIELDS,
+                    "default": [
+                        { "key": "<label|allocationFile>", "value": "<allocation_file|>" }
+                    ]
                 }
             ),
-            "controls": [
-                "divider",
-                "saveAs",
-                "divider"
-            ]
+            "controls": {
+                "edit": [
+                    "save",
+                    "saveAs",
+                    "load",
+                    "newFile",
+                    "divider",
+                    "addAllocationFile",
+                    "addRadio",
+                    "addKey",
+                    "newEmpty",
+                ],
+                "render": []
+            }
         }
 
         super().__init__(title = "Bench Builder", root = root, csvPath = csvPath, builderData = builderData)

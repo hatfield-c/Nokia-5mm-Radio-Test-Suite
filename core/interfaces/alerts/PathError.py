@@ -6,7 +6,7 @@ class PathError(Alert):
             title = str(pathType) + " Path Error",
             data = {
                 "title": "PATH ERROR",
-                "description": "There was an issue loading/saving " + str(pathType) + " data with the path '" + str(path) + "'"
+                "description": "There was an error accessing the path:\n'" + str(path)  + "'\n\nused for parameter type '" + str(pathType) + "'"
             }, 
             dimensions = {
                 "height": 150,

@@ -1,3 +1,4 @@
+import traceback
 import tkinter
 from tkinter import simpledialog
 
@@ -30,14 +31,24 @@ class Builder(Interface):
             csvPath = None,
             builderData = {
                 "type": "[ NO TYPE SPECIFIED ]",
+                "mutable": False,
                 "factory": ModelFactory(
                     args = {
                         "type": "model",
                         "fields": [ "key", "value" ]
                     }
                 ),
-                "controls": []
-            }, 
+                "controls": {
+                    "edit": [
+                        "save",
+                        "saveAs",
+                        "newFile",
+                        "divider",
+                        "newEmpty"
+                    ],
+                    "render": []
+                }
+            },
             dimensions = DEFAULT_DIMENSIONS
         ):
         super().__init__(title = title, root = root, dimensions = dimensions)
@@ -68,6 +79,7 @@ class Builder(Interface):
         try:
             self.dataCollection.load()
         except Exception:
+            traceback.print_exc()
             PathError(path = csvPath, pathType = self.builderData["type"] + " " + self.dataCollection.ID)
             self.dataCollection = Collection(path = None, factory = self.builderData["factory"])
 
@@ -179,7 +191,34 @@ class Builder(Interface):
         newCollection.grid(row = 0, column = 4)
 
         return headerFrame
+    
+    def compileData(self):
+        data = {}
+
+        for modelFrame in self.modelFrames:
+            model = modelFrame.getModel()
+            frameData = modelFrame.compileData()
+
+            formattedData = model.build(frameData)
+            data[model.getIndex()] = formattedData
         
+        return data
+
+    def buildModelFrame(self, model):
+        return CSVFrame(
+            root = self.collectionFrame, 
+            model = model, 
+            controls = self.builderData["controls"], 
+            builder = 
+            self
+        )
+        
+    ################################################
+    #                                              #
+    #                Button Handlers               #
+    #                                              #
+    ################################################
+
     def addnewModel(self):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
         
@@ -190,10 +229,11 @@ class Builder(Interface):
 
         factory = self.builderData["factory"]        
         model = factory.create(path = fileName)
-        
+
         try:
             model.save()
         except Exception:
+            traceback.print_exc()
             PathError(path = fileName, pathType = model.ID)
             return
         
@@ -219,6 +259,7 @@ class Builder(Interface):
         try:
             model.load()
         except Exception:
+            traceback.print_exc()
             PathError(path = fileName, pathType = model.ID)
             return
     
@@ -235,6 +276,7 @@ class Builder(Interface):
         try:
             self.dataCollection.save()
         except Exception:
+            traceback.print_exc()
             PathError(path = self.dataCollection.getPath(), pathType = self.dataCollection.ID)
             return
         
@@ -252,7 +294,8 @@ class Builder(Interface):
             self.dataCollection.setPath(fileName)
             self.dataCollection.save()
         except Exception:
-            CollectionPathError(path = fileName)
+            traceback.print_exc()
+            PathError(path = fileName, pathType = self.dataCollection.ID)
             self.dataCollection.setPath(origPath)
 
         self.rebuild(fileName)
@@ -280,23 +323,11 @@ class Builder(Interface):
 
         self.rebuild(fileName)
 
-    def compileData(self):
-        data = {}
-
-        for modelFrame in self.modelFrames:
-            model = modelFrame.getModel()
-            frameData = modelFrame.compileData()
-
-            formattedData = model.build(frameData)
-            data[model.getIndex()] = formattedData
-        
-        return data
-
-    def buildModelFrame(self, model):
-        return CSVFrame(root = self.collectionFrame, model = model, controls = self.builderData["controls"], builder = self)
-
     def editDefaultValues(self, model):
-        editCsv = EditModel(model = model)
+        editCsv = EditModel(
+            model = model, 
+            controls = self.builderData["controls"]["edit"]
+        )
         editCsv.pack()
 
     def reloadFrame(self, csvEditor, model):

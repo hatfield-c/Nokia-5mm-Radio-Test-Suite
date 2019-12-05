@@ -1,9 +1,11 @@
 import tkinter
+import traceback
 from Config import _CONFIG_
 from core.Interface import Interface
 from core.interfaces.Builder import Builder
 from core.interfaces.Alert import Alert
 from core.interfaces.alerts.NoSequences import NoSequences
+from core.interfaces.alerts.SequenceError import SequenceError
 
 class Activation(Interface):
     def __init__(self, root, suite):
@@ -38,17 +40,22 @@ class Activation(Interface):
             sequence = sequences[sequenceIndex]
 
             for pair in sequence:
-                benchIndex = pair["bench"]
-                runIndex = pair["run"]
+                try:
+                    benchIndex = pair["bench"]
+                    runIndex = pair["run"]
 
-                bench = benches[benchIndex]
-                run = runs[runIndex]
+                    bench = benches[benchIndex]
+                    run = runs[runIndex]
 
-                bluePrint = _CONFIG_["modules"][run["module"]]
-                overseer = bluePrint(parameters = run, testbench = bench)
+                    bluePrint = _CONFIG_["modules"][run["module"]]
+                    module = bluePrint(parameters = run, testbench = bench)
 
-                result = overseer.run_test()
-                results.append(result)
+                    result = module.run_test()
+                    results.append(result)
+                except Exception:
+                    traceback.print_exc()
+                    error = SequenceError(sequenceIndex = sequenceIndex, sequenceData = pair)
+                    error.pack()
 
         string = str(results)
 

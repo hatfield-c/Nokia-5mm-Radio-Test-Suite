@@ -8,8 +8,13 @@ class Entry(tkinter.Entry):
 
     def __init__(self, args):
         root = args["root"]
-        config = args["config"]
-        default = args["default"]
+        configData = args["config"]
+        data = args["data"]
+        orig = args["orig"]
 
+        config = { }
         super().__init__(root, config)
-        self.insert(0, default)
+        self.insert(0, orig)
+
+    def getRaw(self, value):
+        return value

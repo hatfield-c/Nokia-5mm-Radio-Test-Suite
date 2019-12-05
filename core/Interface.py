@@ -13,6 +13,7 @@ class Interface(tkinter.Frame):
             self.root.iconbitmap(_CONFIG_["favicon_path"])
             self.root.geometry(str(self.dimensions['width']) + "x" + str(self.dimensions['height']))
             self.root.title(self.title)
+            self.root.resizable(False, False)
         else:
             self.root = root
 

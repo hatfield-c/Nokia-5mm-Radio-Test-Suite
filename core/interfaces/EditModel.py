@@ -14,6 +14,7 @@ class EditModel(Interface):
             "width": 770, 
             "height": 500
         }, 
+        controls = [],
         model = None
     ):
         if model.getPath() is not None:
@@ -28,14 +29,7 @@ class EditModel(Interface):
         self.titleLabel = tkinter.Frame(self)
         self.csvFrame = tkinter.Frame(self)
 
-        self.controls = [
-            "newFile",
-            "load",
-            "saveAs",
-            "divider",
-            "save",
-            "newPoint",
-        ]
+        self.controls = controls
 
         self.delimiter = Divider(self)
         self.csvFrame = CSVEditor(

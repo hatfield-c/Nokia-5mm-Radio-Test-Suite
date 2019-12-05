@@ -9,24 +9,41 @@ import tkinter
 class SequenceBuilder(Builder):
 
     FIELDS = [
-        "key",
-        "value"
+        "bench",
+        "run",
+        "runtime"
     ]
 
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Sequence",
+            "mutable": True,
             "factory": ModelFactory(
                 args = {
                     "type": Model.ID, 
-                    "fields": self.FIELDS
+                    "fields": self.FIELDS,
+                    "default": [
+                        { "bench": "<sequence_select|bench|NONE>", "run": "<sequence_select|run|NONE>", "runtime": "0.0" }
+                    ]
                 }
             ),
-            "controls": [
-                "divider",
-                "saveAs",
-                "divider"
-            ]
+            "controls": {
+                "edit": [
+                    "save",
+                    "saveAs",
+                    "load",
+                    "newFile",
+                    "divider",
+                    "newEmpty",
+                    "addSequenceSelector"
+                ],
+                "render": [
+                    "save",
+                    "saveAs",
+                    "divider",
+                    "newSequencePair"
+                ]
+            }
         }
 
         super().__init__(title = "Sequence Builder", root = root, csvPath = csvPath, builderData = builderData)

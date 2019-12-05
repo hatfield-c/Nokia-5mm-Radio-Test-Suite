@@ -19,6 +19,7 @@ class Application(tkinter.Tk):
 
         self.geometry(str(self.suite.dimensions['width']) + "x" + str(self.suite.dimensions['height']))
         self.title(_CONFIG_["app_title"])
+        self.resizable(False, False)
 
         self.mainloop()
 

@@ -1,3 +1,4 @@
+import traceback
 import tkinter
 
 from core.interfaces.builders.BenchBuilder import BenchBuilder
@@ -21,7 +22,7 @@ from Config import _CONFIG_
 
 class SuiteManager(Interface):
     
-    def __init__(self, title = "", root = None, modelData = None, dimensions = { "width": 1100, "height": 620}):
+    def __init__(self, title = "", root = None, modelData = None, dimensions = { "width": 1100, "height": 605}):
         super().__init__(title = title, root = root, dimensions = dimensions)
 
         self.modelFactory = ModelFactory(
@@ -59,7 +60,8 @@ class SuiteManager(Interface):
         self.nav.destroy()
 
         self.workspace = tkinter.Frame(self)
-        self.workspaces = self.buildWorkspaces()
+        self.workspaces = {}
+        self.buildWorkspaces()
 
         self.nav = self.buildNav()
 
@@ -89,6 +91,7 @@ class SuiteManager(Interface):
         try:
             self.modelData.save()
         except Exception:
+            traceback.print_exc()
             PathError(path = self.modelData.getPath(), pathType = self.modelData.ID)
 
     def saveAsSuite(self, args):
@@ -110,6 +113,7 @@ class SuiteManager(Interface):
         try:
             newSuite.save()
         except Exception:
+            traceback.print_exc()
             PathError(path = newSuite.getPath(), pathType = newSuite.ID)
     
         self.rebuild(modelData = newSuite)
@@ -127,6 +131,7 @@ class SuiteManager(Interface):
         try:
             newSuite.save()
         except Exception:
+            traceback.print_exc()
             PathError(path = newSuite.getPath(), pathType = newSuite.ID)
         
         self.rebuild(modelData = newSuite)
@@ -142,6 +147,7 @@ class SuiteManager(Interface):
         try:
             suite.load()
         except Exception:
+            traceback.print_exc()
             PathError(path = suite.getPath(), pathType = suite.ID)
         
         self.rebuild(modelData = suite)
@@ -157,36 +163,30 @@ class SuiteManager(Interface):
 
     def buildWorkspaces(self):
         if self.modelData.getPath() is not None:
-            runs = RunBuilder(
+            self.workspaces["runs"] = RunBuilder(
                 root = self.workspace, 
                 csvPath = self.modelData.runs
             )
-            sequences = SequenceBuilder(
-                root = self.workspace, 
-                csvPath = self.modelData.sequences
-            )
-            activation = Activation(
-                root = self.workspace, 
-                suite = self
-            )
-            benches = BenchBuilder(
+            self.workspaces["benches"] = BenchBuilder(
                 root = self.workspace, 
                 csvPath = self.modelData.benches
             )
+            self.workspaces["sequences"] = SequenceBuilder(
+                root = self.workspace, 
+                csvPath = self.modelData.sequences
+            )
+            self.workspaces["activation"] = Activation(
+                root = self.workspace, 
+                suite = self
+            )
+
         else:
-            runs = Welcome(root = self.workspace)
-            sequences = Welcome(root = self.workspace)
-            activation = Welcome(root = self.workspace)
-            benches = Welcome(root = self.workspace)
+            self.workspaces["runs"] = Welcome(root = self.workspace)
+            self.workspaces["benches"] = Welcome(root = self.workspace)
+            self.workspaces["sequences"] = Welcome(root = self.workspace)
+            self.workspaces["activation"] = Welcome(root = self.workspace)
 
-        workspaces = {
-            "runs": runs,
-            "sequences": sequences,
-            "activation": activation,
-            "benches": benches
-        }
-
-        return workspaces
+        self.workspaces["benches"].lift()
 
     def buildNav(self):
         return Nav(
@@ -211,3 +211,18 @@ class SuiteManager(Interface):
                 }
             ]
         )
+
+    def getWorkspace(self, key):
+        if self.modelData.getPath() is None:
+            return None
+
+        if key == "bench" or key == "benches":
+            return self.workspaces["benches"]
+
+        if key == "run" or key == "runs":
+            return self.workspaces["runs"]
+
+        if key == "sequence" or key == "sequences":
+            return self.workspaces["sequences"]
+
+        return self.workspaces

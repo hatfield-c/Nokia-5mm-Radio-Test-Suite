@@ -1,6 +1,6 @@
 key,value,data
 <label|name>,basic,<radio|A|B|C>
-description,basictesting,basicdata
+description,basictesting,<allocation_file|NONE>
 testclass,basic,classdata
 temp,25,celsius
 lorem,ipsem,hrumper
@@ -9,3 +9,4 @@ humtpy,grumpty,dumpty
 length,2000,centimeters
 yval,236,units
 addr,0x0333f0,hex
+<label|Allocation File>,<allocation_file|>,

@@ -1,6 +1,8 @@
 from core.inputs.Label import Label
 from core.inputs.Entry import Entry
 from core.inputs.Radio import Radio
+from core.inputs.AllocationFile import AllocationFile
+from core.inputs.CollectionDropDown import CollectionDropDown
 
 class InputFactory:
 
@@ -8,7 +10,8 @@ class InputFactory:
         "entry": Entry,
         "label": Label,
         "radio": Radio,
-        "allocation_file": ""
+        "allocation_file": AllocationFile,
+        "sequence_select": CollectionDropDown
     }
 
     OPEN_COMMAND = "<"
@@ -18,7 +21,7 @@ class InputFactory:
     def __init__(self):
         pass
 
-    def create(self, root, rawString, config = {}):
+    def create(self, root, rawString, args = {}):
         if rawString is None or root is None:
             return None
 
@@ -27,20 +30,20 @@ class InputFactory:
         if data["id"] not in self.INPUTS:
             return None
 
-        args = { 
+        arguments = { 
             "root": root,
-            "config": config,
-            "default": data["default"],
+            "config": args,
+            "orig": data["orig"],
             "data": data["args"]
         }
         bluePrint = self.INPUTS[data["id"]]
         
-        return bluePrint(args)
+        return bluePrint(arguments)
 
     def parse(self, string):
         default = {
             "id": "entry",
-            "default": string,
+            "orig": string,
             "args": [ ]
         }
 
@@ -63,7 +66,7 @@ class InputFactory:
 
         data = {
             "id": inputId,
-            "default": string,
+            "orig": string,
             "args": args
         }
 

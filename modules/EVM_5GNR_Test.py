@@ -8,8 +8,6 @@ import sys
 
 #       local imports
 import modules.SCPI_Scripts.EVM_Script as evm_scpi
-from legacy.Support_Modules import csv_logger as csvr
-
 
 class EVM_5GNR_Test():
 

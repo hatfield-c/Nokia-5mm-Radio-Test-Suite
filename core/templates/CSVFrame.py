@@ -24,7 +24,8 @@ class CSVFrame(tkinter.Frame):
                 "width": self.builder.paramWidth, 
                 "height": int(self.builder.dimensions["height"] / 3)
             }, 
-            controls = self.controls
+            controls = self.controls["render"],
+            mutable = self.builder.builderData["mutable"]
         )
 
         indexString = "[" + str(model.getIndex()) + "] "

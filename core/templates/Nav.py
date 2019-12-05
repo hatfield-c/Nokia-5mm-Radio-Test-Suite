@@ -6,7 +6,7 @@ class Nav(tkinter.Frame):
     def __init__(self, root, data):
         tkinter.Frame.__init__(self, master = root, relief = "ridge", borderwidth = 1, width = 200, height = 601, background = _CONFIG_["color_primary"])
         self.grid_propagate(False)
-        self.currentBuilder = None
+        self.currentBuilder = tkinter.StringVar()
 
         self.mainPanel = tkinter.Frame(self, width = 200, height = 150, background = _CONFIG_["color_primary"])
         self.delimiter = Divider(self, width = 200) #tkinter.Frame(self, width = 200, height = 1, bg = "black")
@@ -45,10 +45,10 @@ class Nav(tkinter.Frame):
         self.fileField.pack(pady = (0, 5))
 
     def buildStepsPanel(self, data):
-        self.stepLabel = tkinter.Label(self.steps, text = "Suite Builder:", background = _CONFIG_["color_primary"])
+        self.stepLabel = tkinter.Label(self.steps, text = "Configuration Steps:", background = _CONFIG_["color_primary"])
         self.stepLabel.pack(anchor = "w", pady = (10, 0))
 
-        self.stepList = tkinter.Frame(self.steps, bg = "white", relief = "ridge", borderwidth = 2, width = 200, height = 370)
+        self.stepList = tkinter.Frame(self.steps, bg = "white", relief = "ridge", borderwidth = 2, width = 200, height = 375)
         self.stepList.grid_propagate(False)
         self.stepList.columnconfigure(0, weight = 1)
         self.stepList.pack()

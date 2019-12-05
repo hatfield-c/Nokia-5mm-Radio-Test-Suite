@@ -1,4 +1,16 @@
 key,value
-module,DumpInput
+module,M_OBUE
 freq,45
 shift,22.0
+<label|Resolution Bandwidth(MHz)>,4444
+<label|Sweep Time(s)>,55555
+<label|Category>,<radio|A|B>
+<label|Carrier0>,<label|Carrier0>
+<label|Center Frequency(GHz)0>,123
+<label|Channel Bandwidth(MHz)0>,321
+<label|Carrier1>,<label|Carrier1>
+<label|Center Frequency(GHz)1>,567
+<label|Channel Bandwidth(MHz)1>,765
+<label|Carrier2>,<label|Carrier2>
+<label|Center Frequency(GHz)2>,999999
+<label|Channel Bandwidth(MHz)2>,000000

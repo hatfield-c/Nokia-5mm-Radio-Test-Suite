@@ -1,13 +1,13 @@
 from modules.DumpInput import DumpInput
 from modules.OBUE_Test import OBUE_Test
-from modules.EVM_5GNR_Test import EVM_5GNR_Test
-from modules.M_OBUE_Test import M_OBUE_Test
 from modules.EIRP_Test import EIRP_Test
+from modules.EVM_5GNR_Test import EVM_5GNR_Test
+from modules.M_OBUE_Standard import M_OBUE_Standard
 
 _CONFIG_ = {
     # App Configuration
     "app_title": "Test Suite Manager",
-    "version": "0.56",
+    "version": "0.72",
 
     # CSV Configuration
     "csv_dir": "CSV Data/",
@@ -36,7 +36,7 @@ _CONFIG_ = {
         "DumpInput": DumpInput,
         "OBUE": OBUE_Test,
         "EVM": EVM_5GNR_Test,
-        "M_OBUE": M_OBUE_Test,
+        "M_OBUE": M_OBUE_Standard,
         "EIRP": EIRP_Test
     }
 

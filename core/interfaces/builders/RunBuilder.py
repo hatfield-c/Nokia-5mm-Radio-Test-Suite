@@ -16,20 +16,32 @@ class RunBuilder(Builder):
     def __init__(self, root, csvPath = None):
         builderData = {
             "type": "Run",
+            "mutable": False,
             "factory": ModelFactory(
                 args = {
                     "type": Parameters.ID, 
                     "fields": self.FIELDS,
                     "default": [
-                        { "key": "module", "value": "DumpInput" }
+                        { "key": "<label|module>", "value": "DumpInput" }
                     ]
                 }
             ),
-            "controls": [
-                "divider",
-                "saveAs",
-                "divider"
-            ]
+            "controls": {
+                "edit": [
+                    "save",
+                    "saveAs",
+                    "load",
+                    "newFile",
+                    "divider",
+                    "addMobue",
+                    "addAbCategory",
+                    "addCarrier",
+                    "addRadio",
+                    "addKey",
+                    "newEmpty"
+                ],
+                "render": []
+            }
         }
 
         super().__init__(title = "Run Builder", root = root, csvPath = csvPath, builderData = builderData)
