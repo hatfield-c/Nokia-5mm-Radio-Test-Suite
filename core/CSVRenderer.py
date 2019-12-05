@@ -294,7 +294,6 @@ class CSVRenderer(tkinter.Frame):
         row = self.generateEmptyRow()
         row["bench"] = CollectionDropDown.DEFAULT_BENCH_STR
         row["run"] = CollectionDropDown.DEFAULT_RUN_STR
-        row["runtime"] = "<label|0.0>"
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, parentWidth = self.getFieldWidth())
 

@@ -1,5 +1,0 @@
-bench,run,runtime
-<sequence_select|bench|1:4c280b22.csv>,<sequence_select|run|1:obue_single.csv>,<label|0.0>
-<sequence_select|bench|1:4c280b22.csv>,<sequence_select|run|2:obue_multiple.csv>,<label|0.0>
-<sequence_select|bench|1:4c280b22.csv>,<sequence_select|run|3:eirp_aclr.csv>,<label|0.0>
-<sequence_select|bench|1:4c280b22.csv>,<sequence_select|run|4:evm_5gnr.csv>,<label|0.0>

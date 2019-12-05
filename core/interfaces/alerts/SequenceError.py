@@ -9,10 +9,10 @@ class SequenceError(Alert):
                 "description": (
                     "There has been a non-recoverable error while attempting to activate the Sequence with ID '" + 
                     str(sequenceIndex)  + 
-                    "'.\n\n" + 
+                    "'\n\n" + 
                     "Sequence Data:\n" +
                     "    " + str(sequenceData) + "\n\n" +
-                    "This application will abort the execution of this sequence, and continue to the next."
+                    "This application will attempt to retrieve the result data if possible, and then continue to the next sequence pair."
                 )
             }, 
             dimensions = {

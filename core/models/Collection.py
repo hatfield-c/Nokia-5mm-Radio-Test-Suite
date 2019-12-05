@@ -78,6 +78,13 @@ class Collection(Model):
         lastIndex = int(lastModel.getIndex())
         return str(lastIndex + 1)
 
+    def getModel(self, modelIndex):
+        for model in self.models:
+            if model.getIndex() == modelIndex:
+                return model
+
+        return None
+
     def getModels(self):
         return self.models
 

@@ -208,8 +208,7 @@ class Builder(Interface):
             root = self.collectionFrame, 
             model = model, 
             controls = self.builderData["controls"], 
-            builder = 
-            self
+            builder = self
         )
 
     def getPath(self):
@@ -341,6 +340,7 @@ class Builder(Interface):
 
     def removeFrame(self, container, model):
         self.dataCollection.remove(model)
+        self.modelFrames.remove(container.csvFrame)
         container.destroy()
 
 

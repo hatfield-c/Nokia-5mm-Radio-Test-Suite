@@ -234,6 +234,13 @@ class SuiteManager(Interface):
             ]
         )
 
+    def getDataCollections(self):
+        return {
+            "benches": self.workspaces["benches"].dataCollection,
+            "runs": self.workspaces["runs"].dataCollection,
+            "sequences": self.workspaces["sequences"].dataCollection
+    }
+
     def getWorkspace(self, key):
         if self.modelData.getPath() is None:
             return None

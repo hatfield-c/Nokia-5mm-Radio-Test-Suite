@@ -365,7 +365,6 @@ class CSVEditor(tkinter.Frame):
         row = self.generateEmptyRow()
         row["bench"] = SequenceSelector.DEFAULT_BENCH_STR
         row["run"] = SequenceSelector.DEFAULT_RUN_STR
-        row["runtime"] = "<label|0.0>"
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
 

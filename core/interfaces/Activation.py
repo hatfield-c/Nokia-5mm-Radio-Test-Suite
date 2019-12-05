@@ -1,11 +1,15 @@
 import tkinter
 import traceback
+import time
+
 from Config import _CONFIG_
 from core.Interface import Interface
+
 from core.interfaces.Builder import Builder
 from core.interfaces.Alert import Alert
 from core.interfaces.alerts.NoSequences import NoSequences
 from core.interfaces.alerts.SequenceError import SequenceError
+from core.interfaces.alerts.ModuleError import ModuleError
 
 class Activation(Interface):
     def __init__(self, root, suite):
@@ -46,16 +50,29 @@ class Activation(Interface):
 
                     bench = benches[benchIndex]
                     run = runs[runIndex]
+                    startTime = time.time()
 
-                    bluePrint = _CONFIG_["modules"][run["module"]]
-                    module = bluePrint(parameters = run, testbench = bench)
+                    try:
+                        bluePrint = _CONFIG_["modules"][run["module"]]
+                        module = bluePrint(parameters = run, testbench = bench)
 
-                    result = module.run_test()
+                        result = module.run_test()
+                    except Exception:
+                        traceback.print_exc()
+                        error = ModuleError(moduleName = run["module"], sequenceIndex = sequenceIndex, sequenceData = pair)
+                        error.pack()
+                        continue
+
+                    endTime = time.time()
+
                     results.append(result)
+                    runtime = endTime - startTime
+
                 except Exception:
                     traceback.print_exc()
                     error = SequenceError(sequenceIndex = sequenceIndex, sequenceData = pair)
                     error.pack()
+                    continue
 
         string = str(results)
 
