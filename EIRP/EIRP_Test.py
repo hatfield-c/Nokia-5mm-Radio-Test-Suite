@@ -32,9 +32,6 @@ class EIRP_Test():
         res.append(feedback)
         #logger requires a list of the responses.
 
-        if to_log is True:
-            csvr.log_to_csv(res, self.testbench, "EIRP_ACLR")
-
         return feedback
 
 

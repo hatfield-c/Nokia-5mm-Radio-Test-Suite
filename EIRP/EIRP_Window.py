@@ -43,7 +43,7 @@ class EIRP_Window():
                         "Adjacent Spacing", "Alternate Spacing",
                         "User Std."]
 
-        self.input_pane = ip.InputPane(self.window, "EIRP Config",
+        self.input_pane = ip.InputPane(self.window, "ACLR Config",
                                         entry_fields, default_vals)
         self.input_pane.pack()
 
@@ -67,7 +67,8 @@ class EIRP_Window():
 
 
     def spawn_res_pane(self, feedback):
-        res_pane = sp.SpecPane(self.window, "EIRP Results", feedback)
+        print(feedback)
+        res_pane = sp.SpecPane(self.window, "ACLR Results", feedback)
         res_pane.pack()
 
 

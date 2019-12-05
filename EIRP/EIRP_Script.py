@@ -42,7 +42,7 @@ INSTRUMENT = "TCPIP::192.168.255.200::inst0::INSTR"
 def eirp_script(center_freq,
                     tx_bw, adj_bw, alt_bw,
                     adj_space, alt_space, user_standard,
-                    testbench, reset = True):
+                    testbench, reset = True, trigger_mode = False):
 
     feedback = {}
 
@@ -78,8 +78,10 @@ def eirp_script(center_freq,
     success = write_command( Analyzer, ":CALC:MARK:FUNC:POW:SEL ACP" )
 
     #external trigger at 1.4 V
-    success = write_command( Analyzer, ":TRIG:SEQ:SOUR EXT" )
-    success = write_command( Analyzer, ":TRIG:SEQ:LEV:EXT 1.4" )
+    #add comment allowing
+    if trigger_mode:
+        success = write_command( Analyzer, ":TRIG:SEQ:SOUR EXT" )
+        success = write_command( Analyzer, ":TRIG:SEQ:LEV:EXT 1.4" )
 
     #set sweep time to 100ms
     success = write_command( Analyzer, ":SENS:SWE:TIME 0.1" )
@@ -161,8 +163,6 @@ def eirp_script(center_freq,
     feedback['carrier'] = acp_tup[0]
     feedback['adj lower'] = acp_tup[1]
     feedback['adj upper'] = acp_tup[2]
-    feedback['alt lower'] = acp_tup[3]
-    feedback['alt upper'] = acp_tup[4]
 
     print(response) #check what format ACLR returns in
 
