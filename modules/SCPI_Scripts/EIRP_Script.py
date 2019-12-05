@@ -40,7 +40,8 @@ INSTRUMENT = "TCPIP::192.168.255.200::inst0::INSTR"
 
 #sweep time, BW, gate delay,
 def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
-                    testbench, reset = True):
+                    testbench, reset = True,
+                    correction_file = "C:\\R_S\\instr\\user\\NR5G\\rftube3_26_40GHz_20Nov19.s2p"):
 
     feedback = {}
 
@@ -115,11 +116,10 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
 
     #####################################################################
     #User-defined correction selected (Option K-544).
-    filepath = "C:\\R_S\\instr\\user\\NR5G\\rftube3_26_40GHz_20Nov19.s2p"
     #File name is selected by user or an external configuration file.
     success = write_command( Analyzer, ":SENS:CORR:FRES:USER:STAT ON" )
     success = write_command( Analyzer,
-                    ":SENS:CORR:FRES:INP1:USER:SLIS1:INS '%s'"%(filepath) )
+                    ":SENS:CORR:FRES:INP1:USER:SLIS1:INS '%s'"%(correction_file) )
 
     #Noise correction ON
     success = write_command( Analyzer, ":SENS:POW:NCOR ON" )
@@ -139,9 +139,6 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
     #SAVE SETTINGS AS A USER standard
     success = write_command( Analyzer, (":CALC:MARK:FUNC:POW:STAN:SAVE '%s'"
                                             %(user_standard)) )
-    #DEFINING WEIGHTING FILTERS
-        #INSERT MORE COMMANDS (optional)
-
 
     #Performing the Measurement
     success = write_command( Analyzer, ":POW:ACH:PRES ACP;*WAI" ) #sync
