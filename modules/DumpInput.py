@@ -7,6 +7,7 @@ class DumpInput:
 
     def run_test(self):
         time.sleep(3)
-        result = str(self.parameters) + "\n\n" + str(self.testbench) + "\n\n\n"
+        result = self.parameters
+        result.update(self.testbench)
         return result
 

@@ -27,11 +27,17 @@ class CollectionDropDown(tkinter.Frame):
         self.collectionType = str(data[0])
         self.defaultSelection = str(data[1])
 
+        self.dropDown = tkinter.Frame(self)
+        self.refreshButton = tkinter.Frame(self)
+
         self.rebuild()
 
     def rebuild(self):
         suite = _CONFIG_["app_root"].suite
         builder = suite.getWorkspace(key = self.collectionType)
+
+        self.dropDown.destroy()
+        self.refreshButton.destroy()
 
         if builder is None:
             models = []

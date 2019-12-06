@@ -103,6 +103,34 @@ class Parameters(Model):
 
         return data
 
+    def saveParameters(self):
+        fields = [ "key", "value" ]
+        data = []
+
+        for paramKey in self.parameters:
+            row = {}
+            parameter = self.parameters[paramKey]
+
+            row["key"] = parameter.getKey()
+            row["value"] = parameter.getValue()
+
+            args = parameter.getArgs()
+
+            if len(args) > 0:
+                for argKey in args:
+                    arg = args[argKey]
+
+                    row[argKey] = arg
+
+                    if argKey not in fields:
+                        fields.append(argKey)
+            
+            data.append(row)
+
+        self.fields = fields
+        self.data = data
+        self.save()
+
     def toString(self):
         vals = "<path: " + self.path + " " + self.getPath() + ">\n"
 

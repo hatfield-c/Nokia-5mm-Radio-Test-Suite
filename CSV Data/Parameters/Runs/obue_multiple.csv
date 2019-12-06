@@ -4,3 +4,12 @@ key,value
 <label|Channel Bandwidth(MHz)>,100
 <label|Resolution Bandwidth(Hz)>,1000000
 <label|Sweep Time(s)>,0.2
+<label|Resolution Bandwidth(MHz)>,
+<label|Sweep Time(s)>,
+<label|Category>,<radio|A|B>
+<label|Carrier0>,<label|Carrier0>
+<label|Center Frequency(GHz)0>,
+<label|Channel Bandwidth(MHz)0>,
+<label|Carrier1>,<label|Carrier1>
+<label|Center Frequency(GHz)1>,
+<label|Channel Bandwidth(MHz)1>,

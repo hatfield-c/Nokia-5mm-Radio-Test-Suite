@@ -79,78 +79,7 @@ class SuiteManager(Interface):
         self.footer.grid(row = 1, column = 0, sticky = "news")      
 
         self.nav.grid(row = 0, column = 0, sticky = "nw")
-        self.workspace.grid(row = 0, column = 1, sticky = "ne")
-
-    def saveSuite(self, args):
-        if self.modelData.getPath() is None:
-            self.newSuite(args = args)
-            return
-
-        self.modelData.setCollection(key = "benches", value = self.workspaces["benches"].csvPath)
-        self.modelData.setCollection(key = "runs", value = self.workspaces["runs"].csvPath)
-        self.modelData.setCollection(key = "sequences", value = self.workspaces["sequences"].csvPath)
-
-        try:
-            self.modelData.save()
-        except Exception:
-            traceback.print_exc()
-            PathError(path = self.modelData.getPath(), pathType = self.modelData.ID)
-
-    def saveAsSuite(self, args):
-        if self.modelData.getPath() is None:
-            self.newSuite(args)
-            return
-
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
-
-        if fileName is None or fileName == "":
-            return
-
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-
-        self.modelData.setPath(fileName)
-
-        try:
-            self.modelData.save()
-        except Exception:
-            traceback.print_exc()
-            PathError(path = self.modelData.getPath(), pathType = self.modelData.ID)
-
-        self.rebuild(modelData = self.modelData)
-
-    def newSuite(self, args):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New Suite File", filetypes = [("csv files", "*.csv")])
-
-        if fileName is None or fileName == "":
-            return
-
-        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
-
-        newSuite = self.modelFactory.create(path = fileName)
-
-        try:
-            newSuite.save()
-        except Exception:
-            traceback.print_exc()
-            PathError(path = newSuite.getPath(), pathType = newSuite.ID)
-        
-        self.rebuild(modelData = newSuite)
-
-    def editSuite(self, args):
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load Test Suite", filetypes = [("csv files", "*.csv")])
-
-        if fileName is None or fileName == "":
-            return
-
-        suite = self.modelFactory.create(path = fileName)
-
-        try:
-            suite.load()
-        except Exception:
-            traceback.print_exc()
-            PathError(path = suite.getPath(), pathType = suite.ID)
-        
-        self.rebuild(modelData = suite)
+        self.workspace.grid(row = 0, column = 1, sticky = "ne")    
 
     def checkQuit(self):
         if self.modelData.getPath() is None:
@@ -241,6 +170,23 @@ class SuiteManager(Interface):
             "sequences": self.workspaces["sequences"].dataCollection
     }
 
+    def validCollections(self):
+        benchCollection = self.modelData.getCollection(key = "benches")
+        runCollection = self.modelData.getCollection(key = "runs")
+        sequenceCollection = self.modelData.getCollection(key = "sequences")
+
+        if (
+            benchCollection is None or 
+            benchCollection == "benchCollection" or 
+            runCollection is None or 
+            runCollection == "" or 
+            sequenceCollection is None or 
+            sequenceCollection == ""
+        ):
+            return False
+
+        return True
+
     def getWorkspace(self, key):
         if self.modelData.getPath() is None:
             return None
@@ -255,3 +201,80 @@ class SuiteManager(Interface):
             return self.workspaces["sequences"]
 
         return self.workspaces
+
+    ################################################
+    #                                              #
+    #                Button Handlers               #
+    #                                              #
+    ################################################
+
+    def saveSuite(self, args):
+        if self.modelData.getPath() is None:
+            self.newSuite(args = args)
+            return
+
+        self.modelData.setCollection(key = "benches", value = self.workspaces["benches"].csvPath)
+        self.modelData.setCollection(key = "runs", value = self.workspaces["runs"].csvPath)
+        self.modelData.setCollection(key = "sequences", value = self.workspaces["sequences"].csvPath)
+
+        try:
+            self.modelData.save()
+        except Exception:
+            traceback.print_exc()
+            PathError(path = self.modelData.getPath(), pathType = self.modelData.ID)
+
+    def saveAsSuite(self, args):
+        if self.modelData.getPath() is None:
+            self.newSuite(args)
+            return
+
+        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
+
+        if fileName is None or fileName == "":
+            return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+
+        self.modelData.setPath(fileName)
+
+        try:
+            self.modelData.save()
+        except Exception:
+            traceback.print_exc()
+            PathError(path = self.modelData.getPath(), pathType = self.modelData.ID)
+
+        self.rebuild(modelData = self.modelData)
+
+    def newSuite(self, args):
+        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New Suite File", filetypes = [("csv files", "*.csv")])
+
+        if fileName is None or fileName == "":
+            return
+
+        fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
+
+        newSuite = self.modelFactory.create(path = fileName)
+
+        try:
+            newSuite.save()
+        except Exception:
+            traceback.print_exc()
+            PathError(path = newSuite.getPath(), pathType = newSuite.ID)
+        
+        self.rebuild(modelData = newSuite)
+
+    def editSuite(self, args):
+        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load Test Suite", filetypes = [("csv files", "*.csv")])
+
+        if fileName is None or fileName == "":
+            return
+
+        suite = self.modelFactory.create(path = fileName)
+
+        try:
+            suite.load()
+        except Exception:
+            traceback.print_exc()
+            PathError(path = suite.getPath(), pathType = suite.ID)
+        
+        self.rebuild(modelData = suite)
