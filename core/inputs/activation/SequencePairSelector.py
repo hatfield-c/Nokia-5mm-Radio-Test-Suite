@@ -70,6 +70,9 @@ class SequencePairSelector(tkinter.Frame):
 
             benchModel = benchCollection.getModel(modelIndex = benchIndex)
             runModel = runCollection.getModel(modelIndex = runIndex)
+            
+            if benchModel is None or runModel is None:
+                continue
 
             benchPath = benchModel.fileName
             runPath = runModel.fileName

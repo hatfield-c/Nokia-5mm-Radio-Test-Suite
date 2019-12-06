@@ -9,6 +9,7 @@ from core.models.ModelFactory import ModelFactory
 from core.Interface import Interface
 from core.interfaces.EditModel import EditModel
 from core.interfaces.alerts.PathError import PathError
+from core.interfaces.alerts.builder.NoCollectionError import NoCollectionError
 
 from core.templates.CSVFrame import CSVFrame
 from core.templates.Divider import Divider
@@ -216,7 +217,7 @@ class Builder(Interface):
             return None
 
         return self.dataCollection.getPath()
-        
+
     ################################################
     #                                              #
     #                Button Handlers               #
@@ -224,6 +225,11 @@ class Builder(Interface):
     ################################################
 
     def addnewModel(self):
+        if self.dataCollection.getPath() is None or self.dataCollection.getPath() == "":
+            alert = NoCollectionError(builderType = self.builderData["type"])
+            alert.pack()
+            return
+
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
         
         if fileName is None or fileName == "":
@@ -245,10 +251,13 @@ class Builder(Interface):
 
         newModelFrame = self.buildModelFrame(model = model)
         newModelFrame.grid(row = len(self.modelFrames) - 1, column = 0, pady = 5, padx = (5, 0))
-        
-        self.update_idletasks()
 
     def loadModel(self):
+        if self.dataCollection.getPath() is None or self.dataCollection.getPath() == "":
+            alert = NoCollectionError(builderType = self.builderData["type"])
+            alert.pack()
+            return
+
         fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
 
         if fileName is None or fileName == "":

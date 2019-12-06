@@ -28,7 +28,7 @@ class Model:
         return self.index
 
     def setIndex(self, index):
-        self.index = index
+        self.index = str(index)
 
     def setFields(self, fields):
         self.fields = fields
@@ -42,6 +42,9 @@ class Model:
         if self.path is not None:
             pathSplit = self.path.split("/")
             self.fileName = pathSplit[len(pathSplit) - 1]
+            
+            nameSplit = self.fileName.split(".")
+            self.pureName = nameSplit[0]
 
             pathLen = len(self.path)
             if pathLen >= 32:
@@ -50,6 +53,7 @@ class Model:
                 self.shortPath = self.path
         else:
             self.fileName = None
+            self.pureName = None
             self.shortPath = None
 
     def setData(self, fields = None, data = None):

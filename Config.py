@@ -7,10 +7,11 @@ from modules.M_OBUE_Standard import M_OBUE_Standard
 _CONFIG_ = {
     # App Configuration
     "app_title": "Test Suite Manager",
-    "version": "0.85",
+    "version": "0.96",
 
     # CSV Configuration
     "csv_dir": "CSV Data/",
+    "result_dir": "CSV Data/Results/",
     "csv_path_key": "csv_path",
     "csv_child_data_key": "child_data",
     "csv_newline": "",

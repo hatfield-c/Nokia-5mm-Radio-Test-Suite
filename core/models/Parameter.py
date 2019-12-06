@@ -1,5 +1,5 @@
 class Parameter:
-    def __init__(self, key, value, args):
+    def __init__(self, key, value, args = {}):
         self.key = key
         self.value = value
         self.args = args
@@ -26,14 +26,14 @@ class Parameter:
         string = ""
 
         if self.value is not None:
-            string += "[Key: " + self.key + "] "
-            string += "[Value: " + self.value + "] "
+            string += "[Key: " + str(self.key) + "] "
+            string += "[Value: " + str(self.value) + "] "
         else:
             string += "[Key: None] "
             string += "[Value: None] "
 
         for argKey in self.args:
-            string  += "[" + argKey + ": " + self.args[argKey] + "] "
+            string  += "[" + argKey + ": " + str(self.args[argKey]) + "] "
 
         return string
 
