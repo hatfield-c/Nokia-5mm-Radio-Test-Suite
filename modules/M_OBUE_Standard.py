@@ -40,6 +40,10 @@ class M_OBUE_Standard:
         centerFreq = None
         for paramKey in self.parameters:
             paramVal = str(self.parameters[paramKey])
+
+            if paramVal is None or paramVal == "":
+                return None
+
             strBegin = paramKey.find("Center Frequency(GHz)")
             
             if strBegin < 0:
@@ -59,6 +63,10 @@ class M_OBUE_Standard:
         bandwidth = None
         for paramKey in self.parameters:
             paramVal = str(self.parameters[paramKey])
+
+            if paramVal is None or paramVal == "":
+                return None
+
             strBegin = paramKey.find("Channel Bandwidth(MHz)")
 
             if strBegin < 0:

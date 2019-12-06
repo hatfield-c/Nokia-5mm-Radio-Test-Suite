@@ -1,18 +1,18 @@
 from core.interfaces.Alert import Alert
 
-class ModuleError(Alert):
+class ModuleNotFound(Alert):
     def __init__(self, moduleName, sequenceIndex, sequenceData):
         super().__init__(
-            title = "Module Error",
+            title = "Module Not Found",
             data = {
-                "title": "MODULE EXECUTION ERROR",
+                "title": "MODULE NOT FOUND",
                 "description": (
-                    "There has been a non-recoverable error while running test module:\n" + 
-                    "    '" + str(moduleName)  + "'\n\n" + 
-                    "With sequence data:\n" +
+                    "A sequence attempted to load a module which is not registered with the application:\n" + 
+                    "    module: '" + str(moduleName)  + "'\n\n" + 
+                    "Sequence data:\n" +
                     "    Sequence Index: " + str(sequenceIndex) + "\n" +
                     "    Bench/Run Pair: " + str(sequenceData) + "\n\n" +
-                    "This application will abort the execution of this module, and continue to the next sequence."
+                    "This application will abort the execution of this module, and continue to the next sequence pair."
                 )
             }, 
             dimensions = {

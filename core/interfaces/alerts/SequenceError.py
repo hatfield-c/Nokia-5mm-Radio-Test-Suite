@@ -7,12 +7,11 @@ class SequenceError(Alert):
             data = {
                 "title": "SEQUENCE ERROR",
                 "description": (
-                    "There has been a non-recoverable error while attempting to activate the Sequence with ID '" + 
-                    str(sequenceIndex)  + 
-                    "'\n\n" + 
+                    "There has been a non-recoverable error while attempting to activate the Sequence with index:\n" + 
+                    "   '" + str(sequenceIndex) + "'\n\n" + 
                     "Sequence Data:\n" +
                     "    " + str(sequenceData) + "\n\n" +
-                    "This application will attempt to retrieve the result data if possible, and then continue to the next sequence pair."
+                    "This application will still attempt to retrieve the result data if possible, and then continue to the next sequence pair."
                 )
             }, 
             dimensions = {
