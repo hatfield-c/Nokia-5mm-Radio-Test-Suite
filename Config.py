@@ -3,6 +3,7 @@ from modules.OBUE_Test import OBUE_Test
 from modules.EIRP_Test import EIRP_Test
 from modules.EVM_5GNR_Test import EVM_5GNR_Test
 from modules.M_OBUE_Standard import M_OBUE_Standard
+from modules.M_OBUE_Standard_Demo import M_OBUE_Standard_Demo
 
 _CONFIG_ = {
     # App Configuration
@@ -39,6 +40,7 @@ _CONFIG_ = {
         "OBUE": OBUE_Test,
         "EVM": EVM_5GNR_Test,
         "M_OBUE": M_OBUE_Standard,
+        "M_OBUE_DEMO": M_OBUE_Standard_Demo,
         "EIRP": EIRP_Test
     }
 
