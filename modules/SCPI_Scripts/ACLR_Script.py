@@ -39,20 +39,19 @@ def get_esr(instrument):
 INSTRUMENT = "TCPIP::192.168.255.200::inst0::INSTR"
 
 #sweep time, BW, gate delay,
-def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
-                    testbench, reset = True,
-                    correction_file = "C:\\R_S\\instr\\user\\NR5G\\rftube3_26_40GHz_20Nov19.s2p"):
+def aclr_script(center_freq, tx_bw_MHz, adj_bw_MHz, adj_space_MHz,
+                user_standard, testbench, reset = True, trigger_mode = False,
+                correction_file = None):
+
+    correction_file = "C:\\R_S\\instr\\user\\NR5G\\rftube3_26_40GHz_20Nov19.s2p"
 
     feedback = {}
-
     center_freq = float(center_freq.strip()) * (10 ** 9) #convert to Hz from GHz
 
     #Units are taken in hz.
-    tx_bw = float(tx_bw * (10**6)) #convert bw values from MHz to Hz
-    adj_bw = float(adj_bw * (10**6))
-    alt_bw = float(alt_bw * (10**6))
-    adj_space = float(adj_space * (10**6))
-    alt_space = float(alt_space * (10**6))
+    tx_bw = float(tx_bw_MHz)*(10**6)
+    adj_bw = float(adj_bw_MHz)*(10**6)
+    adj_space = float(adj_space_MHz)*(10**6)
 
     VisaResourceManager = visa.ResourceManager()
     # connect to analyzer
@@ -60,15 +59,6 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
     Analyzer = VisaResourceManager.open_resource(("TCPIP::%s::inst0::INSTR"%instrument_ip))
     Analyzer.write_termination = '\n'
     Analyzer.clear()
-
-    #external trigger 1
-
-    #resolution bandwidth 1 MHZ
-    #RF Attenuation
-    #ref level 50
-    #ref level offset = 21
-    #turn on external reference
-    #RBW 1kHz
 
     #restart
     if reset is True:
@@ -78,8 +68,10 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
     success = write_command( Analyzer, ":CALC:MARK:FUNC:POW:SEL ACP" )
 
     #external trigger at 1.4 V
-    success = write_command( Analyzer, ":TRIG:SEQ:SOUR EXT" )
-    success = write_command( Analyzer, ":TRIG:SEQ:LEV:EXT 1.4" )
+    #add comment allowing
+    if trigger_mode:
+        success = write_command( Analyzer, ":TRIG:SEQ:SOUR EXT" )
+        success = write_command( Analyzer, ":TRIG:SEQ:LEV:EXT 1.4" )
 
     #set sweep time to 100ms
     success = write_command( Analyzer, ":SENS:SWE:TIME 0.1" )
@@ -120,7 +112,7 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
     #File name is selected by user or an external configuration file.
     success = write_command( Analyzer, ":SENS:CORR:FRES:USER:STAT ON" )
     success = write_command( Analyzer,
-                    ":SENS:CORR:FRES:INP1:USER:SLIS1:INS '%s'"%(correction_file) )
+                    ":SENS:CORR:FRES:INP1:USER:SLIS1:INS '%s'"%(correction_file))
 
     #Noise correction ON
     success = write_command( Analyzer, ":SENS:POW:NCOR ON" )
@@ -140,6 +132,9 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
     #SAVE SETTINGS AS A USER standard
     success = write_command( Analyzer, (":CALC:MARK:FUNC:POW:STAN:SAVE '%s'"
                                             %(user_standard)) )
+    #DEFINING WEIGHTING FILTERS
+        #INSERT MORE COMMANDS (optional)
+
 
     #Performing the Measurement
     success = write_command( Analyzer, ":POW:ACH:PRES ACP;*WAI" ) #sync

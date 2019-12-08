@@ -1,0 +1,13 @@
+key,value
+<label|module>,M_OBUE
+<label|Sweep Time(s)>,0.2
+<label|Resolution Bandwidth(MHz)>,10
+<label|Category>,<radio|A|B>
+<label|Carrier 0 FC(GHz)>,36.0
+<label|Carrier 0 BW(MHz)>,100
+<label|Carrier 1 FC(GHz)>,36.5
+<label|Carrier 1 BW(MHz)>,100
+<label|Carrier 2 FC(GHz)>,37.0
+<label|Carrier 2 BW(MHz)>,100
+<label|Carrier 3 FC(GHz)>,37.5
+<label|Carrier 3 BW(MHz)>,100

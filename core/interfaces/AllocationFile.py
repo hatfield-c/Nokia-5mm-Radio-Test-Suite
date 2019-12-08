@@ -22,7 +22,7 @@ class AllocationFile(tkinter.Toplevel):
 
         self.label = tkinter.Label(self, text = "Select Allocation File", font = "Helevetica 12 bold underline")
         self.label.grid(row = 0, column = 0, pady = 10)
-        
+
         self.navbox = fsw_file_navbox(self, self.directory, "s2p")
         self.navbox.grid(row = 1, column = 0)
 
@@ -35,11 +35,11 @@ class AllocationFile(tkinter.Toplevel):
 
     def submit(self):
         path = self.navbox.get_filepath()
-        
+
         if path is not None and path != "":
             self.parent.path = path
-        
-        self.cancel()    
+
+        self.cancel()
 
     def cancel(self):
         self.destroy()

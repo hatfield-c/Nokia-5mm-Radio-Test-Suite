@@ -24,7 +24,7 @@ class M_OBUE_Test:
     f_offset_max_R = RF_Stop + 1.5 #40 GHz + 1.5 GHz
 
 
-    def __init__(self, parameters, carrier_list, testbench = None,
+    def __init__(self, parameters, testbench = None,
                     to_log = True, iq_swap = False):
 
         carrier_list = self.extract_carrier_vals(parameters)
@@ -144,20 +144,16 @@ class M_OBUE_Test:
 
         #iterate through carriers
         for carrier_num in range(0, self.MAX_CARRIERS):
-            fc_key = ("Carrier %d Center Frequency(GHz)"%carrier_num)
-            bw_key = ("Carrier %d Channel Bandwidth(MHz)"%carrier_num)
-
+            fc_key = ("Carrier %d FC(GHz)"%carrier_num)
+            bw_key = ("Carrier %d BW(MHz)"%carrier_num)
 
             if fc_key in parameters:
                 carrier = {}
                 carrier["Center Frequency(GHz)"] = parameters[fc_key]
                 if bw_key in parameters:
                     carrier["Channel Bandwidth(MHz)"] = parameters[bw_key]
-
             carrier_list.append(carrier)
-
         return carrier_list
-
 
 
 if __name__ == '__main__':
