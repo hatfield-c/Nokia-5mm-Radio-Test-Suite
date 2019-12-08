@@ -13,7 +13,7 @@ key,value
 <label|Test Temperature>,ROOM
 <label|Az. Beam Position>,0_deg
 <label|El. Beam Position>,0_deg
-<label|Instrument IP>,TCPIP::192.168.255.200::inst0::INSTR
+<label|Instrument IP>,192.168.255.200
 <label|Testbench Correction>,bench4_7jun.s2p
 <label|Measured Antenna Gain>,21
 <label|Radio Antenna Gain>,29.1
