@@ -92,51 +92,54 @@ class M_OBUE_Test:
 
     def calc_spans_a(self):
         #spans 0 through n left to right.
-        bw_mid_offset = (0.1 *(self.BW_Contiguous) + 0.5)
+        bw_mid_offset = (0.1 * (self.BW_Contiguous+ 0.0000005))
         spans = []
-        print(self.carrier_block)
+
         spans.append((self.f_offset_max_L,
                     self.carrier_block[0] - bw_mid_offset))
 
-        spans.append((self.carrier_block[0] - bw_mid_offset,
-                    self.carrier_block[0] - 0.5))
+        spans.append(((self.carrier_block[0]-bw_mid_offset),
+                    (self.carrier_block[0] -(0.5/(10**6)))))
 
-        spans.append((self.carrier_block[1] + 0.5,
+        spans.append(((self.carrier_block[1] + (0.5/(10**6))),
                     self.carrier_block[1] + bw_mid_offset))
 
         spans.append((self.carrier_block[1] + bw_mid_offset,
                     self.f_offset_max_R))
 
-        #print("Calc spans A", spans)
         return spans
 
     #Fix calc spans B. Calculating invalid band sizes.
     def calc_spans_b(self):
 
         #calculate 3 spans to each side
-        bw_mid_offset = (0.1 *(self.BW_Contiguous) + 0.5)
+        bw_mid_offset = (0.1 * (self.BW_Contiguous+ 0.0000005))
         spans = []
         spans.append((self.f_offset_max_L,
-                    (self.carrier_block[0] - 2*self.BW_Contiguous+5)))
+                        (self.carrier_block[0]-((2*self.BW_Contiguous-0.000005)))))
 
-        spans.append((2*self.BW_Contiguous,
-                    self.carrier_block[0]-bw_mid_offset))
+        spans.append(( self.carrier_block[0] - (2*(self.BW_Contiguous - 0.0000005)),
+                        (self.carrier_block[0]-bw_mid_offset)
+                    ))
 
-        spans.append((self.carrier_block[0] - bw_mid_offset,
-                    self.carrier_block[0]-0.5))
+        spans.append(( (self.carrier_block[0] - bw_mid_offset),
+                        (self.carrier_block[0]-0.0000005)
+                    ))
 
         #Carrier Frequency Block
 
-        spans.append((self.carrier_block[1] + 0.5,
-                    self.carrier_block[1] + bw_mid_offset))
+        spans.append(( (self.carrier_block[1] +(0.0000005)),
+                     (self.carrier_block[1] + bw_mid_offset)
+                    ))
 
-        spans.append((self.carrier_block[1] + bw_mid_offset,
-                    2*self.BW_Contiguous + 0.5))
+        spans.append(( (self.carrier_block[1] + bw_mid_offset),
+                        self.carrier_block[1] + (2*(self.BW_Contiguous-0.0000005))
+                    ))
 
-        spans.append((2*self.BW_Contiguous + 5.0,
-                    self.f_offset_max_R))
+        spans.append(( self.carrier_block[1] + (2*self.BW_Contiguous+0.000005),
+                        self.f_offset_max_R
+                    ))
 
-        print("Calc spans B", spans)
         return spans
 
 
@@ -166,9 +169,9 @@ if __name__ == '__main__':
     parameters['Resolution Bandwidth(MHz)'] = 1000
     parameters['Sweep Time(s)'] = 0.1
 
-    carrier_list = [{'Center Frequency(GHz)': '26', 'Channel Bandwidth(MHz)': '1000'},
-                    {'Center Frequency(GHz)': '27', 'Channel Bandwidth(MHz)': '1000'},
-                    {'Center Frequency(GHz)': '28', 'Channel Bandwidth(MHz)': '1000'},
-                    {'Center Frequency(GHz)': '29', 'Channel Bandwidth(MHz)': '1000'}]
+    carrier_list = [{'Center Frequency(GHz)': '36.5', 'Channel Bandwidth(MHz)': '1000'},
+                    {'Center Frequency(GHz)': '36.6', 'Channel Bandwidth(MHz)': '1000'},
+                    {'Center Frequency(GHz)': '36.7', 'Channel Bandwidth(MHz)': '1000'},
+                    {'Center Frequency(GHz)': '36.8', 'Channel Bandwidth(MHz)': '1000'}]
 
     test = M_OBUE_Test_Contig(parameters, carrier_list)
