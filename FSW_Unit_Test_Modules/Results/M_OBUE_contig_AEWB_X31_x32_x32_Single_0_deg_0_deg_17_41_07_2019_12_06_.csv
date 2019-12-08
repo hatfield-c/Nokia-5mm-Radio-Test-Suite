@@ -1,0 +1,26 @@
+Test Bench,4W 203 B4
+Unit Name,AEWB
+Unit HW Version,X31
+TRX Module Version,x32
+Antenna Module Version,x32
+RFM SW Version,5GH49.R04.03
+Malli FPGA Image,v42
+Antenna FPGA Image,0.3.0
+Carrier Configuration,Single
+Test Date,17_41_07_2019_12_06
+Test Temperature,ROOM
+Az. Beam Position,0_deg
+El. Beam Position,0_deg
+Instrument,TCPIP::192.168.255.200::inst0::INSTR
+Testbench Correction,bench4_7jun.s2p
+Measured Antenna Gain,21
+Radio Antenna Gain,29.1
+RF Start,37
+RF Stop,40
+,
+,
+Name,Span Start,Span Stop,Number Points,mAM Gain,RA Gain,Pk Frequency,Pk Amplitude,TRP,
+Span 0,35.5,35.29,1001,21,29.1,35.29,-52.9,-61.0,
+Span 1,35.29,35.45,1001,21,29.1,35.43346,-52.8,-60.9,
+Span 2,38.05,38.21,1001,21,29.1,38.08061,-53.6,-61.7,
+Span 3,38.21,41.5,6579,21,29.1,39.99752,-50.2,-58.3,
