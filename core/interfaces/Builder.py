@@ -258,7 +258,11 @@ class Builder(Interface):
             alert.pack()
             return
 
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = self.builderData["default_dir"], 
+            title = "Save New " + self.builderData["type"], 
+            filetypes = [("csv files", "*.csv")]
+        )
         
         if fileName is None or fileName == "":
             return
@@ -286,7 +290,11 @@ class Builder(Interface):
             alert.pack()
             return
 
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.builderData["type"], filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.askopenfilename(
+            initialdir = self.builderData["default_dir"], 
+            title = "Load " + self.builderData["type"], 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -323,7 +331,11 @@ class Builder(Interface):
         
 
     def saveCollectionAs(self):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = _CONFIG_["collection_dir"], 
+            title = "Save Collection As", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -342,7 +354,11 @@ class Builder(Interface):
         self.rebuild(fileName)
 
     def loadCollection(self):
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load " + self.builderData["type"] + " Collection", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.askopenfilename(
+            initialdir = _CONFIG_["collection_dir"], 
+            title = "Load " + self.builderData["type"] + " Collection", 
+            filetypes = [("csv files", "*.csv")]
+        )
         
         if fileName is None or fileName == "":
             return
@@ -352,7 +368,11 @@ class Builder(Interface):
         self.rebuild(fileName)
 
     def newCollection(self):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save New Collecion", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = _CONFIG_["collection_dir"], 
+            title = "Save New Collecion", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -367,7 +387,8 @@ class Builder(Interface):
     def editDefaultValues(self, model):
         editCsv = EditModel(
             model = model, 
-            controls = self.builderData["controls"]["edit"]
+            controls = self.builderData["controls"]["edit"],
+            defaultDir = self.builderData["default_dir"]
         )
         editCsv.pack()
 

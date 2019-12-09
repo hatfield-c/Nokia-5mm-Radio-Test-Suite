@@ -1,3 +1,4 @@
+from Config import _CONFIG_
 from core.Interface import Interface
 from core.CSVEditor import CSVEditor
 from core.UIFactory import UIFactory
@@ -13,7 +14,8 @@ class EditModel(Interface):
         dimensions = { 
             "width": 770, 
             "height": 500
-        }, 
+        },
+        defaultDir = _CONFIG_["csv_dir"],
         controls = [],
         model = None
     ):
@@ -22,6 +24,7 @@ class EditModel(Interface):
             
         super().__init__(title = title, dimensions = dimensions)
 
+        self.defaultDir = defaultDir
         self.model = model
         self.dimensions = dimensions
 
@@ -34,6 +37,7 @@ class EditModel(Interface):
         self.delimiter = Divider(self)
         self.csvFrame = CSVEditor(
             root = self, 
+            defaultDir = self.defaultDir,
             dimensions = self.dimensions, 
             model = self.model, 
             controls = self.controls,

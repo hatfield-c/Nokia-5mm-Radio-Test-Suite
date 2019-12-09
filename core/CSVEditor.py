@@ -10,19 +10,28 @@ from core.interfaces.alerts.NoKeyValueError import NoKeyValueError
 from core.interfaces.alerts.NoBenchRunError import NoBenchRunError
 
 from core.inputs.Label import Label as InputLabel
-from core.inputs.AllocationFile import AllocationFile
+from core.inputs.FSWFile import FSWFile
 from core.inputs.CollectionDropDown import CollectionDropDown as SequenceSelector
 from core.inputs.Radio import Radio
 
 class CSVEditor(tkinter.Frame):
 
-    def __init__(self, root, model, dimensions, controls = None, subInterface = True):
+    def __init__(
+            self, 
+            root, 
+            model, 
+            dimensions, 
+            defaultDir = _CONFIG_["csv_dir"],
+            controls = None, 
+            subInterface = True
+        ):
         super().__init__(root, width = dimensions["width"], height = dimensions["height"])
 
         self.root = root
         self.subInterface = subInterface
         self.model = model
         self.dimensions = dimensions
+        self.defaultDir = defaultDir
         self.controls = controls
         self.modelFactory = ModelFactory(
             args = {
@@ -271,7 +280,11 @@ class CSVEditor(tkinter.Frame):
         self.rebuild(self.model)
 
     def saveAs(self):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = self.defaultDir, 
+            title = "Save As", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -287,7 +300,11 @@ class CSVEditor(tkinter.Frame):
         self.rebuild(newModel)
 
     def load(self):
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Open", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.askopenfilename(
+            initialdir = self.defaultDir, 
+            title = "Open", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -316,7 +333,11 @@ class CSVEditor(tkinter.Frame):
         return emptyRow
 
     def newFile(self):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = self.defaultDir, 
+            title = "New", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -353,8 +374,8 @@ class CSVEditor(tkinter.Frame):
         entryContainer = args["entry_container"]
 
         row = self.generateEmptyRow()
-        row["key"] ="<label|Allocation Filepath>"
-        row["value"] = AllocationFile.DEFAULT
+        row["key"] ="<label|Allocation File>"
+        row["value"] = FSWFile.DEFAULT_BUILD + "ALLOCATION|>"
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
 
@@ -370,8 +391,8 @@ class CSVEditor(tkinter.Frame):
         entryContainer = args["entry_container"]
 
         row = self.generateEmptyRow()
-        row["key"] ="<label|Correction Filepath>"
-        row["value"] = AllocationFile.DEFAULT
+        row["key"] ="<label|Correction File>"
+        row["value"] = FSWFile.DEFAULT_BUILD + "s2p|>"
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
 

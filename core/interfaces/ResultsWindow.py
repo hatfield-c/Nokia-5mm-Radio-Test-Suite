@@ -202,7 +202,11 @@ class ResultsWindow(Interface):
         DataController.SaveSloppy(fileName = self.autoPath, csvData = csvObj)
 
     def saveAs(self, sequenceIndex, benchIndex, runIndex, resultData):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = _CONFIG_["result_dir"], 
+            title = "Save Collection As", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return

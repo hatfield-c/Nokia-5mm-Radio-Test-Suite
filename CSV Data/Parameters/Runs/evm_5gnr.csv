@@ -4,4 +4,4 @@ key,value
 <label|Attenuation(dBm)>,10.0
 <label|Number Carriers>,1
 <label|QAM PDSCH>,64
-<label|Allocation File>,<allocation_file|>
+<label|Allocation File>,<fsw_file|ALLOCATION|>

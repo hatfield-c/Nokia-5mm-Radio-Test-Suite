@@ -36,7 +36,6 @@ class RunBuilder(Builder):
                     "newFile",
                     "divider",
                     "addAllocationFile",
-                    "addCorrectionFile",
                     "addMobue",
                     "addAbCategory",
                     "addCarrier",

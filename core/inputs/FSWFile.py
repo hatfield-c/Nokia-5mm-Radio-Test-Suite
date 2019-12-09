@@ -1,13 +1,15 @@
 import tkinter
-from core.interfaces.AllocationFile import AllocationFile as AllocationInterface
+from core.interfaces.FSWFile import FSWFile as FSWInterface
 
-class AllocationFile(tkinter.Frame):
+class FSWFile(tkinter.Frame):
     # Defines the numerical index of the passed arguments data, and what they store
     # args["data"] = [
-    #    0          The default path of the field
+    #   0           The file extension that the browser looks for
+    #   1           The default path of the field
     # ]
 
-    DEFAULT = "<allocation_file|>"
+    DEFAULT = "<fsw_file|ALLOCATION|>"
+    DEFAULT_BUILD = "<fsw_file|"
 
     def __init__(self, args):
         root = args["root"]
@@ -20,9 +22,14 @@ class AllocationFile(tkinter.Frame):
         self.columnconfigure(0, weight = 1)
 
         if len(data) < 1:
+            self.fileType = "s2p"
+        else:
+            self.fileType = data[0]
+
+        if len(data) < 2:
             self.path = ""
         else:
-            self.path = data[0]
+            self.path = data[1]
         
         self.fileField = tkinter.Entry(self)
         self.fileField.insert(index = 0, string = self.path)
@@ -32,15 +39,15 @@ class AllocationFile(tkinter.Frame):
         self.button = tkinter.Button(
             self, 
             text = u"\uD83D\uDCC1",
-            command = lambda : self.getAllocationFile(),
+            command = lambda : self.getFSWFile(),
             borderwidth = 0,
             font = "Helevetica 12"
         )
         self.button.grid(row = 0, column = 1)
 
-    def getAllocationFile(self):
+    def getFSWFile(self):
         filePath = self.fileField.get()
-        allocationInterface = AllocationInterface(parent = self, startingDir = filePath)
+        fswInterface = FSWInterface(parent = self, startingDir = filePath, fileType = self.fileType)
 
         self.fileField.delete(0, 'end')
         self.fileField.insert(index = 0, string = self.path)

@@ -233,7 +233,11 @@ class SuiteManager(Interface):
             self.newSuite(args)
             return
 
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save As", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = _CONFIG_["suite_dir"], 
+            title = "Save As", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -251,7 +255,11 @@ class SuiteManager(Interface):
         self.rebuild(modelData = self.modelData)
 
     def newSuite(self, args):
-        fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "New Suite File", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.asksaveasfilename(
+            initialdir = _CONFIG_["suite_dir"], 
+            title = "New Suite File", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return
@@ -269,7 +277,11 @@ class SuiteManager(Interface):
         self.rebuild(modelData = newSuite)
 
     def editSuite(self, args):
-        fileName = tkinter.filedialog.askopenfilename(initialdir = _CONFIG_["csv_dir"], title = "Load Test Suite", filetypes = [("csv files", "*.csv")])
+        fileName = tkinter.filedialog.askopenfilename(
+            initialdir = _CONFIG_["suite_dir"], 
+            title = "Load Test Suite", 
+            filetypes = [("csv files", "*.csv")]
+        )
 
         if fileName is None or fileName == "":
             return

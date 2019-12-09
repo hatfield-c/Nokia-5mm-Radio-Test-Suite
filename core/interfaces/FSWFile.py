@@ -3,10 +3,11 @@ from core.Interface import Interface
 from core.inputs.legacy.fsw_file_navigator import fsw_file_navbox
 import tkinter
 
-class AllocationFile(tkinter.Toplevel):
-    def __init__(self, parent, startingDir = None ):
+class FSWFile(tkinter.Toplevel):
+    def __init__(self, parent, startingDir = None, fileType = ".s2p"):
         super().__init__(parent)
         self.parent = parent
+        self.fileType = fileType
 
         self.transient(self.parent)
         self.geometry("400x200")
@@ -14,16 +15,16 @@ class AllocationFile(tkinter.Toplevel):
         self.iconbitmap(_CONFIG_["favicon_path"])
 
         if startingDir is None or startingDir == "":
-            self.directory = "C:\\R_S\\Instr\\user\\NR5G"
+            self.directory = "C:\\"
         else:
             self.directory = startingDir
 
         self.columnconfigure(0, weight = 1)
 
-        self.label = tkinter.Label(self, text = "Select Allocation File", font = "Helevetica 12 bold underline")
+        self.label = tkinter.Label(self, text = "Select FSW File of type: " + str(self.fileType), font = "Helevetica 12 bold underline")
         self.label.grid(row = 0, column = 0, pady = 10)
         
-        self.navbox = fsw_file_navbox(self, self.directory, "s2p")
+        self.navbox = fsw_file_navbox(self, self.directory, str(self.fileType))
         self.navbox.grid(row = 1, column = 0)
 
         self.submitButton = tkinter.Button(self, text = "Submit", padx = 10, command = lambda : self.submit())

@@ -1,7 +1,7 @@
 from core.inputs.Label import Label
 from core.inputs.Entry import Entry
 from core.inputs.Radio import Radio
-from core.inputs.AllocationFile import AllocationFile
+from core.inputs.FSWFile import FSWFile
 from core.inputs.CollectionDropDown import CollectionDropDown
 
 class InputFactory:
@@ -10,7 +10,7 @@ class InputFactory:
         "entry": Entry,
         "label": Label,
         "radio": Radio,
-        "allocation_file": AllocationFile,
+        "fsw_file": FSWFile,
         "sequence_select": CollectionDropDown
     }
 

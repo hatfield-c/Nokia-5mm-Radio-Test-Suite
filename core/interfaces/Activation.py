@@ -33,6 +33,7 @@ class Activation(Interface):
         self.autosave = tkinter.IntVar()
         self.viewResults.set("1")
         self.autosave.set("0")
+        self.maxLoops = 999
 
         self.grid_propagate(False)
         self.rowconfigure(0, weight = 1)
@@ -97,7 +98,17 @@ class Activation(Interface):
             borderwidth = 2,
             relief = "groove"
         )
-        self.overwriteCheckbox.grid(row = 0, column = 1, padx = (10, 0))
+        self.overwriteCheckbox.grid(row = 0, column = 1, padx = (10, 10))
+
+        self.loopFrame = tkinter.Frame(self.configFrame, borderwidth = 2, relief = "groove")
+        self.loopFrame.grid(row = 0, column = 2)
+
+        self.loopEntry = tkinter.Entry(self.loopFrame, width = 3)
+        self.loopEntry.insert(0, "1")
+        self.loopEntry.grid(row = 0, column = 0, padx = 5)
+
+        self.loopLabel = tkinter.Label(self.loopFrame, text = "Loop")
+        self.loopLabel.grid(row = 0, column = 1, padx = (0, 5))
 
         self.activateButton = tkinter.Button(
             self.buttonRow, 
@@ -182,8 +193,14 @@ class Activation(Interface):
             NoSequences()
             return
 
-        for sequenceIndex in sequences:
-            self.activateSequence(appData, sequenceIndex)
+        loopCount = self.getLoopCount()
+        loopIndex = 0
+
+        while loopIndex < loopCount:
+            for sequenceIndex in sequences:
+                self.activateSequence(appData, sequenceIndex)
+
+            loopIndex += 1
 
     def oneSequence(self):
         if not self.suite.validCollections():
@@ -206,7 +223,13 @@ class Activation(Interface):
             alert.pack()
             return
 
-        self.activateSequence(appData, sequenceIndex)
+        loopCount = self.getLoopCount()
+        loopIndex = 0
+
+        while loopIndex < loopCount:
+            self.activateSequence(appData, sequenceIndex)
+
+            loopIndex += 1
 
     def pair(self):
         if not self.suite.validCollections():
@@ -233,7 +256,13 @@ class Activation(Interface):
         benchIndex = pairData["benchIndex"]
         runIndex = pairData["runIndex"]
 
-        self.activateSequencePair(appData, sequenceIndex, benchIndex, runIndex)
+        loopCount = self.getLoopCount()
+        loopIndex = 0
+
+        while loopIndex < loopCount:
+            self.activateSequencePair(appData, sequenceIndex, benchIndex, runIndex)
+
+            loopIndex += 1
 
     def activateSequence(self, appData, sequenceIndex):
         viewresults = int(self.viewResults.get())
@@ -390,3 +419,22 @@ class Activation(Interface):
             index += 1
 
         return index
+
+    def getLoopCount(self):
+        loopCount = self.loopEntry.get()
+
+        if loopCount == None or loopCount == "":
+            loopCount = 0
+
+        try:
+            loopCount = int(loopCount)
+        except:
+            loopCount = 0
+
+        if loopCount < 1:
+            loopCount = 0
+
+        if loopCount > 999:
+            loopCount = self.maxLoops
+
+        return loopCount

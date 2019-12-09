@@ -1,5 +1,5 @@
 key,value
-<label|Correction File>,<allocation_file|>
+<label|Correction File>,<fsw_file|s2p|>
 <label|Test Bench>,4W 203 B4
 <label|Unit Name>,AEWB
 <label|Unit HW Version>,X31
@@ -14,7 +14,6 @@ key,value
 <label|Az. Beam Position>,0_deg
 <label|El. Beam Position>,0_deg
 <label|Instrument IP>,192.168.255.200
-<label|Testbench Correction>,bench4_7jun.s2p
 <label|Measured Antenna Gain>,21
 <label|Radio Antenna Gain>,29.1
 <label|RF Start>,37

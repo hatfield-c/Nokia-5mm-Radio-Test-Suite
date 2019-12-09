@@ -24,7 +24,7 @@ class BenchBuilder(Builder):
                     "type": Parameters.ID, 
                     "fields": self.FIELDS,
                     "default": [
-                        { "key": "<label|DEFAULT_TEXT>", "value": "" }
+                        { "key": "<label|Correction File>", "value": "<fsw_file|s2p|>" }
                     ]
                 }
             ),
@@ -35,6 +35,7 @@ class BenchBuilder(Builder):
                     "load",
                     "newFile",
                     "divider",
+                    "addCorrectionFile",
                     "addRadio",
                     "addKey",
                     "newEmpty",

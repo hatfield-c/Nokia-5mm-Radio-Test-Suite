@@ -23,6 +23,7 @@ _CONFIG_ = {
     "bench_dir": "CSV Data/Parameters/Benches/",
     "run_dir": "CSV Data/Parameters/Runs/",
     "sequence_dir": "CSV Data/Parameters/Sequences/",
+    "result_dir": "CSV Data/Results/",
 
     # Media Paths
     "favicon_path": "media/icon.ico",
