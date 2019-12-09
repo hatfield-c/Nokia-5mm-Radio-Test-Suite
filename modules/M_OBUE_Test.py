@@ -11,8 +11,7 @@ import visa
 
 #       local imports
 import modules.SCPI_Scripts.OBUE_Script as obue_scpi
-#from Support_Modules import csv_logger as csvr
-
+import core.DataController as Helper
 
 class M_OBUE_Test:
 
@@ -23,11 +22,27 @@ class M_OBUE_Test:
     f_offset_max_L = RF_Start - 1.5 #37GHz - 1.5 GHz
     f_offset_max_R = RF_Stop + 1.5 #40 GHz + 1.5 GHz
 
-
-    def __init__(self, parameters, carrier_list, testbench = None,
+    def __init__(self, parameters, testbench = None,
                     to_log = True, iq_swap = False):
+        self.FAIL = False
+        self.failures = []
+
+        flatParameters = parameters
+        flatTestbench = testbench
+        parameters = Helper.DataController.GetDictionary(flatParameters)
+        testbench = Helper.DataController.GetDictionary(flatTestbench)
 
         carrier_list = self.extract_carrier_vals(parameters)
+
+        if not carrier_list or carrier_list is None:
+            self.FAIL = True
+            failure = { 
+                "title": "EMPTY CARRIER LIST", 
+                "message": "A list of carriers was not properly provided to this test class. Please ensure that carrier parameter data is properly set and not empty." 
+            }
+            self.failures.append(failure)
+
+            return
 
         #simplify the block of contiguous multicarrier to
         #a contiguous block tuple. (lower_bound, upper_bound)
@@ -52,27 +67,33 @@ class M_OBUE_Test:
 
         self.offset_spans = []
         print("Category", parameters['Category'])
-        if parameters['Category'] == "1":
+        if str(parameters['Category']) == "1":
             #category_a
             print("A")
             self.offset_spans = self.calc_spans_a()
 
-        if parameters['Category'] == "2":
+        if (parameters['Category']) == "2":
             #category b
             print("B")
             self.offset_spans = self.calc_spans_b()
 
-        #print(self.offset_spans)
+        #print("spans", self.offset_spans)
 
     def run_test(self):
+        if self.FAIL:
+            return self.failures
+
         index = 0
         peak_list = []
         for span in self.offset_spans:
-            peak = obue_scpi.obue_script(("Span " + str(index)),
-                                            self.sweep_time, self.rbw_MHz,
-                                            span[0], span[1],
-                                            self.testbench,
-                                            iq_swap = self.iq_swap)
+            peak = obue_scpi.obue_script(
+                ("Span " + str(index)),
+                float(self.sweep_time), 
+                float(self.rbw_MHz),
+                span[0], span[1],
+                self.testbench,
+                iq_swap = self.iq_swap
+            )
             peak_list.append(peak)
             print(peak)
             index += 1
@@ -141,20 +162,32 @@ class M_OBUE_Test:
 
 
     def extract_carrier_vals(self, parameters):
+        carrier_list = []
 
         #iterate through carriers
         for carrier_num in range(0, self.MAX_CARRIERS):
-            fc_key = ("Carrier %d Center Frequency(GHz)"%carrier_num)
-            bw_key = ("Carrier %d Channel Bandwidth(MHz)"%carrier_num)
-
+            c_key = ("Carrier%d"%carrier_num)
+            fc_key = ("Center Frequency(GHz)%d"%carrier_num)
+            bw_key = ("Channel Bandwidth(MHz)%d"%carrier_num)
+            carrier = {}
 
             if fc_key in parameters:
-                carrier = {}
-                carrier["Center Frequency(GHz)"] = parameters[fc_key]
-                if bw_key in parameters:
-                    carrier["Channel Bandwidth(MHz)"] = parameters[bw_key]
+                if parameters[fc_key] is not None and parameters[fc_key] != "":
+                    carrier["Center Frequency(GHz)"] = parameters[fc_key]
+                
+                parameters.pop(fc_key)
 
-            carrier_list.append(carrier)
+                if bw_key in parameters:
+                    if parameters[bw_key] is not None and parameters[bw_key] != "":
+                        carrier["Channel Bandwidth(MHz)"] = parameters[bw_key]
+                    
+                    parameters.pop(bw_key)
+
+            if c_key in parameters:
+                parameters.pop(c_key)
+
+            if carrier:
+                carrier_list.append(carrier)
 
         return carrier_list
 

@@ -3,13 +3,13 @@ from Config import _CONFIG_
 
 class Radio(tkinter.Frame):
     # Defines the numerical index of the passed arguments data, and what they store
-    POSITIONAL_DATA = [
+    # args["data"] = [
     #    0          Each index of the positional arguments
     #    1          represent a title for an option that 
     #    2          can be chosen for the radio button. 
     #    ...        There is presently no limit to radio
     #    N          radio options.
-    ]
+    # ]
 
     DEFAULT = "<radio|OPTION_1|OPTION_2|OPTION_3|etc.>"
 

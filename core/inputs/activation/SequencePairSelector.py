@@ -42,7 +42,8 @@ class SequencePairSelector(tkinter.Frame):
         if curSequence in seqData:
             sequence = seqData[curSequence]
         else:
-            sequence = []
+            sequence = { }
+
 
         self.pairList = self.buildSelectList(sequence)
         self.currentPair = tkinter.StringVar()
@@ -60,22 +61,26 @@ class SequencePairSelector(tkinter.Frame):
         self.refreshButton.grid(row = 1, column = 1, padx = 10)
 
     def buildSelectList(self, sequence):
-        benchCollection = self.suite.getWorkspace("benches").dataCollection
-        runCollection = self.suite.getWorkspace("runs").dataCollection
+        benchData = self.suite.getWorkspace("benches").compileData()
+        runData = self.suite.getWorkspace("runs").compileData()
 
         selectList = []
-        for pair in sequence:
-            benchIndex = pair["bench"]
-            runIndex = pair["run"]
 
-            benchModel = benchCollection.getModel(modelIndex = benchIndex)
-            runModel = runCollection.getModel(modelIndex = runIndex)
-            
-            if benchModel is None or runModel is None:
+        if "data" not in sequence:
+            return selectList
+        
+        for pair in sequence["data"]:
+            if "bench" not in pair or "run" not in pair:
+                    continue
+
+            if pair["bench"] == "" or pair["run"] == "":
                 continue
 
-            benchPath = benchModel.fileName
-            runPath = runModel.fileName
+            benchIndex = pair["bench"]
+            runIndex = pair["run"]
+            
+            benchPath = benchData[benchIndex]["fileName"]
+            runPath = runData[runIndex]["fileName"]
 
             option = str(benchIndex) + ":" + str(benchPath) + ",   " + str(runIndex) + ":" + str(runPath)
             selectList.append(option)

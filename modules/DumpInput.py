@@ -8,6 +8,6 @@ class DumpInput:
     def run_test(self):
         time.sleep(3)
         result = self.parameters
-        result.update(self.testbench)
+        result.extend(self.testbench)
         return result
 

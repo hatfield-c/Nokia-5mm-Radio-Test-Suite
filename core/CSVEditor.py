@@ -236,6 +236,10 @@ class CSVEditor(tkinter.Frame):
             "title": "Allocation\nFile",
             "action": lambda self, args : self.addAllocationFile(args = args)
         },
+        "addCorrectionFile": {
+            "title": "Correction\nFile",
+            "action": lambda self, args : self.addCorrectionFile(args = args)
+        },
         "addSequenceSelector": {
             "title": "Sequence\nSelector",
             "action": lambda self, args : self.addSequenceSelector(args = args)
@@ -327,6 +331,7 @@ class CSVEditor(tkinter.Frame):
     def addKey(self, args):
         if "key" not in self.model.getFields():
             alert = NoKeyError(path = self.model.getPath())
+            alert.pack()
             return
         
         entryContainer = args["entry_container"]
@@ -342,12 +347,30 @@ class CSVEditor(tkinter.Frame):
     def addAllocationFile(self, args):
         if "key" not in self.model.getFields() or "value" not in self.model.getFields():
             alert = NoKeyValueError(path = self.model.getPath())
+            alert.pack()
             return
 
         entryContainer = args["entry_container"]
 
         row = self.generateEmptyRow()
-        row["key"] ="<label|Allocation File>"
+        row["key"] ="<label|Allocation Filepath>"
+        row["value"] = AllocationFile.DEFAULT
+
+        modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
+
+        gridRow = len(self.entries)
+        modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
+
+    def addCorrectionFile(self, args):
+        if "key" not in self.model.getFields() or "value" not in self.model.getFields():
+            alert = NoKeyValueError(path = self.model.getPath())
+            alert.pack()
+            return
+
+        entryContainer = args["entry_container"]
+
+        row = self.generateEmptyRow()
+        row["key"] ="<label|Correction Filepath>"
         row["value"] = AllocationFile.DEFAULT
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
@@ -358,6 +381,7 @@ class CSVEditor(tkinter.Frame):
     def addSequenceSelector(self, args):
         if "bench" not in self.model.getFields() or "run" not in self.model.getFields():
             alert = NoBenchRunError(path = self.model.getPath())
+            alert.pack()
             return
 
         entryContainer = args["entry_container"]
@@ -387,6 +411,7 @@ class CSVEditor(tkinter.Frame):
     def addMobue(self, args):
         if "key" not in self.model.getFields() or "value" not in self.model.getFields():
             alert = NoKeyValueError(path = self.model.getPath())
+            alert.pack()
             return
         
         entryContainer = args["entry_container"]
@@ -409,6 +434,7 @@ class CSVEditor(tkinter.Frame):
     def addAbCategory(self, args):
         if "key" not in self.model.getFields() or "value" not in self.model.getFields():
             alert = NoKeyValueError(path = self.model.getPath())
+            alert.pack()
             return
         
         entryContainer = args["entry_container"]
@@ -423,6 +449,7 @@ class CSVEditor(tkinter.Frame):
     def addCarrier(self, args):
         if "key" not in self.model.getFields() or "value" not in self.model.getFields():
             alert = NoKeyValueError(path = self.model.getPath())
+            alert.pack()
             return
         
         carrierNum = 0

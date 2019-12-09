@@ -3,10 +3,10 @@ from Config import _CONFIG_
 
 class CollectionDropDown(tkinter.Frame):
     # Defines the numerical index of the passed arguments data, and what they store
-    POSITIONAL_DATA = [
+    # args["data"] = [
     #    0          The type of the collection to get data from.
     #    1          Default value already selected.
-    ]
+    # ]
 
     DEFAULT_RUN_STR = "<sequence_select|run|>"
     DEFAULT_BENCH_STR = "<sequence_select|bench|>"

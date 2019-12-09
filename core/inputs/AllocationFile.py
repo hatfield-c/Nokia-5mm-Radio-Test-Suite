@@ -3,9 +3,9 @@ from core.interfaces.AllocationFile import AllocationFile as AllocationInterface
 
 class AllocationFile(tkinter.Frame):
     # Defines the numerical index of the passed arguments data, and what they store
-    POSITIONAL_DATA = [
+    # args["data"] = [
     #    0          The default path of the field
-    ]
+    # ]
 
     DEFAULT = "<allocation_file|>"
 

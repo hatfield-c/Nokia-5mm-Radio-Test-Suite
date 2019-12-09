@@ -48,11 +48,11 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
     center_freq = float(center_freq.strip()) * (10 ** 9) #convert to Hz from GHz
 
     #Units are taken in hz.
-    tx_bw = float(tx_bw * (10**6)) #convert bw values from MHz to Hz
-    adj_bw = float(adj_bw * (10**6))
-    alt_bw = float(alt_bw * (10**6))
-    adj_space = float(adj_space * (10**6))
-    alt_space = float(alt_space * (10**6))
+    tx_bw = float(float(tx_bw) * (10**6)) #convert bw values from MHz to Hz
+    adj_bw = float(float(adj_bw) * (10**6))
+    alt_bw = float(float(alt_bw) * (10**6))
+    adj_space = float(float(adj_space) * (10**6))
+    alt_space = float(float(alt_space) * (10**6))
 
     VisaResourceManager = visa.ResourceManager()
     # connect to analyzer

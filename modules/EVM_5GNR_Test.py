@@ -8,12 +8,18 @@ import sys
 
 #       local imports
 import modules.SCPI_Scripts.EVM_Script as evm_scpi
+import core.DataController as Helper
 
 class EVM_5GNR_Test():
 
     def __init__(self, parameters = None, testbench = None, to_log = True):
 
         #EVM test doesnt contain much processing for parameters
+        flatParameters = parameters
+        flatTestbench = testbench
+        parameters = Helper.DataController.GetDictionary(flatParameters)
+        testbench = Helper.DataController.GetDictionary(flatTestbench)
+
         self.parameters = parameters
         self.testbench = testbench
         self.to_log = to_log

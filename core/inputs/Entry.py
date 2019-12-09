@@ -2,9 +2,9 @@ import tkinter
 
 class Entry(tkinter.Entry):
     # Defines the numerical index of the passed arguments data, and what they store
-    POSITIONAL_DATA = [
-        # NO POSITIONAL DATA
-    ]
+    # args["data"] = [
+    #   NO POSITIONAL DATA
+    # ]
 
     def __init__(self, args):
         root = args["root"]

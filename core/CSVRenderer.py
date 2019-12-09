@@ -204,7 +204,8 @@ class CSVRenderer(tkinter.Frame):
         for row in self.entries:
             dataRow = {}
             for entryKey in row:
-                dataRow[entryKey] = row[entryKey].get()
+                entryData = str(row[entryKey].get())
+                dataRow[entryKey] = entryData.strip()
 
             data.append(dataRow)
 

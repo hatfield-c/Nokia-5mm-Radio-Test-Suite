@@ -6,10 +6,16 @@ import sys
 #from legacy.Support_Modules import csv_logger as csvr
 
 import modules.SCPI_Scripts.EIRP_Script as eirp_scpi
+import core.DataController as Helper
 
 class EIRP_Test():
 
     def __init__(self, parameters, testbench = None):
+        
+        flatParameters = parameters
+        flatTestbench = testbench
+        parameters = Helper.DataController.GetDictionary(flatParameters)
+        testbench = Helper.DataController.GetDictionary(flatTestbench)
 
         #do some math.
         #from the parameters dic

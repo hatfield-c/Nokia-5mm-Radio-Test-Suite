@@ -4,6 +4,9 @@ import time
 import os
 
 from Config import _CONFIG_
+from core.CSVObject import CSVObject
+from core.DataController import DataController
+
 from core.inputs.CollectionDropDown import CollectionDropDown
 from core.inputs.activation.SequencePairSelector import SequencePairSelector
 
@@ -15,6 +18,7 @@ from core.models.Parameter import Parameter
 
 from core.interfaces.alerts.NoSequences import NoSequences
 from core.interfaces.alerts.SequenceError import SequenceError
+from core.interfaces.alerts.SequenceNotFound import SequenceNotFound
 from core.interfaces.alerts.ModuleError import ModuleError
 from core.interfaces.alerts.NoModuleError import NoModuleError
 from core.interfaces.alerts.ModuleNotFound import ModuleNotFound
@@ -172,9 +176,6 @@ class Activation(Interface):
             return
         
         appData = self.suite.compileData()
-
-        benches = appData["benches"]
-        runs = appData["runs"]
         sequences = appData["sequences"]
 
         if sequences is None or not sequences:
@@ -182,8 +183,7 @@ class Activation(Interface):
             return
 
         for sequenceIndex in sequences:
-            sequence = sequences[sequenceIndex]
-            self.activateSequence(sequenceIndex, sequence, benches, runs)
+            self.activateSequence(appData, sequenceIndex)
 
     def oneSequence(self):
         if not self.suite.validCollections():
@@ -193,29 +193,26 @@ class Activation(Interface):
 
         appData = self.suite.compileData()
 
-        benches = appData["benches"]
-        runs = appData["runs"]
         sequences = appData["sequences"]
+        sequenceIndex = self.sequenceDropDown.get()
 
-        if sequences is None or not sequences:
-            NoSequences()
+        if sequences is None or not sequences :
+            alert = NoSequences()
+            alert.pack()
             return
 
-        sequenceIndex = self.sequenceDropDown.get()
-        sequence = sequences[sequenceIndex]
+        if sequenceIndex is None or sequenceIndex not in sequences:
+            alert = SequenceNotFound(sequenceIndex = sequenceIndex)
+            alert.pack()
+            return
 
-        self.activateSequence(sequenceIndex, sequence, benches, runs)
+        self.activateSequence(appData, sequenceIndex)
 
     def pair(self):
         if not self.suite.validCollections():
             alert = MissingCollections()
             alert.pack()
             return
-
-        appData = self.suite.compileData()
-
-        benches = appData["benches"]
-        runs = appData["runs"]
 
         pairData = self.pairDropDown.get()
 
@@ -230,12 +227,15 @@ class Activation(Interface):
             NoSequences()
             return
 
+        appData = self.suite.compileData()
+
         sequenceIndex = pairData["sequenceIndex"]
-        pair = { "bench": pairData["benchIndex"], "run": pairData["runIndex"] }
+        benchIndex = pairData["benchIndex"]
+        runIndex = pairData["runIndex"]
 
-        self.activateSequencePair(sequenceIndex, pair, benches, runs)
+        self.activateSequencePair(appData, sequenceIndex, benchIndex, runIndex)
 
-    def activateSequence(self, sequenceIndex, sequence, benches, runs):
+    def activateSequence(self, appData, sequenceIndex):
         viewresults = int(self.viewResults.get())
         autosave = int(self.autosave.get())
 
@@ -244,95 +244,129 @@ class Activation(Interface):
             alert.pack()
             return
         
-        for pair in sequence:
+        sequence = appData["sequences"][sequenceIndex]
+
+        for pair in sequence["data"]:
             try:
-                success = self.activateSequencePair(sequenceIndex, pair, benches, runs)
+                if "bench" not in pair or "run" not in pair:
+                    continue
+
+                if pair["bench"] == "" or pair["run"] == "":
+                    continue
+
+                benchIndex = pair["bench"]
+                runIndex = pair["run"]
+                success = self.activateSequencePair(appData, sequenceIndex, benchIndex, runIndex)
             except Exception:
                 traceback.print_exc()
                 error = SequenceError(sequenceIndex = sequenceIndex, sequenceData = pair)
                 error.pack()
                 continue
 
-    def activateSequencePair(self, sequenceIndex, pair, benches, runs):
+    def activateSequencePair(self, appData, sequenceIndex, benchIndex, runIndex):
         viewresults = int(self.viewResults.get())
         autosave = int(self.autosave.get())
 
         if viewresults == 0 and autosave == 0:
             alert = ActivationConfigError()
             alert.pack()
-            return
+            return False
 
         resultData = { "No Data": "No data was returned." }
 
-        benchIndex = pair["bench"]
-        runIndex = pair["run"]
+        sequences = appData["sequences"]
+        benches = appData["benches"]
+        runs = appData["runs"]
 
+        sequence = sequences[sequenceIndex]
         bench = benches[benchIndex]
         run = runs[runIndex]
 
-        if "module" not in run:
-            alert = NoModuleError(sequenceIndex = sequenceIndex, sequenceData = pair)
+        moduleList = _CONFIG_["modules"]
+        moduleName = self.getModule(run["data"])
+
+        if moduleName is None:
+            alert = NoModuleError(
+                sequenceIndex = sequenceIndex + ":" + sequence["pureName"], 
+                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + run["index"] + ":" + run["pureName"] + ")"
+            )
+            alert.pack()
             return False
 
-        moduleList = _CONFIG_["modules"]
-
-        if run["module"] not in moduleList:
-            alert = ModuleNotFound(moduleName = run["module"], sequenceIndex = sequenceIndex, sequenceData = pair)
+        if moduleName not in moduleList:
+            alert = ModuleNotFound(
+                moduleName = moduleName, 
+                sequenceIndex = sequenceIndex + ":" + sequence["pureName"], 
+                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + run["index"] + ":" + run["pureName"] + ")"
+            )
+            alert.pack()
             return False
 
         startTime = time.time()
 
         try:
-            bluePrint = moduleList[run["module"]]
-            module = bluePrint(parameters = run, testbench = bench)
+            bluePrint = moduleList[moduleName]
+            module = bluePrint(parameters = run["data"], testbench = bench["data"])
 
             resultData = module.run_test()
         except Exception:
             traceback.print_exc()
-            error = ModuleError(moduleName = run["module"], sequenceIndex = sequenceIndex, sequenceData = pair)
+            error = ModuleError(
+                moduleName = moduleName, 
+                sequenceIndex = sequenceIndex + ":" + sequence["pureName"], 
+                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + run["index"] + ":" + run["pureName"] + ")"
+            )
             error.pack()
             return False
 
         endTime = time.time()
         runtime = endTime - startTime
-        resultData["MODULE_RUNTIME"] = str(runtime)
-        
-        resultParameters = {}
-        for key in resultData:
-            parameter = Parameter(key = key, value = str(resultData[key]))
-            resultParameters[key] = parameter
+
+        if isinstance(resultData, dict):
+            resultData = DataController.GetList(data = resultData)
+        elif not isinstance(resultData, list):
+            resultData = [ resultData ]
+
+        runtimeRow = { "key": "MODULE_RUNTIME", "value": str(runtime) }
+        resultData.append(runtimeRow)
 
         resultPath = None
         if autosave == 1:
-            resultPath = self.getResultPath(sequenceIndex, benchIndex, runIndex)
-            resultModel = Parameters(path = resultPath)
-            resultModel.setParameters(parameters = resultParameters)
-            resultModel.saveParameters()
+            resultPath = self.getResultPath(appData, sequenceIndex, benchIndex, runIndex)
+            
+            csvObj = CSVObject(rowsList = resultData, fields = None, path = resultPath)
+            DataController.SaveSloppy(fileName = resultPath, csvData = csvObj)
 
         if viewresults == 1:
             results = ResultsWindow(
-                moduleName = run["module"], 
+                moduleName = moduleName,
                 sequenceIndex = sequenceIndex, 
                 benchIndex = benchIndex,
                 runIndex = runIndex,
+                compiledData = appData,
                 resultPath = resultPath,
-                resultData = resultData,
-                suite = self.suite
+                resultData = resultData
             )
             results.pack()
 
         return True
 
-    def getResultPath(self, sequenceIndex, benchIndex, runIndex):
-        collections = self.suite.getDataCollections()
-        benchCollection = collections["benches"]
-        runCollection = collections["runs"]
+    def getModule(self, runData):
+        for row in runData:
+            if "key" not in row or "value" not in row:
+                return None
 
-        benchModel = benchCollection.getModel(modelIndex = benchIndex)
-        runModel = runCollection.getModel(modelIndex = runIndex)
+            if row["key"] == "module":
+                return row["value"]
 
-        benchName = benchModel.pureName
-        runName = runModel.pureName
+        return None
+
+    def getResultPath(self, appData, sequenceIndex, benchIndex, runIndex):
+        bench = appData["benches"][benchIndex]
+        run = appData["runs"][runIndex]
+
+        benchName = bench["pureName"]
+        runName = run["pureName"]
 
         path = _CONFIG_["result_dir"]
         path += self.suite.modelData.pureName + "/"

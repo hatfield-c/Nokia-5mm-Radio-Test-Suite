@@ -2,6 +2,9 @@ import tkinter
 import os
 
 from Config import _CONFIG_
+
+from core.CSVObject import CSVObject
+from core.DataController import DataController
 from core.Interface import Interface
 from core.UIFactory import UIFactory
 
@@ -16,24 +19,27 @@ class ResultsWindow(Interface):
         sequenceIndex,
         benchIndex,
         runIndex,
-        suite,
+        compiledData,
         resultPath,
         resultData
     ):
-        self.suite = suite
+        self.data = compiledData
         self.autoPath = self.getResultPath(sequenceIndex, benchIndex, runIndex)
 
-        collections = suite.getDataCollections()
-        benchCollection = collections["benches"]
-        runCollection = collections["runs"]
+        sequence = compiledData["sequences"][sequenceIndex]
+        bench = compiledData["benches"][benchIndex]
+        run = compiledData["runs"][runIndex]
 
-        benchModel = benchCollection.getModel(modelIndex = benchIndex)
-        runModel = runCollection.getModel(modelIndex = runIndex)
+        sequenceName = sequence["fileName"]
+        benchName = bench["fileName"]
+        runName = run["fileName"]
 
-        benchName = benchModel.fileName
-        runName = runModel.fileName
-
-        title = str(moduleName) + ": [Seq-" + str(sequenceIndex) +"][Bench-" + str(benchIndex) + "-" + str(benchName) + "][Run-" + str(runIndex) + "-" + str(runName) + "]"
+        title = (
+            str(moduleName) + ": " + 
+            "[Seq-" + str(sequenceIndex) +"]" +
+            "[Bench-" + str(benchIndex) + "-" + str(benchName) + "]" + 
+            "[Run-" + str(runIndex) + "-" + str(runName) + "]"
+        )
         super().__init__(title = title, dimensions = { "height": 750, "width": 650 })
         self.columnconfigure(0, weight = 1)
 
@@ -81,7 +87,7 @@ class ResultsWindow(Interface):
 
         UIFactory.ScrollBinding(container = self.scrollContainer, scrollableCanvas = self.scrollFrame, child = self.resultsFrame)
         
-        self.unitFrame = self.buildUnitFrame(moduleName, sequenceIndex, benchIndex, runIndex, benchName, runName, resultPath)
+        self.unitFrame = self.buildUnitFrame(moduleName, sequenceIndex, benchIndex, runIndex, resultPath)
         self.unitFrame.grid(row = 0, column = 0, sticky = "ew")
 
         self.divider = Divider(self.resultsFrame, girth = 1, width = scrollWidth)
@@ -96,15 +102,15 @@ class ResultsWindow(Interface):
         self.buttonFrame = self.buildButtonFrame(sequenceIndex, benchIndex, runIndex, resultData)
         self.buttonFrame.grid(row = 2, column = 0, sticky = "ew", pady = 20)
 
-    def buildUnitFrame(self, moduleName, sequenceIndex, benchIndex, runIndex, benchName, runName, resultPath):
+    def buildUnitFrame(self, moduleName, sequenceIndex, benchIndex, runIndex, resultPath):
         unitFrame = tkinter.Frame(self.resultsFrame, background = "white")
 
         unitData = {
             "Module:": moduleName,
-            "Suite:": self.suite.modelData.fileName,
-            "Sequence Index:": sequenceIndex,
-            "Bench:": str(benchIndex) + ":" + benchName,
-            "Run:": str(runIndex) + ":" + runName
+            "Suite:": self.data["suite"]["fileName"],
+            "Sequence:": sequenceIndex + ":" + self.data["sequences"][sequenceIndex]["fileName"],
+            "Bench:": str(benchIndex) + ":" + self.data["benches"][benchIndex]["fileName"],
+            "Run:": str(runIndex) + ":" + self.data["runs"][runIndex]["fileName"]
         }
 
         i = 0
@@ -115,7 +121,7 @@ class ResultsWindow(Interface):
             keyLabel.grid(row = i, column = 0, sticky = "w")
 
             valueLabel = tkinter.Label(unitFrame, text = str(unit), font = "Helevetica 12", background = "white")
-            valueLabel.grid(row = i, column = 1, padx = (5, 0), sticky = "w")
+            valueLabel.grid(row = i, column = 1, padx = (20, 0), sticky = "w")
 
             i += 1
 
@@ -126,7 +132,11 @@ class ResultsWindow(Interface):
 
             valueLabel = tkinter.Label(unitFrame, text = str(resultPath), font = "Helevetica 12", background = "white")
             valueLabel.grid(row = i, column = 1, padx = (5, 0), sticky = "w")
+            i += 1
 
+
+        resultLabel = tkinter.Label(unitFrame, text = "Results:", font = "Helevetica 12 bold", padx = 10, background = "white")
+        resultLabel.grid(row = i, column = 0, sticky = "w", pady = (20, 0))
 
         return unitFrame
 
@@ -134,14 +144,25 @@ class ResultsWindow(Interface):
         resultFrame = tkinter.Frame(self.resultsFrame, padx = 30, background = "white")
 
         i = 0
-        for key in resultData:
-            result = resultData[key]
+        for row in resultData:
+            if isinstance(row, dict):
+                entries = list(row.values())
+            elif isinstance(row, list):
+                entries = row
+            else:
+                entries = [ row ]
 
-            keyLabel = tkinter.Label(resultFrame, text = key + ":", font = "Helevetica 10 bold", padx = 5, background = "white")
-            keyLabel.grid(row = i, column = 0, sticky = "w")
-
-            valueLabel = tkinter.Label(resultFrame, text = str(result), font = "Helevetica 10", background = "white")
-            valueLabel.grid(row = i, column = 1, padx = (5, 0), sticky = "w")
+            k = 0
+            for entry in entries:
+                entryLabel = tkinter.Label(
+                    resultFrame, 
+                    text = str(entry),
+                    font = "Helevatica 10",
+                    padx = 3,
+                    background = "white"
+                )
+                entryLabel.grid(row = i, column = k, sticky = "w")
+                k += 1
 
             i += 1
 
@@ -175,15 +196,10 @@ class ResultsWindow(Interface):
         return buttonFrame
 
     def save(self, sequenceIndex, benchIndex, runIndex, resultData):
-        resultParameters = {}
-        for key in resultData:
-            parameter = Parameter(key = key, value = str(resultData[key]))
-            resultParameters[key] = parameter
-        
         os.makedirs(os.path.dirname(self.autoPath), exist_ok = True)
-        resultModel = Parameters(path = self.autoPath)
-        resultModel.setParameters(parameters = resultParameters)
-        resultModel.saveParameters()
+
+        csvObj = CSVObject(rowsList = resultData, fields = None, path = self.autoPath)
+        DataController.SaveSloppy(fileName = self.autoPath, csvData = csvObj)
 
     def saveAs(self, sequenceIndex, benchIndex, runIndex, resultData):
         fileName = tkinter.filedialog.asksaveasfilename(initialdir = _CONFIG_["csv_dir"], title = "Save Collection As", filetypes = [("csv files", "*.csv")])
@@ -193,29 +209,17 @@ class ResultsWindow(Interface):
 
         fileName = UIFactory.AddFileExtension(path = fileName, ext = ".csv")
 
-        resultParameters = {}
-        for key in resultData:
-            parameter = Parameter(key = key, value = str(resultData[key]))
-            resultParameters[key] = parameter
-        
         os.makedirs(os.path.dirname(fileName), exist_ok = True)
-        resultModel = Parameters(path = fileName)
-        resultModel.setParameters(parameters = resultParameters)
-        resultModel.saveParameters()
+
+        csvObj = CSVObject(rowsList = resultData, fields = None, path = fileName)
+        DataController.SaveSloppy(fileName = fileName, csvData = csvObj)
 
     def getResultPath(self, sequenceIndex, benchIndex, runIndex):
-        collections = self.suite.getDataCollections()
-        benchCollection = collections["benches"]
-        runCollection = collections["runs"]
-
-        benchModel = benchCollection.getModel(modelIndex = benchIndex)
-        runModel = runCollection.getModel(modelIndex = runIndex)
-
-        benchName = benchModel.pureName
-        runName = runModel.pureName
+        benchName = self.data["benches"][benchIndex]["pureName"]
+        runName = self.data["runs"][runIndex]["pureName"]
 
         path = _CONFIG_["result_dir"]
-        path += self.suite.modelData.pureName + "/"
+        path += self.data["suite"]["pureName"] + "/"
         
         fileName = "[Seq-" + str(sequenceIndex) +"][Bench-" + str(benchIndex) + "-" + str(benchName) + "][Run-" + str(runIndex) + "-" + str(runName) + "]"
         fileName += "/data"

@@ -13,7 +13,7 @@ import visa
 
 #       local imports
 import modules.SCPI_Scripts.OBUE_Script as obue_scpi
-#from Support_Modules import csv_logger as csvr
+import core.DataController as Helper
 
 #OBUE_T is the instance specific version of the test object
 #containing all the necessary calculations and class fields to represent
@@ -37,6 +37,11 @@ class OBUE_Test():
     #paremeters includes center_freq_ghz,
     def __init__(self, parameters, testbench = None, to_log = True,
                     iq_swap = False):
+
+        flatParameters = parameters
+        flatTestbench = testbench
+        parameters = Helper.DataController.GetDictionary(flatParameters)
+        testbench = Helper.DataController.GetDictionary(flatTestbench)
 
         #each frequency has 4 spans. Will be stored as a dictionary of tuples.
         #enter Center Frequency from the beginning.

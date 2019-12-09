@@ -1,3 +1,4 @@
+from Config import _CONFIG_
 from core.interfaces.Builder import Builder
 from core.models.Collection import Collection
 from core.models.ModelFactory import ModelFactory
@@ -17,6 +18,7 @@ class RunBuilder(Builder):
         builderData = {
             "type": "Run",
             "mutable": False,
+            "default_dir": _CONFIG_["run_dir"],
             "factory": ModelFactory(
                 args = {
                     "type": Parameters.ID, 
@@ -33,6 +35,8 @@ class RunBuilder(Builder):
                     "load",
                     "newFile",
                     "divider",
+                    "addAllocationFile",
+                    "addCorrectionFile",
                     "addMobue",
                     "addAbCategory",
                     "addCarrier",

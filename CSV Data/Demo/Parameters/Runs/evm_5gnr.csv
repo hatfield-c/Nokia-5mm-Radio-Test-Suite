@@ -4,3 +4,5 @@ key,value
 <label|Attenuation(dBm)>,10.0
 <label|Number Carriers>,1
 <label|QAM PDSCH>,64
+<label|Allocation Filepath>,<allocation_file|C:\R_S\instr\user\NR5G\AllocationFiles\DL\64QAM_cellId1_papr11_74.allocation>
+<label|Correction Filepath>,<allocation_file|>

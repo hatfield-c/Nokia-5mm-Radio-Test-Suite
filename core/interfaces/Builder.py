@@ -197,10 +197,38 @@ class Builder(Interface):
 
         for modelFrame in self.modelFrames:
             model = modelFrame.getModel()
-            frameData = modelFrame.compileData()
 
-            formattedData = model.build(frameData)
-            data[model.getIndex()] = formattedData
+            modelData = {
+                "index": model.getIndex(),
+                "path": model.getPath(),
+                "fileName": model.fileName,
+                "pureName": model.pureName,
+                "fields": model.getFields(),
+                "data": modelFrame.compileData()
+            }
+
+            data[model.getIndex()] = modelData
+        
+        return data
+
+    def compileIndexedData(self):
+        data = {}
+
+        for modelFrame in self.modelFrames:
+            model = modelFrame.getModel()
+
+            modelData = {
+                "index": model.getIndex(),
+                "path": model.getPath(),
+                "fileName": model.fileName,
+                "pureName": model.pureName
+            }
+
+            csvData = modelFrame.compileData()
+            formattedData = model.build(csvData)
+
+            modelData["data"]: formattedData
+            data[model.getIndex()] = modelData
         
         return data
 

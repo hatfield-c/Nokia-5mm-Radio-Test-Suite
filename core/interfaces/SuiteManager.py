@@ -104,11 +104,16 @@ class SuiteManager(Interface):
         return False
 
     def compileData(self):
-        data = {}
-
-        data["benches"] = self.workspaces["benches"].compileData()
-        data["runs"] = self.workspaces["runs"].compileData()
-        data["sequences"] = self.workspaces["sequences"].compileData()
+        data = {
+            "suite": {
+                "path": self.modelData.getPath(),
+                "fileName": self.modelData.fileName,
+                "pureName": self.modelData.pureName
+            },
+            "benches": self.workspaces["benches"].compileData(),
+            "runs": self.workspaces["runs"].compileData(),
+            "sequences": self.workspaces["sequences"].compileData()
+        }
 
         return data
 

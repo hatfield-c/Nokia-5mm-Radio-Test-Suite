@@ -1,3 +1,4 @@
+from Config import _CONFIG_
 from core.interfaces.Builder import Builder
 from core.models.Collection import Collection
 from core.models.ModelFactory import ModelFactory
@@ -17,6 +18,7 @@ class SequenceBuilder(Builder):
         builderData = {
             "type": "Sequence",
             "mutable": True,
+            "default_dir": _CONFIG_["sequence_dir"],
             "factory": ModelFactory(
                 args = {
                     "type": Model.ID, 
