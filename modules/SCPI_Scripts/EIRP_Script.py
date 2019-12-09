@@ -56,7 +56,8 @@ def eirp_script(center_freq, tx_bw, adj_bw, adj_space, user_standard,
 
     VisaResourceManager = visa.ResourceManager()
     # connect to analyzer
-    Analyzer = VisaResourceManager.open_resource( INSTRUMENT )
+    instrument_ip = testbench['Instrument IP']
+    Analyzer = VisaResourceManager.open_resource(("TCPIP::%s::inst0::INSTR"%instrument_ip))
     Analyzer.write_termination = '\n'
     Analyzer.clear()
 

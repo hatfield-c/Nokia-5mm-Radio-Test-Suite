@@ -48,7 +48,8 @@ def evm_script(center_freq, attenuation,
 
     VisaResourceManager = visa.ResourceManager()
     # connect to analyzer
-    Analyzer = VisaResourceManager.open_resource( INSTRUMENT )
+    instrument_ip = testbench['Instrument IP']
+    Analyzer = VisaResourceManager.open_resource(("TCPIP::%s::inst0::INSTR"%instrument_ip))
 
     #unit housekeeping
     if reset is True:

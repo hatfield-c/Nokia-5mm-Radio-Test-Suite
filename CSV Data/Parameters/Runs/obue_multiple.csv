@@ -1,15 +1,20 @@
 key,value
 <label|module>,M_OBUE
-<label|Center Frequency(GHz)>,37.39404
-<label|Channel Bandwidth(MHz)>,100
-<label|Resolution Bandwidth(Hz)>,1000000
 <label|Sweep Time(s)>,0.2
-<label|Resolution Bandwidth(MHz)>,1
-<label|Sweep Time(s)>,1
+<label|Resolution Bandwidth(MHz)>,100
 <label|Category>,<radio|A|B>
 <label|Carrier0>,<label|Carrier0>
-<label|Center Frequency(GHz)0>,1
-<label|Channel Bandwidth(MHz)0>,1
-<label|Carrier1>,<label|Carrier1>
-<label|Center Frequency(GHz)1>,1
-<label|Channel Bandwidth(MHz)1>,1
+<label|Center Frequency(GHz)0>,36.0
+<label|Channel Bandwidth(MHz)0>,100
+<label|Carrier1>,<label|Carrier1>,
+<label|Center Frequency(GHz)1>,36.5
+<label|Channel Bandwidth(MHz)1>,100
+<label|Carrier2>,<label|Carrier2>
+<label|Center Frequency(GHz)2>,37.5
+<label|Channel Bandwidth(MHz)2>,100
+<label|Carrier2>,<label|Carrier2>
+<label|Center Frequency(GHz)2>,38.0
+<label|Channel Bandwidth(MHz)2>,100
+<label|Carrier3>,<label|Carrier3>
+<label|Center Frequency(GHz)3>,38.5
+<label|Channel Bandwidth(MHz)3>,100

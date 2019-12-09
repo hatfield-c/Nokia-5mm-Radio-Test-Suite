@@ -28,6 +28,7 @@ def get_esr(instrument):
     return int(esr)
 
 
+instrument_ip = "192.168.255.200"
 #SCPI script. Given a directory filepath and a type, return all listings in the
 #filepath directory of the specificed file type and subdirectories
 def get_directory(filepath, filetype):
@@ -37,7 +38,7 @@ def get_directory(filepath, filetype):
     ######################################################################
     VisaResourceManager = visa.ResourceManager()
     # connect to analyzer
-    Analyzer = VisaResourceManager.open_resource("TCPIP::192.168.255.200::inst0::INSTR")
+    Analyzer = VisaResourceManager.open_resource("TCPIP::%s::inst0::INSTR"%instrument_ip)
     Analyzer.write_termination = '\n'
     Analyzer.clear()
 

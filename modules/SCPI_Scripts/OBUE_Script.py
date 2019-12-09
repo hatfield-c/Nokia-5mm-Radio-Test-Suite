@@ -62,7 +62,8 @@ def obue_script(test_name, sweep, rbw, start, stop, testbench,
         ######################################################################
         VisaResourceManager = visa.ResourceManager()
         # connect to analyzer
-        Analyzer = VisaResourceManager.open_resource(testbench['Instrument'])
+        instrument_ip = testbench['Instrument IP']
+        Analyzer = VisaResourceManager.open_resource(("TCPIP::%s::inst0::INSTR"%instrument_ip))
         Analyzer.write_termination = '\n'
         Analyzer.clear()
 
