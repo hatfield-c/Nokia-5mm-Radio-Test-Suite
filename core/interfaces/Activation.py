@@ -13,8 +13,7 @@ from core.inputs.activation.SequencePairSelector import SequencePairSelector
 from core.Interface import Interface
 from core.interfaces.Builder import Builder
 from core.interfaces.ResultsWindow import ResultsWindow
-from core.models.Parameters import Parameters
-from core.models.Parameter import Parameter
+from core.interfaces.DUT import DUT
 
 from core.interfaces.alerts.NoSequences import NoSequences
 from core.interfaces.alerts.SequenceError import SequenceError
@@ -31,8 +30,10 @@ class Activation(Interface):
         self.suite = suite
         self.viewResults = tkinter.IntVar()
         self.autosave = tkinter.IntVar()
+        self.dut = tkinter.IntVar()
         self.viewResults.set("1")
         self.autosave.set("0")
+        self.dut.set("1")
         self.maxLoops = 999
 
         self.grid_propagate(False)
@@ -80,7 +81,7 @@ class Activation(Interface):
             padx = 5,
             pady =5
         )
-        self.configFrame.grid(row = 0, column = 1, pady = (0, 5))
+        self.configFrame.grid(row = 0, column = 0, columnspan = 4, pady = (0, 5))
         
         self.verboseCheckbox = tkinter.Checkbutton(
             self.configFrame, 
@@ -100,8 +101,17 @@ class Activation(Interface):
         )
         self.overwriteCheckbox.grid(row = 0, column = 1, padx = (10, 10))
 
+        self.dutCheckBox = tkinter.Checkbutton(
+            self.configFrame,
+            text = "DUT",
+            variable = self.dut,
+            borderwidth =2,
+            relief = "groove"
+        )
+        self.dutCheckBox.grid(row = 0, column = 2)
+
         self.loopFrame = tkinter.Frame(self.configFrame, borderwidth = 2, relief = "groove")
-        self.loopFrame.grid(row = 0, column = 2)
+        self.loopFrame.grid(row = 0, column = 3, padx = (10, 0))
 
         self.loopEntry = tkinter.Entry(self.loopFrame, width = 3)
         self.loopEntry.insert(0, "1")
@@ -295,6 +305,7 @@ class Activation(Interface):
     def activateSequencePair(self, appData, sequenceIndex, benchIndex, runIndex):
         viewresults = int(self.viewResults.get())
         autosave = int(self.autosave.get())
+        dut = int(self.dut.get())
 
         if viewresults == 0 and autosave == 0:
             alert = ActivationConfigError()
@@ -332,6 +343,9 @@ class Activation(Interface):
             return False
 
         startTime = time.time()
+
+        if dut == 1:
+            dutWindow = DUT(parent = self)
 
         try:
             bluePrint = moduleList[moduleName]
