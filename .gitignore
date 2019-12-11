@@ -1,10 +1,15 @@
-# Ignore python compilation files that may have been generated during testing
+
+# Ignore python compilation files that may have been generated during runtime
 
 *__pycache__*
-
 *.py[cod]
-
 *$py.class
 .vscode/
 
-.Results/
+
+# Ignore extraneous application files.
+# Can be overridden with 'git add -f DIR_NAME' or 'git add -f FILE_NAME'
+
+Python/*
+!Python/python-3.7.0-install.exe
+CSV Data/Results/
