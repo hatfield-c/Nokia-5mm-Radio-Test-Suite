@@ -1,1 +1,1 @@
-.\Python37-32\python.exe .\Application.py
+.\Python\python.exe .\Application.py
