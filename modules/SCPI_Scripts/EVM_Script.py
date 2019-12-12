@@ -40,7 +40,7 @@ DELAY = 5
 
 def evm_script(center_freq, attenuation,
                 alloc_file, correction_file, cell_number,
-                iq_swap = False, reset = True, qam = "64"):
+                iq_swap = False, reset = True, bench_ip = None, qam = "64"):
 
 
     #convert center_freq from GHz to Hz
@@ -48,7 +48,7 @@ def evm_script(center_freq, attenuation,
 
     VisaResourceManager = visa.ResourceManager()
     # connect to analyzer
-    instrument_ip = testbench['Instrument IP']
+    instrument_ip = bench_ip
     Analyzer = VisaResourceManager.open_resource(("TCPIP::%s::inst0::INSTR"%instrument_ip))
 
     #unit housekeeping

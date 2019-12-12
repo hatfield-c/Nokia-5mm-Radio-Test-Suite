@@ -33,7 +33,9 @@ class EVM_5GNR_Test():
                         alloc_file = self.parameters['Allocation File'],
                         correction_file = self.testbench['Correction File'],
                         cell_number = self.parameters['Number Carriers'],
-                        qam = self.parameters['QAM PDSCH'])
+                        bench_ip = self.testbench['Instrument IP'],
+                        qam = self.parameters['QAM PDSCH']
+        )
         res = []
         res.append(feedback)
 
