@@ -50,7 +50,8 @@ _CONFIG_ = {
         "EVM": modules.EVM_5GNR_Test.EVM_5GNR_Test,
 
         "DumpInput": modules.DumpInput.DumpInput,
-        "M_OBUE_DUMP": modules.M_OBUE_Dump.M_OBUE_Dump
+        "M_OBUE_DUMP": modules.M_OBUE_Dump.M_OBUE_Dump,
+        "New_Module": modules.DumpInput.DumpInput
     }
 
 }

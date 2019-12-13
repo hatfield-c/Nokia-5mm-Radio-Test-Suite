@@ -17,7 +17,7 @@ class DataController:
             for line in fileReader:
                 item = {}
                 for value, key in zip(line, keys):
-                    item[key] = value
+                    item[key] = str(value).strip()
                     if(key == Config._CONFIG_["csv_path_key"] and loadChildData):
                         item[Config._CONFIG_["csv_child_data_key"]] = DataController.Load(item[key], loadChildData)
 
@@ -42,7 +42,7 @@ class DataController:
             for row in csvData.getAll():
                 rowData = []
                 for field in fields:
-                    rowData.append(str(row[field]))
+                    rowData.append(str(row[field]).strip())
 
                 fileWriter.writerow(rowData)
 
@@ -62,12 +62,12 @@ class DataController:
 
                 if isinstance(row, dict):
                     for rowKey in row:
-                        rowData.append(str(row[rowKey]))
+                        rowData.append(str(row[rowKey]).strip())
                 elif isinstance(row, list):
                     for item in row:
-                        rowData.append(str(item))
+                        rowData.append(str(item).strip())
                 else:
-                    rowData.append(str(row))
+                    rowData.append(str(row).strip())
 
                 fileWriter.writerow(rowData)
 
