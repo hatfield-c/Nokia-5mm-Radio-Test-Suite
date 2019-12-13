@@ -40,7 +40,9 @@ class BenchBuilder(Builder):
                     "addKey",
                     "newEmpty",
                 ],
-                "render": []
+                "render": [
+                    "saveAs"
+                ]
             }
         }
 

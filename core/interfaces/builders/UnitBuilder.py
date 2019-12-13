@@ -24,7 +24,7 @@ class UnitBuilder(Builder):
                     "type": Parameters.ID, 
                     "fields": self.FIELDS,
                     "default": [
-                        { "key": "<label|module>", "value": "DumpInput" }
+                        { "key": "<label|module>", "value": "<module|DumpInput>" }
                     ]
                 }
             ),
@@ -43,7 +43,9 @@ class UnitBuilder(Builder):
                     "addKey",
                     "newEmpty"
                 ],
-                "render": []
+                "render": [
+                    "saveAs"
+                ]
             }
         }
 
