@@ -36,3 +36,9 @@ For debugging, open a command prompt window and navigate to the root directory o
 	{PATH TO PYTHON}\python.exe .\core\Application.py
 
 Where {PATH TO PYTHON} is replaced with the path to the Python instance that will run the application (default is .\Python\python.exe).
+
+## Documentation ##
+
+Further documentation detailing the architecture of the application, and possible debugging solutions, can be found at '/Documentation/Nokia Test Suite Manager Development Guide.pdf'.
+
+Please review this document before using the application, and absolutely review it before modifying the code of the application.
