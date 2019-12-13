@@ -1,4 +1,4 @@
 step,csv_path
 benches,CSV Data/Demo/Collections/demo_benches.csv
-runs,CSV Data/Demo/Collections/demo_runs.csv
+units,CSV Data/Demo/Collections/demo_units.csv
 sequences,CSV Data/Demo/Collections/demo_sequences.csv

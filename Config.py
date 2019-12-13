@@ -21,8 +21,8 @@ _CONFIG_ = {
     "suite_dir": "CSV Data/Suites/",
     "collection_dir": "CSV Data/Collections/",
     "bench_dir": "CSV Data/Parameters/Benches/",
-    "run_dir": "CSV Data/Parameters/Runs/",
-    "sequence_dir": "CSV Data/Parameters/Sequences/",
+    "unit_dir": "CSV Data/Parameters/Units/",
+    "sequence_dir": "CSV Data/Sequences/",
     "result_dir": "CSV Data/Results/",
 
     # Media Paths

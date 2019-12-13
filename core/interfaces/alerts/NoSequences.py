@@ -6,6 +6,6 @@ class NoSequences(Alert):
             title = "No Configured Sequences",
             data = {
                 "title": "NO CONFIGURED SEQUENCES",
-                "description": "There were no detected valid sequences to be activated. Please check that bench/run pairings exist as required."
+                "description": "There were no detected valid sequences to be activated. Please check that bench/unit pairings exist as required."
             }
         )

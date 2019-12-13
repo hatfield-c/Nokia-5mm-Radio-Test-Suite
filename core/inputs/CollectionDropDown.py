@@ -1,4 +1,6 @@
 import tkinter
+import core.interfaces.Builder
+
 from Config import _CONFIG_
 
 class CollectionDropDown(tkinter.Frame):
@@ -8,7 +10,7 @@ class CollectionDropDown(tkinter.Frame):
     #    1          Default value already selected.
     # ]
 
-    DEFAULT_RUN_STR = "<sequence_select|run|>"
+    DEFAULT_UNIT_STR = "<sequence_select|unit|>"
     DEFAULT_BENCH_STR = "<sequence_select|bench|>"
 
     NONE_STR = "NONE"
@@ -35,11 +37,11 @@ class CollectionDropDown(tkinter.Frame):
     def rebuild(self):
         suite = _CONFIG_["app_root"].suite
         builder = suite.getWorkspace(key = self.collectionType)
-
+    
         self.dropDown.destroy()
         self.refreshButton.destroy()
 
-        if builder is None:
+        if not isinstance(builder, core.interfaces.Builder.Builder):
             models = []
         else:
             collection = builder.dataCollection

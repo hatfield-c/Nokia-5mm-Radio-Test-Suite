@@ -9,7 +9,7 @@ class NoModuleError(Alert):
                 "description": (
                     "No module was detected in the following sequence pair:\n" + 
                     "    Sequence Index: " + str(sequenceIndex) + "\n" +
-                    "    Bench/Run Pair: " + str(sequenceData) + "\n\n" +
+                    "    Bench/Unit Pair: " + str(sequenceData) + "\n\n" +
                     "This application will abort the execution of this sequence pair, and continue to the next set."
                 )
             }, 

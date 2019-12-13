@@ -1,10 +1,9 @@
 import tkinter
 import tkinter.filedialog
 import os
-from core.Interface import Interface
-from core.interfaces.SuiteManager import SuiteManager
+
 from Config import _CONFIG_
-from core.interfaces.Alert import Alert
+from core.interfaces.SuiteManager import SuiteManager
 
 class Application(tkinter.Tk):
     def __init__(self):

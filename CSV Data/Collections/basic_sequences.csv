@@ -1,3 +1,3 @@
 id,csv_path
-1,CSV Data/Parameters/Sequences/basic_sequence.csv
-2,CSV Data/Parameters/Sequences/experimental_sequence.csv
+1,CSV Data/Sequences/basic_sequence.csv
+2,CSV Data/Sequences/experimental_sequence.csv

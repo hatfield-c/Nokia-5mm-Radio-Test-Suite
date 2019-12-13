@@ -254,8 +254,8 @@ class Activation(Interface):
             pairData["sequenceIndex"] == "" or
             pairData["benchIndex"] is None or 
             pairData["benchIndex"] == "" or
-            pairData["runIndex"] is None or 
-            pairData["runIndex"] == ""
+            pairData["unitIndex"] is None or 
+            pairData["unitIndex"] == ""
         ):
             NoSequences()
             return
@@ -264,13 +264,13 @@ class Activation(Interface):
 
         sequenceIndex = pairData["sequenceIndex"]
         benchIndex = pairData["benchIndex"]
-        runIndex = pairData["runIndex"]
+        unitIndex = pairData["unitIndex"]
 
         loopCount = self.getLoopCount()
         loopIndex = 0
 
         while loopIndex < loopCount:
-            self.activateSequencePair(appData, sequenceIndex, benchIndex, runIndex)
+            self.activateSequencePair(appData, sequenceIndex, benchIndex, unitIndex)
 
             loopIndex += 1
 
@@ -287,22 +287,22 @@ class Activation(Interface):
 
         for pair in sequence["data"]:
             try:
-                if "bench" not in pair or "run" not in pair:
+                if "bench" not in pair or "unit" not in pair:
                     continue
 
-                if pair["bench"] == "" or pair["run"] == "":
+                if pair["bench"] == "" or pair["unit"] == "":
                     continue
 
                 benchIndex = pair["bench"]
-                runIndex = pair["run"]
-                success = self.activateSequencePair(appData, sequenceIndex, benchIndex, runIndex)
+                unitIndex = pair["unit"]
+                success = self.activateSequencePair(appData, sequenceIndex, benchIndex, unitIndex)
             except Exception:
                 traceback.print_exc()
                 error = SequenceError(sequenceIndex = sequenceIndex, sequenceData = pair)
                 error.pack()
                 continue
 
-    def activateSequencePair(self, appData, sequenceIndex, benchIndex, runIndex):
+    def activateSequencePair(self, appData, sequenceIndex, benchIndex, unitIndex):
         viewresults = int(self.viewResults.get())
         autosave = int(self.autosave.get())
         dut = int(self.dut.get())
@@ -316,19 +316,19 @@ class Activation(Interface):
 
         sequences = appData["sequences"]
         benches = appData["benches"]
-        runs = appData["runs"]
+        units = appData["units"]
 
         sequence = sequences[sequenceIndex]
         bench = benches[benchIndex]
-        run = runs[runIndex]
+        unit = units[unitIndex]
 
         moduleList = _CONFIG_["modules"]
-        moduleName = self.getModule(run["data"])
+        moduleName = self.getModule(unit["data"])
 
         if moduleName is None:
             alert = NoModuleError(
                 sequenceIndex = sequenceIndex + ":" + sequence["pureName"], 
-                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + run["index"] + ":" + run["pureName"] + ")"
+                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + unit["index"] + ":" + unit["pureName"] + ")"
             )
             alert.pack()
             return False
@@ -337,7 +337,7 @@ class Activation(Interface):
             alert = ModuleNotFound(
                 moduleName = moduleName, 
                 sequenceIndex = sequenceIndex + ":" + sequence["pureName"], 
-                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + run["index"] + ":" + run["pureName"] + ")"
+                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + unit["index"] + ":" + unit["pureName"] + ")"
             )
             alert.pack()
             return False
@@ -349,7 +349,7 @@ class Activation(Interface):
 
         try:
             bluePrint = moduleList[moduleName]
-            module = bluePrint(parameters = run["data"], testbench = bench["data"])
+            module = bluePrint(parameters = unit["data"], testbench = bench["data"])
 
             resultData = module.run_test()
         except Exception:
@@ -357,7 +357,7 @@ class Activation(Interface):
             error = ModuleError(
                 moduleName = moduleName, 
                 sequenceIndex = sequenceIndex + ":" + sequence["pureName"], 
-                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + run["index"] + ":" + run["pureName"] + ")"
+                sequenceData = "(" + bench["index"] + ":" + bench["pureName"] + ",   " + unit["index"] + ":" + unit["pureName"] + ")"
             )
             error.pack()
             return False
@@ -375,7 +375,7 @@ class Activation(Interface):
 
         resultPath = None
         if autosave == 1:
-            resultPath = self.getResultPath(appData, sequenceIndex, benchIndex, runIndex)
+            resultPath = self.getResultPath(appData, sequenceIndex, benchIndex, unitIndex)
             
             csvObj = CSVObject(rowsList = resultData, fields = None, path = resultPath)
             DataController.SaveSloppy(fileName = resultPath, csvData = csvObj)
@@ -385,7 +385,7 @@ class Activation(Interface):
                 moduleName = moduleName,
                 sequenceIndex = sequenceIndex, 
                 benchIndex = benchIndex,
-                runIndex = runIndex,
+                unitIndex = unitIndex,
                 compiledData = appData,
                 resultPath = resultPath,
                 resultData = resultData
@@ -394,8 +394,8 @@ class Activation(Interface):
 
         return True
 
-    def getModule(self, runData):
-        for row in runData:
+    def getModule(self, unitData):
+        for row in unitData:
             if "key" not in row or "value" not in row:
                 return None
 
@@ -404,17 +404,17 @@ class Activation(Interface):
 
         return None
 
-    def getResultPath(self, appData, sequenceIndex, benchIndex, runIndex):
+    def getResultPath(self, appData, sequenceIndex, benchIndex, unitIndex):
         bench = appData["benches"][benchIndex]
-        run = appData["runs"][runIndex]
+        unit = appData["units"][unitIndex]
 
         benchName = bench["pureName"]
-        runName = run["pureName"]
+        unitName = unit["pureName"]
 
         path = _CONFIG_["result_dir"]
         path += self.suite.modelData.pureName + "/"
         
-        fileName = "[Seq-" + str(sequenceIndex) +"][Bench-" + str(benchIndex) + "-" + str(benchName) + "][Run-" + str(runIndex) + "-" + str(runName) + "]"
+        fileName = "[Seq-" + str(sequenceIndex) +"][Bench-" + str(benchIndex) + "-" + str(benchName) + "][Unit-" + str(unitIndex) + "-" + str(unitName) + "]"
         fileName += "/data"
         fileIndex = self.getFileIndex(path, fileName)
         fileName += str(fileIndex) + ".csv"

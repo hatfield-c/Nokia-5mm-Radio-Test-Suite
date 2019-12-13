@@ -2,9 +2,8 @@ import traceback
 import tkinter
 
 from core.interfaces.builders.BenchBuilder import BenchBuilder
-from core.interfaces.builders.RunBuilder import RunBuilder
+from core.interfaces.builders.UnitBuilder import UnitBuilder
 from core.interfaces.builders.SequenceBuilder import SequenceBuilder
-from core.interfaces.Builder import Builder
 
 from core.Interface import Interface
 from core.interfaces.Welcome import Welcome
@@ -32,7 +31,7 @@ class SuiteManager(Interface):
                 "fields": [ "step", "csv_path" ],
                 "default": [
                     { "step": "benches", "csv_path": "" },
-                    { "step": "runs", "csv_path": "" },
+                    { "step": "units", "csv_path": "" },
                     { "step": "sequences", "csv_path": "" }
                 ]
             }
@@ -86,14 +85,14 @@ class SuiteManager(Interface):
             return True
 
         benchData = self.modelData.getCollection(key = "benches")
-        runData = self.modelData.getCollection(key = "runs")
+        unitData = self.modelData.getCollection(key = "units")
         sequenceData = self.modelData.getCollection(key = "sequences")
 
         self.quit = True
         if benchData == None or benchData == "":
             check = CheckQuit(parent = self, missingCollection = "BENCH")
-        elif runData == None or runData == "":
-            check = CheckQuit(parent = self, missingCollection = "RUN")
+        elif unitData == None or unitData == "":
+            check = CheckQuit(parent = self, missingCollection = "UNIT")
         elif sequenceData == None or sequenceData == "":
             check = CheckQuit(parent = self, missingCollection = "SEQUENCE")
             
@@ -111,7 +110,7 @@ class SuiteManager(Interface):
                 "pureName": self.modelData.pureName
             },
             "benches": self.workspaces["benches"].compileData(),
-            "runs": self.workspaces["runs"].compileData(),
+            "units": self.workspaces["units"].compileData(),
             "sequences": self.workspaces["sequences"].compileData()
         }
 
@@ -119,9 +118,9 @@ class SuiteManager(Interface):
 
     def buildWorkspaces(self):
         if self.modelData.getPath() is not None:
-            self.workspaces["runs"] = RunBuilder(
+            self.workspaces["units"] = UnitBuilder(
                 root = self.workspace, 
-                csvPath = self.modelData.runs
+                csvPath = self.modelData.units
             )
             self.workspaces["benches"] = BenchBuilder(
                 root = self.workspace, 
@@ -137,7 +136,7 @@ class SuiteManager(Interface):
             )
 
         else:
-            self.workspaces["runs"] = Welcome(root = self.workspace)
+            self.workspaces["units"] = Welcome(root = self.workspace)
             self.workspaces["benches"] = Welcome(root = self.workspace)
             self.workspaces["sequences"] = Welcome(root = self.workspace)
             self.workspaces["activation"] = Welcome(root = self.workspace)
@@ -154,13 +153,13 @@ class SuiteManager(Interface):
                 {
                     "items": [
                         "1. Bench Builder",
-                        "2. Run Builder",
+                        "2. Unit Builder",
                         "3. Sequence Builder",
                         "4. Begin Testing"
                     ],
                     "actions": [
                         lambda : self.workspaces["benches"].lift(),
-                        lambda : self.workspaces["runs"].lift(),
+                        lambda : self.workspaces["units"].lift(),
                         lambda : self.workspaces["sequences"].lift(),
                         lambda : self.workspaces["activation"].lift()
                     ]
@@ -169,22 +168,29 @@ class SuiteManager(Interface):
         )
 
     def getDataCollections(self):
+        if isinstance(self.workspaces["benches"], Welcome):
+            return {
+                "benches": None,
+                "units": None,
+                "sequences": None
+            }
+
         return {
             "benches": self.workspaces["benches"].dataCollection,
-            "runs": self.workspaces["runs"].dataCollection,
+            "units": self.workspaces["units"].dataCollection,
             "sequences": self.workspaces["sequences"].dataCollection
-    }
+        }
 
     def validCollections(self):
         benchCollection = self.modelData.getCollection(key = "benches")
-        runCollection = self.modelData.getCollection(key = "runs")
+        unitCollection = self.modelData.getCollection(key = "units")
         sequenceCollection = self.modelData.getCollection(key = "sequences")
 
         if (
             benchCollection is None or 
-            benchCollection == "benchCollection" or 
-            runCollection is None or 
-            runCollection == "" or 
+            benchCollection == "" or 
+            unitCollection is None or 
+            unitCollection == "" or 
             sequenceCollection is None or 
             sequenceCollection == ""
         ):
@@ -199,8 +205,8 @@ class SuiteManager(Interface):
         if key == "bench" or key == "benches":
             return self.workspaces["benches"]
 
-        if key == "run" or key == "runs":
-            return self.workspaces["runs"]
+        if key == "unit" or key == "units":
+            return self.workspaces["units"]
 
         if key == "sequence" or key == "sequences":
             return self.workspaces["sequences"]
@@ -219,7 +225,7 @@ class SuiteManager(Interface):
             return
 
         self.modelData.setCollection(key = "benches", value = self.workspaces["benches"].csvPath)
-        self.modelData.setCollection(key = "runs", value = self.workspaces["runs"].csvPath)
+        self.modelData.setCollection(key = "units", value = self.workspaces["units"].csvPath)
         self.modelData.setCollection(key = "sequences", value = self.workspaces["sequences"].csvPath)
 
         try:

@@ -1,3 +1,3 @@
-bench,run
-<sequence_select|bench|1:4c280b22_demo.csv>,<sequence_select|run|2:obue_multiple.csv>
-<sequence_select|bench|1:4c280b22_demo.csv>,<sequence_select|run|4:evm_5gnr.csv>
+bench,unit
+<sequence_select|bench|1:4c280b22_demo.csv>,<sequence_select|unit|2:obue_multiple.csv>
+<sequence_select|bench|1:4c280b22_demo.csv>,<sequence_select|unit|4:evm_5gnr.csv>

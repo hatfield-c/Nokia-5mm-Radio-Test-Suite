@@ -6,7 +6,7 @@ from core.models.ModelFactory import ModelFactory
 from core.templates.Divider import Divider
 from Config import _CONFIG_
 from core.UIFactory import UIFactory
-from core.interfaces.alerts.NoBenchRunError import NoBenchRunError
+from core.interfaces.alerts.NoBenchUnitError import NoBenchUnitError
 
 class CSVRenderer(tkinter.Frame):
 
@@ -286,15 +286,15 @@ class CSVRenderer(tkinter.Frame):
         self.rebuild(newModel)
 
     def newSequencePair(self, args):
-        if "bench" not in self.model.getFields() or "run" not in self.model.getFields():
-            alert = NoBenchRunError(path = self.model.getPath())
+        if "bench" not in self.model.getFields() or "unit" not in self.model.getFields():
+            alert = NoBenchUnitError(path = self.model.getPath())
             return
 
         entryContainer = args["entry_container"]
 
         row = self.generateEmptyRow()
         row["bench"] = CollectionDropDown.DEFAULT_BENCH_STR
-        row["run"] = CollectionDropDown.DEFAULT_RUN_STR
+        row["unit"] = CollectionDropDown.DEFAULT_UNIT_STR
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, parentWidth = self.getFieldWidth())
 

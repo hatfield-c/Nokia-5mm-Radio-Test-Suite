@@ -7,7 +7,7 @@ from core.UIFactory import UIFactory
 from core.templates.Divider import Divider
 from core.interfaces.alerts.NoKeyError import NoKeyError
 from core.interfaces.alerts.NoKeyValueError import NoKeyValueError
-from core.interfaces.alerts.NoBenchRunError import NoBenchRunError
+from core.interfaces.alerts.NoBenchUnitError import NoBenchUnitError
 
 from core.inputs.Label import Label as InputLabel
 from core.inputs.FSWFile import FSWFile
@@ -400,8 +400,8 @@ class CSVEditor(tkinter.Frame):
         modelFrame.grid(row = gridRow, column = 0, pady = 2, sticky = "ew")
 
     def addSequenceSelector(self, args):
-        if "bench" not in self.model.getFields() or "run" not in self.model.getFields():
-            alert = NoBenchRunError(path = self.model.getPath())
+        if "bench" not in self.model.getFields() or "unit" not in self.model.getFields():
+            alert = NoBenchUnitError(path = self.model.getPath())
             alert.pack()
             return
 
@@ -409,7 +409,7 @@ class CSVEditor(tkinter.Frame):
 
         row = self.generateEmptyRow()
         row["bench"] = SequenceSelector.DEFAULT_BENCH_STR
-        row["run"] = SequenceSelector.DEFAULT_RUN_STR
+        row["unit"] = SequenceSelector.DEFAULT_UNIT_STR
 
         modelFrame = self.buildModelFrame(root = entryContainer, rowData = row, entryWidth = self.getFieldWidth())
 

@@ -1,6 +1,9 @@
 import tkinter
+import core.interfaces.Builder
+
 from Config import _CONFIG_
 from core.UIFactory import UIFactory
+from core.interfaces.Builder import Builder
 from core.inputs.CollectionDropDown import CollectionDropDown
 
 class SequencePairSelector(tkinter.Frame):
@@ -32,7 +35,7 @@ class SequencePairSelector(tkinter.Frame):
 
         self.dropDown.destroy()
 
-        if sequenceBuilder is None:
+        if not isinstance(sequenceBuilder, core.interfaces.Builder.Builder):
             seqData = { }
         else:
             seqData = sequenceBuilder.compileData()
@@ -61,8 +64,15 @@ class SequencePairSelector(tkinter.Frame):
         self.refreshButton.grid(row = 1, column = 1, padx = 10)
 
     def buildSelectList(self, sequence):
-        benchData = self.suite.getWorkspace("benches").compileData()
-        runData = self.suite.getWorkspace("runs").compileData()
+        benchWorkspace = self.suite.getWorkspace("benches")
+        unitWorkspace = self.suite.getWorkspace("units")
+
+        if not isinstance(benchWorkspace, core.interfaces.Builder.Builder) or not isinstance(unitWorkspace, core.interfaces.Builder.Builder):
+            benchData = {}
+            unitData = {}
+        else:
+            benchData = benchWorkspace.compileData()
+            unitData = unitWorkspace.compileData()
 
         selectList = []
 
@@ -70,25 +80,25 @@ class SequencePairSelector(tkinter.Frame):
             return selectList
         
         for pair in sequence["data"]:
-            if "bench" not in pair or "run" not in pair:
+            if "bench" not in pair or "unit" not in pair:
                     continue
 
-            if pair["bench"] == "" or pair["run"] == "":
+            if pair["bench"] == "" or pair["unit"] == "":
                 continue
 
             benchIndex = pair["bench"]
-            runIndex = pair["run"]
+            unitIndex = pair["unit"]
             
             benchPath = benchData[benchIndex]["fileName"]
-            runPath = runData[runIndex]["fileName"]
+            unitPath = unitData[unitIndex]["fileName"]
 
-            option = str(benchIndex) + ":" + str(benchPath) + ",   " + str(runIndex) + ":" + str(runPath)
+            option = str(benchIndex) + ":" + str(benchPath) + ",   " + str(unitIndex) + ":" + str(unitPath)
             selectList.append(option)
 
         return selectList
 
     def get(self):
-        defaultData = { "sequenceIndex": "", "benchIndex": "", "runIndex": ""  }
+        defaultData = { "sequenceIndex": "", "benchIndex": "", "unitIndex": ""  }
 
         sequenceOption = self.sequenceDropDown.get()
         pairOption = self.currentPair.get()
@@ -101,10 +111,10 @@ class SequencePairSelector(tkinter.Frame):
         
         pairSplit = pairOption.split(",   ")
         benchSplit = pairSplit[0].split(":")
-        runSplit = pairSplit[1].split(":")
+        unitSplit = pairSplit[1].split(":")
 
         benchIndex = benchSplit[0]
-        runIndex = runSplit[0]
+        unitIndex = unitSplit[0]
 
-        data = { "sequenceIndex": sequenceOption, "benchIndex": benchIndex, "runIndex": runIndex  }
+        data = { "sequenceIndex": sequenceOption, "benchIndex": benchIndex, "unitIndex": unitIndex  }
         return data

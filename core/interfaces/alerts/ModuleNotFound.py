@@ -11,7 +11,7 @@ class ModuleNotFound(Alert):
                     "    module: '" + str(moduleName)  + "'\n\n" + 
                     "Sequence data:\n" +
                     "    Sequence Index: " + str(sequenceIndex) + "\n" +
-                    "    Bench/Run Pair: " + str(sequenceData) + "\n\n" +
+                    "    Bench/Unit Pair: " + str(sequenceData) + "\n\n" +
                     "This application will abort the execution of this module, and continue to the next sequence pair."
                 )
             }, 

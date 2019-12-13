@@ -10,15 +10,15 @@ class Suite(Model):
 
         self.path = path
         self.benches = None
-        self.runs = None
+        self.units = None
         self.sequences = None
 
     def getCollection(self, key):
         if key == "benches":
             return self.benches
 
-        if key == "runs":
-            return self.runs
+        if key == "units":
+            return self.units
 
         if key == "sequences":
             return self.sequences
@@ -31,8 +31,8 @@ class Suite(Model):
         if key == "benches":
             self.benches = value
 
-        if key == "runs":
-            self.runs = value
+        if key == "units":
+            self.units = value
 
         if key == "sequences":
             self.sequences = value
@@ -40,7 +40,7 @@ class Suite(Model):
     def save(self):
         self.data = [
             { "step": "benches", "csv_path": self.benches },
-            { "step": "runs", "csv_path": self.runs },
+            { "step": "units", "csv_path": self.units },
             { "step": "sequences", "csv_path": self.sequences }
         ]
 
@@ -56,8 +56,8 @@ class Suite(Model):
             if row["step"] == "benches":
                 self.benches = row["csv_path"]
 
-            if row["step"] == "runs" :
-                self.runs = row["csv_path"]
+            if row["step"] == "units" :
+                self.units = row["csv_path"]
 
             if row["step"] == "sequences":
                 self.sequences = row["csv_path"]

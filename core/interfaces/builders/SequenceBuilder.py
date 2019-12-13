@@ -11,7 +11,7 @@ class SequenceBuilder(Builder):
 
     FIELDS = [
         "bench",
-        "run"
+        "unit"
     ]
 
     def __init__(self, root, csvPath = None):
@@ -24,7 +24,7 @@ class SequenceBuilder(Builder):
                     "type": Model.ID, 
                     "fields": self.FIELDS,
                     "default": [
-                        { "bench": "<sequence_select|bench|NONE>", "run": "<sequence_select|run|NONE>" }
+                        { "bench": "<sequence_select|bench|NONE>", "unit": "<sequence_select|unit|NONE>" }
                     ]
                 }
             ),

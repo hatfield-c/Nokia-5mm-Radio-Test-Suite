@@ -3,7 +3,6 @@ import tkinter
 from tkinter import simpledialog
 
 from core.models.Collection import Collection
-from core.models.Parameters import Parameters
 from core.models.ModelFactory import ModelFactory
 
 from core.Interface import Interface
@@ -14,7 +13,6 @@ from core.interfaces.alerts.builder.NoCollectionError import NoCollectionError
 from core.templates.CSVFrame import CSVFrame
 from core.templates.Divider import Divider
 
-from core.CSVEditor import CSVEditor
 from core.UIFactory import UIFactory
 from Config import _CONFIG_
 

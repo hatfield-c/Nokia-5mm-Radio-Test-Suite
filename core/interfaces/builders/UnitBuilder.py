@@ -7,7 +7,7 @@ from core.UIFactory import UIFactory
 from core.models.Parameters import Parameters
 import tkinter
 
-class RunBuilder(Builder):
+class UnitBuilder(Builder):
 
     FIELDS = [
         "key",
@@ -16,9 +16,9 @@ class RunBuilder(Builder):
 
     def __init__(self, root, csvPath = None):
         builderData = {
-            "type": "Run",
+            "type": "Unit",
             "mutable": False,
-            "default_dir": _CONFIG_["run_dir"],
+            "default_dir": _CONFIG_["unit_dir"],
             "factory": ModelFactory(
                 args = {
                     "type": Parameters.ID, 
@@ -47,4 +47,4 @@ class RunBuilder(Builder):
             }
         }
 
-        super().__init__(title = "Run Builder", root = root, csvPath = csvPath, builderData = builderData)
+        super().__init__(title = "Unit Builder", root = root, csvPath = csvPath, builderData = builderData)

@@ -1,0 +1,5 @@
+id,csv_path
+1,CSV Data/Parameters/Units/obue_single.csv
+2,CSV Data/Parameters/Units/obue_multiple.csv
+3,CSV Data/Parameters/Units/eirp_aclr.csv
+4,CSV Data/Parameters/Units/evm_5gnr.csv
