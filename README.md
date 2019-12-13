@@ -1,151 +1,37 @@
-# Application Info #
 
-## Python Data ##
+## System Requirements ##
 
-Version: 3.7.4
+### Python Data ###
+Version: 3.7.0
 
-Location: {PATH TO APP}\Python37-32
+Location: {PATH TO APP}\Python
 
 Package Dependencies:
 
-	- tkinter
-		UI Framework upon which the application is built
-	- Pillow
-		Images processing framework based off the PIL (Python-Imaging-Library) package
+	- pyvisa
+
+### Auto-Install Python ###
+
+To run the Nokia™ Test Suite Manager, you will need to have Python 3.7.0 installed and configured with the tkinter, pyvisa, and pyvisa-py libraries. An installer is included in this TSM distribution, and is located at ‘Python/python-3.7.0-install.exe’. An internet connection is required to install the 3rd party pyvisa libraries, while tkinter usually comes default with python.
+
+An automated install script is included with this distribution, which handles the python installation and library dependency downloads automatically. Run the file ‘reinstall.bat’, and the automated script will do its job. Rerunning the script after an install will result in a fresh reinstall procedure, with the previous python instance being uninstalled automatically
+
+An 'uninstall.bat' script is included as well as a convenience. Please see documentation for debugging info on the auto-install process.
 
 ## Upgrading Python ##
 
-When upgrading the local Python version, install it to a new folder, and make sure to have the 'pip' and 'tkinter' modules installed as a part of the installation procedure (Should be offered as an option during install of Python. If not, then you'll have to figure out how to install them manually, or find a new installer). Then, run the following command on the Window command line:
-	
-	{PATH TO PYTHON}\python.exe {PATH TO PYTHON}\scripts\pip.exe install Pillow
+When upgrading the Python instance used by this application, uninstall the old instance using the 'uninstall.bat' script.
 
-This will install the Pillow library into the upgraded Python instance, and all dependency requirements should be met.
+Then, download the Python .EXE Windows Installer from the Python website with the desired version, and put it in the Python/ folder. Modify the 'reinstall.bat' and 'uninstall.bat' files to reference the new installer .exe file, and then 'reinstall.bat'.
 
 ## Running the Application from Python ##
 
-With the local Python instance, you do not need to have Python installed/configured on the machine you wish to run the application from. Simply run the following command from the Windows command line:
+There are two options to run this application. Make sure Python is installed using the 'reinstall.bat' script before proceeding, or use your own Python instance.
 
-	{PATH TO PYTHON}\python.exe {PATH TO APP}\core\Application.py
+For the normal option, double click the 'run.bat' file, which will instantiate the application using Python.
 
-# FSW Automation 5G #
+For debugging, open a command prompt window and navigate to the root directory of the application. Then run the following command:
 
-## OBUE Multicarrier Module Addition ##
+	{PATH TO PYTHON}\python.exe .\core\Application.py
 
-maintained by Anthony.Tang@nokia.com
-
-Last Changed: 8/08/2019 Anthony Tang
-Python Version: 3.7.0
-
-To run use:    
-
-    .\Python37-32\python.exe FSW_interface.py
-
-    run_obue.bat
-    run_eirp.bat
-    run_5GNR.bat
-
-Full installation of python is in here so just run
-all commands with the internal python installation
-
-    .\Python37-32\python.exe <commands go here>
-
-
-Run to check all installed python dependencies.
-
-    .\Python37-32\python.exe -m pip list
-
-By specifying the python instance we bypass system path things and ensure
-the embedded environment is used along with those dependent modules.
-
-### OBUE Test ###
-
-- Centre Frequency in GHz
-- Channel Bandwidth in MHz
-- Resolution Bandwidth
-- Sweep Time
-- Optional Test Bench Struct
-
-
-### EIRP Test ###
-
-- TX Bandwidth
-- Adjacent BW
-- Alternate BW
-- Adjacent Spacing
-- Alternate Spacing
-- User Standard
-- Optional Test Bench Struct
-
-
-### 5GNR Signal Quality Test ###
-
-- Centre Frequency in GHz
-- Attenuation dBm
-- Allocation File (Absolute Filepath)
-
-
-## Default Values ##
-
-Default values for test files are defined in the "Resources" directory. They are
-stored as .xlsx files and are accessed though the testconf class. The file
-access is name dependent and stored in the TestConfig.py file and are defined
-as relative file paths.
-
-Changing the default values will involve opening up the excel file and editing
-the data field. Attribute fields are dictionary use sensitive so the
-attribute column should not be edited.  
-
-## Test Configuration ##
-
-The test bench is defined in the testbench.xlsx file and defines attributes
-relevant to the test set up and radio hardware, as compared to the individual
-test case.
-
-Editing the testbench configuration can be done directly in the .xlsx file.
-Additional data fields can be added and will receive logging.
-
-## Results ##
-
-Test results come back in GUI form, as well as an auto generated .csv file
-that can be found in the "Results" directory.
-
-
-## Batch Test Input Parser #
-
-The batching system operates on the assumption that the TEXT CORRECT
-attribute values are defined for each of the attributes and corresponding
-data points. The TEST attribute in column informs the function and parameters
-requested by each test, the TEST attribute requires:
-
-    Attribute to be <"TEST">
-    Data to be < "OBUE" | "EIRP" | "5GNR" >
-
-Extraneous data will be ignored. Data definitions must be in row directly
-after their attribute definitions.
-Additional values will be logged, but not considered in the test operation.
-
-"OBUE" required fields:
-	<
-	"Center Frequency(GHz)",
-	"Channel Bandwidth(MHz)"
-	"Resolution Bandwidth(Hz)"
-	"Sweep Time(s)"
-	>
-
-"EIRP" required fields:
-	<
-  "Center Frequency(GHz)"
-	"TX BW"
-	"Adjacent BW"
-	"Alternate BW"
-	"Adjacent Spacing"
-	"Alternate Spacing"
-	"User Std."
-	>
-
-"5GNR" required fields:
-	<
-	"Centre Frequency(GHz)"
-	"Attenuation(dBm)"
-	"Allocation File"
-	>
+Where {PATH TO PYTHON} is replaced with the path to the Python instance that will run the application (default is .\Python\python.exe).
