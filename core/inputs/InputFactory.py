@@ -2,6 +2,7 @@ from core.inputs.Label import Label
 from core.inputs.Entry import Entry
 from core.inputs.Radio import Radio
 from core.inputs.FSWFile import FSWFile
+from core.inputs.ModuleDropDown import ModuleDropDown
 from core.inputs.CollectionDropDown import CollectionDropDown
 
 class InputFactory:
@@ -11,7 +12,8 @@ class InputFactory:
         "label": Label,
         "radio": Radio,
         "fsw_file": FSWFile,
-        "sequence_select": CollectionDropDown
+        "sequence_select": CollectionDropDown,
+        "module": ModuleDropDown
     }
 
     OPEN_COMMAND = "<"

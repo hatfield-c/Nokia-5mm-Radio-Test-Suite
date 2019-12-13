@@ -1,5 +1,5 @@
 key,value
-<label|module>,DumpInput
+<label|module>,<module|DumpInput>
 <label|Center Frequency(GHz)>,37.39404
 <label|Attenuation(dBm)>,10.0
 <label|Number Carriers>,1

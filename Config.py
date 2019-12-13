@@ -44,12 +44,13 @@ _CONFIG_ = {
 
     # Test Module Registration
     "modules": {
-        "DumpInput": modules.DumpInput.DumpInput,
-        "M_OBUE_DUMP": modules.M_OBUE_Dump.M_OBUE_Dump,
         "OBUE": modules.OBUE_Test.OBUE_Test,
         "M_OBUE": modules.M_OBUE_Test.M_OBUE_Test,
         "EIRP": modules.EIRP_Test.EIRP_Test,
-        "EVM": modules.EVM_5GNR_Test.EVM_5GNR_Test
+        "EVM": modules.EVM_5GNR_Test.EVM_5GNR_Test,
+
+        "DumpInput": modules.DumpInput.DumpInput,
+        "M_OBUE_DUMP": modules.M_OBUE_Dump.M_OBUE_Dump
     }
 
 }

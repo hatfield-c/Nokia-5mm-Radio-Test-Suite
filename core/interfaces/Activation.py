@@ -61,6 +61,7 @@ class Activation(Interface):
         self.buttonRow = tkinter.Frame(
             self.container, 
             pady = 10,
+            padx = 5,
             background ="white", 
             borderwidth = 2, 
             relief = "groove"
@@ -69,9 +70,9 @@ class Activation(Interface):
 
         self.buttonRow.rowconfigure(0, weight = 1)
         self.buttonRow.rowconfigure(1, weight = 1)
-        self.buttonRow.columnconfigure(0, weight = 1)
-        self.buttonRow.columnconfigure(1, weight = 1)
-        self.buttonRow.columnconfigure(2, weight = 1)
+        self.buttonRow.columnconfigure(0, weight = 0)
+        self.buttonRow.columnconfigure(1, weight = 2)
+        self.buttonRow.columnconfigure(2, weight = 3)
 
         self.configFrame = tkinter.Frame(
             self.buttonRow,
@@ -120,14 +121,24 @@ class Activation(Interface):
         self.loopLabel = tkinter.Label(self.loopFrame, text = "Loop")
         self.loopLabel.grid(row = 0, column = 1, padx = (0, 5))
 
+        self.allContainer = tkinter.Frame(
+            self.buttonRow,
+            padx = 10,
+            background = _CONFIG_["blue_primary"], 
+            borderwidth = 2, 
+            relief = "groove"
+        )
+        self.allContainer.grid(row = 1, column = 0, sticky = "news")
+        self.allContainer.rowconfigure(0, weight = 1)
+
         self.activateButton = tkinter.Button(
-            self.buttonRow, 
+            self.allContainer, 
             text = "Activate All\nSequences", 
             command = lambda : self.activateSequences(), 
             font = "Helevetica 12 bold",
             background = _CONFIG_["color_secondary"]
         )
-        self.activateButton.grid(row = 1, column = 0)
+        self.activateButton.grid(row = 0, column = 0)
 
         self.oneSequenceContainer = tkinter.Frame(
             self.buttonRow, 
@@ -137,7 +148,9 @@ class Activation(Interface):
             padx = 5,
             pady = 5
         )
-        self.oneSequenceContainer.grid(row = 1, column = 1, padx = 30)
+        self.oneSequenceContainer.grid(row = 1, column = 1, padx = 5, sticky = "news")
+        self.oneSequenceContainer.columnconfigure(0, weight = 1)
+        self.oneSequenceContainer.rowconfigure(1, weight = 1)
 
         self.sequenceButton = tkinter.Button(
             self.oneSequenceContainer, 
@@ -156,8 +169,8 @@ class Activation(Interface):
                 "orig": ""
             }     
         )
-        self.sequenceDropDown.config(borderwidth = 2, relief = "groove")
-        self.sequenceDropDown.grid(row = 1, column = 0)
+        self.sequenceDropDown.config(borderwidth = 2, relief = "groove", padx = 3, pady = 3)
+        self.sequenceDropDown.grid(row = 1, column = 0, sticky = "ew")
 
         self.pairContainer = tkinter.Frame(
             self.buttonRow,
@@ -167,7 +180,8 @@ class Activation(Interface):
             padx = 5,
             pady = 5
         )
-        self.pairContainer.grid(row = 1, column = 2)
+        self.pairContainer.grid(row = 1, column = 2, sticky = "ew")
+        self.pairContainer.columnconfigure(0, weight = 1)
 
         self.pairButton = tkinter.Button(
             self.pairContainer, 
@@ -180,7 +194,7 @@ class Activation(Interface):
 
         self.pairDropDown = SequencePairSelector(self.pairContainer, self.suite)
         self.pairDropDown.config(borderwidth = 2, relief = "groove")
-        self.pairDropDown.grid(row = 1, column = 0)
+        self.pairDropDown.grid(row = 1, column = 0, sticky = "ew")
 
     def activateSequences(self):
         if not self.suite.validCollections():

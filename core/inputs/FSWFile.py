@@ -57,7 +57,7 @@ class FSWFile(tkinter.Frame):
 
     def getRaw(self, value):
         rawString = "<"
-        rawString += "allocation_file|"
+        rawString += "fsw_file|"
         rawString += value
         rawString += ">"
         return rawString

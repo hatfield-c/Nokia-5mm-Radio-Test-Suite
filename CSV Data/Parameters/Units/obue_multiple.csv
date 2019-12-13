@@ -1,5 +1,5 @@
 key,value
-<label|module>,M_OBUE
+<label|module>,<module|M_OBUE>
 <label|Sweep Time(s)>,0.2
 <label|Resolution Bandwidth(MHz)>,100
 <label|Category>,<radio|A|B>

@@ -25,7 +25,7 @@ class SequencePairSelector(tkinter.Frame):
                 "orig": ""
             }     
         )
-        self.sequenceDropDown.grid(row = 0, column = 0, columnspan = 2)
+        self.sequenceDropDown.grid(row = 0, column = 0, columnspan = 2, padx = (3, 0), pady = (3, 0), sticky = "ew")
         self.dropDown = tkinter.Frame(self)
 
         self.rebuild()
@@ -57,11 +57,11 @@ class SequencePairSelector(tkinter.Frame):
         else:
             options = self.pairList
         
-        self.dropDown = tkinter.OptionMenu(self, self.currentPair, *options)
-        self.dropDown.grid(row = 1, column = 0, sticky = "ew")
+        self.dropDown = tkinter.ttk.Combobox(self, textvariable = self.currentPair, values = options, state = "readonly")
+        self.dropDown.grid(row = 1, column = 0, sticky = "ew", padx = (3, 0))
 
         self.refreshButton = tkinter.Button(self, text = u"\u27F3", command = self.rebuild, borderwidth = 0)
-        self.refreshButton.grid(row = 1, column = 1, padx = 10)
+        self.refreshButton.grid(row = 1, column = 1, padx = 10, pady = (5, 3))
 
     def buildSelectList(self, sequence):
         benchWorkspace = self.suite.getWorkspace("benches")
