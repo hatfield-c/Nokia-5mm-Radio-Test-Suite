@@ -9,6 +9,7 @@ Location: {PATH TO APP}\Python
 Package Dependencies:
 
 	- pyvisa
+	- pyvisa-py
 
 ### Auto-Install Python ###
 
@@ -22,7 +23,7 @@ An 'uninstall.bat' script is included as well as a convenience. Please see docum
 
 When upgrading the Python instance used by this application, uninstall the old instance using the 'uninstall.bat' script.
 
-Then, download the Python .EXE Windows Installer from the Python website with the desired version, and put it in the Python/ folder. Modify the 'reinstall.bat' and 'uninstall.bat' files to reference the new installer .exe file, and then 'reinstall.bat'.
+Then, download the Python .EXE Windows Installer from the Python website with the desired version, and put it in the Python/ folder. Modify the 'reinstall.bat' and 'uninstall.bat' files to reference the new installer .exe file, and then run 'reinstall.bat'.
 
 ## Running the Application from Python ##
 
