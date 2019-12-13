@@ -20,7 +20,7 @@ class EditModel(Interface):
         model = None
     ):
         if model.getPath() is not None:
-            title += title + ": " + UIFactory.TruncatePath(path = model.getPath(), length = 45)
+            title = title + ": " + UIFactory.TruncatePath(path = model.getPath(), length = 45)
             
         super().__init__(title = title, dimensions = dimensions)
 
