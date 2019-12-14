@@ -9,6 +9,7 @@ Location: {PATH TO APP}\Python
 Package Dependencies:
 
 	- pyvisa
+	- pyvisa-py
 
 ### Auto-Install Python ###
 
@@ -22,7 +23,7 @@ An 'uninstall.bat' script is included as well as a convenience. Please see docum
 
 When upgrading the Python instance used by this application, uninstall the old instance using the 'uninstall.bat' script.
 
-Then, download the Python .EXE Windows Installer from the Python website with the desired version, and put it in the Python/ folder. Modify the 'reinstall.bat' and 'uninstall.bat' files to reference the new installer .exe file, and then 'reinstall.bat'.
+Then, download the Python .EXE Windows Installer from the Python website with the desired version, and put it in the Python/ folder. Modify the 'reinstall.bat' and 'uninstall.bat' files to reference the new installer .exe file, and then run 'reinstall.bat'.
 
 ## Running the Application from Python ##
 
@@ -35,3 +36,9 @@ For debugging, open a command prompt window and navigate to the root directory o
 	{PATH TO PYTHON}\python.exe .\core\Application.py
 
 Where {PATH TO PYTHON} is replaced with the path to the Python instance that will run the application (default is .\Python\python.exe).
+
+## Documentation ##
+
+Further documentation detailing the architecture of the application, and possible debugging solutions, can be found at '/Documentation/Nokia Test Suite Manager Development Guide.pdf'.
+
+Please review this document before using the application, and absolutely review it before modifying the code of the application.
